@@ -1,0 +1,18 @@
+{
+  "name": "churnur",
+  "version": "1.0.0",
+  "description": "A web app to help keep track of credit cards for churning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "credit",
+    "churning"
+  ],
+  "author": "Stephen Brown-Bourne",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.14.1"
+  }
+}
