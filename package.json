@@ -4,7 +4,8 @@
   "description": "A web app to help keep track of credit cards for churning",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "fastify start --watch --log-level info --pretty-logs index.js"
   },
   "keywords": [
     "credit",
@@ -13,6 +14,7 @@
   "author": "Stephen Brown-Bourne",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^3.14.1"
+    "fastify": "^3.14.1",
+    "fastify-cli": "^2.9.1"
   }
 }
