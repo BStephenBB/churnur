@@ -1,4 +1,3 @@
-- make fastify use typescript
 - add prisma to fastify
 - get docker compose w/ postgress working
 - glue together fastify, prisma, pg, and docker
