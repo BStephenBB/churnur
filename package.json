@@ -2,7 +2,6 @@
   "name": "churnur",
   "version": "1.0.0",
   "description": "A web app to help keep track of credit cards for churning",
-  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "fastify start --watch --log-level info --pretty-logs app.js",
