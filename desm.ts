@@ -2,11 +2,11 @@
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
-function urlDirname(url) {
+function urlDirname(url: string | URL) {
   return dirname(fileURLToPath(url));
 }
 
-function urlJoin(url, ...str) {
+function urlJoin(url: string | URL, ...str: string[]) {
   return join(urlDirname(url), ...str);
 }
 
