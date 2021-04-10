@@ -4,8 +4,9 @@
   "description": "A web app to help keep track of credit cards for churning",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "fastify start --watch --log-level info --pretty-logs app.js",
-    "build": "tsc -p tsconfig.json"
+    "start": "fastify start --watch --log-level info --pretty-logs dist/app.js",
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch"
   },
   "keywords": [
     "credit",

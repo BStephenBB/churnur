@@ -5,6 +5,6 @@ export default async function hello(
   options: FastifyServerOptions
 ) {
   app.get('/', async () => {
-    return { hello: 'world' }
+    return { hello: 'world!!' }
   })
 }
