@@ -1,10 +1,6 @@
 import { join } from './desm.js'
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
 
-declare module yeet {
-  sup: string
-}
-
 export default async function (
   app: FastifyInstance,
   options: FastifyServerOptions
