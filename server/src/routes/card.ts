@@ -21,6 +21,7 @@ export default async function card(
       },
     },
     async (request, reply) => {
+      // TODO user id won't be needed once we attach the user to each request by default
       const { userId, cardName } = request.body // TODO rest of card options here, figure out how to save dates
       const { prisma } = app
 
@@ -37,11 +38,13 @@ export default async function card(
 
   app.get<{ Params: { id: string } }>(
     '/card/:id',
-    {},
+    {}, // TODO schema
     async (request, rely) => {
+      const { id } = request.params
       const { prisma } = app
-      const card = prisma.card.findUnique({ where: {} })
-      console.log('hi')
+      const card = await prisma.card.findUnique({ where: { id: Number(id) } })
+
+      rely.send(card)
     }
   )
 }

@@ -4,6 +4,8 @@ type Params = {
   id: string
 }
 
+// TODO consolidate user routes
+
 export default async function getUser(
   app: FastifyInstance,
   options: FastifyServerOptions

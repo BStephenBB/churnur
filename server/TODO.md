@@ -17,4 +17,5 @@
 - use `fluent-json-schema` package for all schema probably
 - figure out a way to generate schema from types
 - settup swagger or something similar so don't need to use postman
+- look into relative routes etc.
 
