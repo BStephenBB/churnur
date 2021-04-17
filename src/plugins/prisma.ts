@@ -6,9 +6,11 @@ import type { PrismaClient as PrismaClientType } from '@prisma/client'
 import pkg from '@prisma/client'
 const { PrismaClient } = pkg
 
+// TODO put this in a spot that makes more sense probably
 declare module 'fastify' {
   export interface FastifyInstance {
     prisma: PrismaClientType
+    isUserAllowed: (token: string) => Promise<string | void>
   }
 }
 

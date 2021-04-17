@@ -10,6 +10,11 @@ import {
   FastifyReply,
 } from 'fastify'
 
+// TODOs
+
+// add https errors
+// add config to app
+
 async function authorization(
   app: FastifyInstance,
   options: FastifyServerOptions
@@ -72,7 +77,7 @@ async function authorization(
 
     let mail
     try {
-      mail = await app.isUserAllowed(cookie.value)
+      mail = await app.isUserAllowed(cookie.value ?? 'NOT REAL USER') // TODO better way to do this
     } catch (error) {
       request.log.warn(
         `Invalid user tried to authenticate: ${JSON.stringify(error.user)}`
@@ -91,7 +96,7 @@ async function authorization(
     request.user = { mail }
   }
 
-  async function isUserAllowed(token: string) {
+  async function isUserAllowed(token: string): Promise<string | void> {
     // TODO the undici types seem really poor
     const response = await client.request({
       method: 'GET',
