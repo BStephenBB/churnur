@@ -21,8 +21,7 @@ export default async function card(
       },
     },
     async (request, reply) => {
-      console.log(request.body)
-      const { userId, cardName } = request.body
+      const { userId, cardName } = request.body // TODO rest of card options here, figure out how to save dates
       const { prisma } = app
 
       const newCard = await prisma.card.create({
@@ -33,6 +32,16 @@ export default async function card(
       })
 
       reply.send(newCard)
+    }
+  )
+
+  app.get<{ Params: { id: string } }>(
+    '/card/:id',
+    {},
+    async (request, rely) => {
+      const { prisma } = app
+      const card = prisma.card.findUnique({ where: {} })
+      console.log('hi')
     }
   )
 }
