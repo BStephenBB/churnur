@@ -11,6 +11,10 @@ declare module 'fastify' {
   export interface FastifyInstance {
     prisma: PrismaClientType
     isUserAllowed: (token: string) => Promise<string | void>
+    config: {
+      GOOGLE_CLIENT_ID: string
+      GOOGLE_CLIENT_SECRET: string
+    }
   }
 }
 

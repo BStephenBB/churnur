@@ -27,8 +27,8 @@ async function authorization(
     name: 'google',
     credentials: {
       client: {
-        id: 'GOOGLE_CLIENT_ID',
-        secret: 'GOOGLE_CLIENT_ID',
+        id: config.GOOGLE_CLIENT_ID,
+        secret: config.GOOGLE_CLIENT_SECRET,
       },
       auth: OAuth.GOOGLE_CONFIGURATION,
     },
