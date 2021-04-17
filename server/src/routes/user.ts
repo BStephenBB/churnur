@@ -4,6 +4,7 @@ export default async function makeUser(
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
+  const { prisma } = app
   app.post<{ Body: { email: string } }>(
     '/signup',
     {
@@ -18,7 +19,6 @@ export default async function makeUser(
     },
     async (request, reply) => {
       const { email } = request.body
-      const { prisma } = app
 
       const result = await prisma.user.create({
         data: {
@@ -27,6 +27,19 @@ export default async function makeUser(
       })
 
       reply.send(result)
+    }
+  )
+
+  // TODO schema
+  app.get<{ Params: { id: string } }>(
+    '/user/:id/cards',
+    {},
+    async (request, reply) => {
+      const { id } = request.params
+      const cards = await prisma.card.findMany({
+        where: { ownerId: Number(id) },
+      })
+      reply.send(cards)
     }
   )
 }
