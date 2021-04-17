@@ -10,18 +10,13 @@ import {
   FastifyReply,
 } from 'fastify'
 
-// TODOs
-
-// add https errors
-// add config to app
-
 async function authorization(
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
   const { httpErrors, config } = app
 
-  const client = undici('https://www.googleapis.com', {}) // TODO types?? also url
+  const client = undici('https://accounts.google.com', {}) // TODO types?? also url
 
   app.register(OAuth, {
     name: 'google',
@@ -35,7 +30,7 @@ async function authorization(
     // register a fastify url to start the redirect flow
     startRedirectPath: '/login/google',
     // google redirect here after the user logs in
-    callbackUri: 'http://localhost:3000/login/google/callback', // TODO change if in prod?
+    callbackUri: 'http://localhost:3000/login/google/callback', // TODO change if in prod? this is where they go afterwards I think? will need to build this route, or can just be a link to the frontend I think?
     scope: ['user:email', 'user:profile'], // TODO maybe 'userinfo' instead of just user see https://developers.google.com/identity/protocols/oauth2/scopes#oauth2
 
     // add tags for the scheme TODO look into if/when we need to do this:
@@ -45,8 +40,9 @@ async function authorization(
     },
   })
 
+  // TODO look into what this secret is for
   app.register(Cookie, {
-    secret: 'CONFIG.COOKIE_SECRET', // TODO
+    secret: config.COOKIE_SECRET,
   })
 
   // When using session w/ cookies, should use CSRF
@@ -75,16 +71,16 @@ async function authorization(
       throw httpErrors.unauthorized('Invalid cookie signature')
     }
 
-    let mail
+    let email
     try {
-      mail = await app.isUserAllowed(cookie.value ?? 'NOT REAL USER') // TODO better way to do this
+      email = await app.isUserAllowed(cookie.value ?? 'NOT REAL USER') // TODO better way to do this
     } catch (error) {
       request.log.warn(
         `Invalid user tried to authenticate: ${JSON.stringify(error.user)}`
       )
       // clear the cookie as well in case of errors:
       // this way if a user retries the request we'll have an additional request to Google
-      // reply.clearCookie('user_session', { path: '/_app' }) // TODO what do I use for path? TODO see if we need to add path like <-- this
+      // reply.clearCookie('user_session', { path: '/' }) // TODO what do I use for path? TODO see if we need to add path like <-- this
       reply.clearCookie('user_session')
       throw error
     }
@@ -93,16 +89,20 @@ async function authorization(
     // behavior etc. will be different depending on if user exists or not
 
     // add the user's email to the request object
-    request.user = { mail }
+    // prob would normally add real user
+    // think about if try/catch and if block is best here...?
+    if (email) {
+      request.user = { email: email }
+    }
   }
 
   async function isUserAllowed(token: string): Promise<string | void> {
     // TODO the undici types seem really poor
     const response = await client.request({
       method: 'GET',
-      path: '/user/emails',
+      path: '/o/oauth2/v2/auth',
       headers: {
-        'User-Agent': 'scurte', // TODO figure out this user agent thing?
+        // 'User-Agent': 'scurte', // TODO figure out this user agent thing?
         Authorization: `Bearer ${token}`,
       },
     })

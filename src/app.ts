@@ -12,13 +12,13 @@ export default async function (
   options: FastifyServerOptions
 ) {
   // fastify-autoload loads all plugins found in a directory and automatically configures routes matching the folder structure.
-  //
 
   // register env variables, configuration will be available under `fastify.config`
   app.register(Environment, {
     schema: S.object()
       .prop('GOOGLE_CLIENT_ID', S.string().required())
       .prop('GOOGLE_CLIENT_SECRET', S.string().required())
+      .prop('COOKIE_SECRET', S.string().required())
       .valueOf(),
   })
 
