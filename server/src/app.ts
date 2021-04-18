@@ -38,12 +38,12 @@ export default async function (
     maxEventLoopUtilization: 0.98,
   })
 
-  // // TODO turn CORS on, will leave off for now for easy development/testing
-  // // Enable the use of CORS
-  // // https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
-  // app.register(Cors, {
-  //   origin: false,
-  // })
+  // Enable the use of CORS
+  // https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+  app.register(Cors, {
+    // origin: false, // TODO turn this on in dev
+    origin: 'http://localhost:3001', // TODO turn this on in dev
+  })
 
   // register all routes
   app.register(AutoLoad, {
