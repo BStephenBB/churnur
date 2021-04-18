@@ -10,6 +10,7 @@
     "next": "latest",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-query": "^3.13.10",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
