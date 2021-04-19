@@ -1,10 +1,16 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
-import { useSortBy, useTable } from 'react-table'
+import { useBlockLayout, useTable } from 'react-table'
 import styled from 'styled-components'
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`
 
 type Card = {
   id: number
@@ -51,20 +57,14 @@ const getUsersCards = async () => {
   return json
 }
 
-const CardsTable = ({
-  columns,
-  data,
-}: {
-  columns: Column<Card>[]
-  data: Cards
-}) => {
+const CardsTable = ({ data }: { data: Cards }) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-  } = useTable<Card>({ columns: columns, data: data })
+  } = useTable<Card>({ columns: columns, data: data }, useBlockLayout)
 
   return (
     <div {...getTableProps()} className="table">
@@ -73,14 +73,20 @@ const CardsTable = ({
           return (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
               {headerGroup.headers.map((column) => {
-                return column.render('Header')
+                return (
+                  <div {...column.getHeaderProps()} className="th">
+                    {column.render('Header')}
+                  </div>
+                )
               })}
             </div>
           )
         })}
       </div>
+
       <div {...getTableBodyProps()}>
         {rows.map((row) => {
+          prepareRow(row)
           return (
             <div className="row" {...row.getRowProps()}>
               {row.cells.map((cell) => {
@@ -101,7 +107,7 @@ export default function Dashboard() {
 
   const memoizedCards = useMemo(() => cards, [cards])
 
-  if (status === 'loading' || cards === undefined) {
+  if (status === 'loading' || memoizedCards === undefined) {
     return null
   }
 
@@ -110,10 +116,7 @@ export default function Dashboard() {
   return (
     <Wrapper>
       <h2>Churnur</h2>
-      {cards.map((card) => {
-        const { id, name } = card
-        return <div key={id}>{name}</div>
-      })}
+      <CardsTable data={memoizedCards} />
     </Wrapper>
   )
 }
