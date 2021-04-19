@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 
-const Title = styled.h1`
-  color: red;
-  font-size: 50px;
-`
+const Wrapper = styled.div``
 
 type Card = {
   id: number
@@ -51,12 +48,12 @@ export default function Dashboard() {
   }
 
   return (
-    <Title>
-      <button>hi</button>
+    <Wrapper>
+      <h2>Churnur</h2>
       {cards.map((card) => {
         const { id, name } = card
         return <div key={id}>{name}</div>
       })}
-    </Title>
+    </Wrapper>
   )
 }

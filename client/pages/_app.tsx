@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { GlobalStyles } from '../GlobalStyles'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { theme } from '../theme'
 import type { QueryClient as ReactQueryClient } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import type { AppProps } from 'next/app'
@@ -17,7 +18,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ThemeProvider theme={{}}>
+        <ThemeProvider theme={theme}>
           <Component {...pageProps} />
           <GlobalStyles />
         </ThemeProvider>
