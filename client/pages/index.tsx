@@ -47,7 +47,7 @@ export default function Dashboard() {
   )
 
   if (status === 'loading' || cards === undefined) {
-    return 'loading'
+    return null
   }
 
   return (
