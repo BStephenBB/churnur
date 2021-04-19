@@ -52,6 +52,7 @@ export default function Dashboard() {
 
   return (
     <Title>
+      <button>hi</button>
       {cards.map((card) => {
         const { id, name } = card
         return <div key={id}>{name}</div>
