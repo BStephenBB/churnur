@@ -39,13 +39,19 @@ const getCardsForUser = async (userId: string) => {
 /* } */
 
 export default function Dashboard() {
-  const { data: cards, status } = useQuery<Card[]>('cards', () =>
-    getCardsForUser(currentUser)
+  const { data: cards, status } = useQuery<Card[]>(
+    'cards',
+    () => getCardsForUser(currentUser),
+    {
+      refetchOnWindowFocus: false,
+    }
   )
 
   if (status === 'loading' || cards === undefined) {
     return null
   }
+
+  console.log(cards)
 
   return (
     <Wrapper>

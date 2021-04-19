@@ -11,12 +11,14 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-query": "^3.13.10",
+    "react-table": "^7.6.3",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "12.0.12",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.4",
+    "@types/react-table": "^7.0.29",
     "@types/styled-components": "^5.0.0",
     "babel-plugin-styled-components": "^1.10.0",
     "typescript": "^4.2.4"
