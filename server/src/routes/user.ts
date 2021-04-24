@@ -36,6 +36,7 @@ export default async function makeUser(
     {},
     async (request, reply) => {
       const { id } = request.params
+      // TODO sort by creation date, but seems to do that by default so not urgent
       const cards = await prisma.card.findMany({
         where: { ownerId: Number(id) },
       })

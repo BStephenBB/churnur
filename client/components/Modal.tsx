@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
+import { formatISO } from 'date-fns'
 import {
   useOverlay,
   usePreventScroll,
@@ -10,6 +11,30 @@ import {
 import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
+
+const currentUser = '1'
+
+const addCard = async (cardData: {
+  userId: number
+  cardName: string
+  creditLimit?: number
+  totalSpend?: number
+  minimumSpendingRequirement?: number
+  signupBonusDueDate?: string
+}) => {
+  const result = await window.fetch(`http://localhost:3000/card`, {
+    method: 'POST',
+    headers: {
+      /* 'Access-Control-Allow-Origin': '*', */
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cardData),
+  })
+  const json = await result.json()
+  console.log('add card response')
+  console.log(json)
+  return json
+}
 
 function ModalDialog(props: {
   title: string
@@ -103,7 +128,23 @@ export function Modal() {
     {
       onPress: () => {
         if (isCompleteInformation) {
-          console.log('hi')
+          console.log('trying to make card')
+          addCard({
+            userId: Number(currentUser),
+            cardName: cardName.trim(),
+            creditLimit: cardLimit.trim()
+              ? Number(cardLimit.trim())
+              : undefined,
+            totalSpend: totalSpend.trim()
+              ? Number(totalSpend.trim())
+              : undefined,
+            minimumSpendingRequirement: minimumSpendingRequirement.trim()
+              ? Number(minimumSpendingRequirement.trim())
+              : undefined,
+            signupBonusDueDate: signupBonusDate.trim()
+              ? formatISO(new Date(signupBonusDate))
+              : undefined,
+          })
           state.close()
         }
       },
