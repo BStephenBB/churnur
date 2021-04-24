@@ -59,6 +59,7 @@ function ModalDialog(props: {
             background: 'white',
             color: 'black',
             padding: 30,
+            borderRadius: '8px',
           }}
         >
           <h3 {...titleProps} style={{ marginTop: 0 }}>
@@ -73,12 +74,9 @@ function ModalDialog(props: {
 
 export function Modal() {
   const state = useOverlayTriggerState({})
-  const openButtonRef = React.useRef(null)
-  const closeButtonRef = React.useRef(null)
+  const openButtonRef = React.useRef<HTMLButtonElement>(null)
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null)
 
-  // useButton ensures that focus management is handled correctly,
-  // across all browsers. Focus is restored to the button once the
-  // dialog closes.
   const { buttonProps: openButtonProps } = useButton(
     {
       onPress: () => state.open(),
@@ -88,7 +86,10 @@ export function Modal() {
 
   const { buttonProps: closeButtonProps } = useButton(
     {
-      onPress: () => state.close(),
+      onPress: () => {
+        console.log('hi')
+        state.close()
+      },
     },
     closeButtonRef
   )
@@ -102,7 +103,7 @@ export function Modal() {
       {state.isOpen ? (
         <OverlayContainer>
           <ModalDialog
-            title="Enter your name"
+            title="Enter card information"
             isOpen={state.isOpen}
             onClose={state.close}
             isDismissable={true}
@@ -110,18 +111,25 @@ export function Modal() {
           >
             <form style={{ display: 'flex', flexDirection: 'column' }}>
               <label>
-                First Name: <input placeholder="John" />
+                Card Name: <input placeholder="ex: Chase Sapphire Reserve" />
               </label>
               <label>
-                Last Name: <input placeholder="Smith" />
+                Card Limit: <input placeholder="ex: 3000.00" />
               </label>
-              <button
-                {...closeButtonProps}
-                ref={closeButtonRef}
-                style={{ marginTop: 10 }}
-              >
+              <label>
+                Total Spend: <input placeholder="ex: 4321.12" />
+              </label>
+              <label>
+                Minimum Spending Requirement:
+                <input placeholder="ex: 8000.00" />
+              </label>
+              <label>
+                Signup Bonus Due Date:
+                <input placeholder="yyyy-mm-dd" />
+              </label>
+              <Button {...closeButtonProps} ref={closeButtonRef}>
                 Submit
-              </button>
+              </Button>
             </form>
           </ModalDialog>
         </OverlayContainer>
