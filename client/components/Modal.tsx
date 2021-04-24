@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useOverlayTriggerState } from '@react-stately/overlays'
+import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
 import { formatISO } from 'date-fns'
 import {
@@ -97,7 +98,7 @@ function ModalDialog(props: {
   )
 }
 
-export function Modal() {
+export function Modal({ state }: { state: OverlayTriggerState }) {
   const [cardName, setCardName] = useState('')
   const [cardLimit, setCardLimit] = useState('')
   const [totalSpend, setTotalSpend] = useState('')
@@ -106,7 +107,14 @@ export function Modal() {
   )
   const [signupBonusDate, setSignupBonusDate] = useState('')
 
-  const state = useOverlayTriggerState({})
+  const clearModal = () => {
+    setCardName('')
+    setCardLimit('')
+    setTotalSpend('')
+    setMinimumSpendingRequirement('')
+    setSignupBonusDate('')
+  }
+
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -146,6 +154,7 @@ export function Modal() {
               : undefined,
           })
           state.close()
+          clearModal()
         }
       },
     },
@@ -163,7 +172,10 @@ export function Modal() {
           <ModalDialog
             title="Enter card information"
             isOpen={state.isOpen}
-            onClose={state.close}
+            onClose={() => {
+              state.close()
+              clearModal()
+            }}
             isDismissable={true}
             role="dialog"
           >

@@ -2,8 +2,10 @@ import { useEffect, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
+import { useOverlayTriggerState } from '@react-stately/overlays'
 import { format } from 'date-fns'
 import { Button, Modal } from '../components'
+import { EditIcon } from '../icons'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -113,6 +115,7 @@ const CardsTable = ({ data }: { data: Cards }) => {
                   </div>
                 )
               })}
+              <div>edit</div>
             </div>
           )
         })}
@@ -126,6 +129,11 @@ const CardsTable = ({ data }: { data: Cards }) => {
               {row.cells.map((cell) => {
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
+              <div>
+                <button>
+                  <EditIcon />
+                </button>
+              </div>
             </div>
           )
         })}
@@ -134,7 +142,9 @@ const CardsTable = ({ data }: { data: Cards }) => {
   )
 }
 
+// TODO optimize re-rendering
 export default function Dashboard() {
+  const cardModalState = useOverlayTriggerState({})
   const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
     refetchOnWindowFocus: false,
   })
@@ -151,7 +161,7 @@ export default function Dashboard() {
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
       <CardsTable data={memoizedCards} />
-      <Modal />
+      <Modal state={cardModalState} />
     </Wrapper>
   )
 }
