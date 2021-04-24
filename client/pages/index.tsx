@@ -18,6 +18,7 @@ type Card = {
   creditLimit: number
   totalSpend: number
   minimumSpendingRequirement: number
+  signupBonusDueDate: string
 }
 
 type Cards = Card[]
@@ -40,6 +41,10 @@ const columns: Column<Card>[] = [
   {
     Header: 'Min. Spending Requirement',
     accessor: 'minimumSpendingRequirement',
+  },
+  {
+    Header: 'Sign up Bonus Due Date',
+    accessor: 'signupBonusDueDate',
   },
 ]
 
