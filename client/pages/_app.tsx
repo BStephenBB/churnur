@@ -20,6 +20,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <title>Churnur | Seamless credit card management</title>
         <link
           rel="icon"
           type="image/png"

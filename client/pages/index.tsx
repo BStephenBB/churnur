@@ -93,7 +93,13 @@ const getUsersCards = async () => {
   return json
 }
 
-const CardsTable = ({ data }: { data: Cards }) => {
+const CardsTable = ({
+  data,
+  openCardModal,
+}: {
+  data: Cards
+  openCardModal: () => void
+}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -115,7 +121,7 @@ const CardsTable = ({ data }: { data: Cards }) => {
                   </div>
                 )
               })}
-              <div>edit</div>
+              <div>Edit</div>
             </div>
           )
         })}
@@ -130,8 +136,8 @@ const CardsTable = ({ data }: { data: Cards }) => {
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
               <div>
-                <button>
-                  <EditIcon />
+                <button onClick={openCardModal}>
+                  <EditIcon title={`edit ${row.original.name} card`} />
                 </button>
               </div>
             </div>
@@ -145,6 +151,7 @@ const CardsTable = ({ data }: { data: Cards }) => {
 // TODO optimize re-rendering
 export default function Dashboard() {
   const cardModalState = useOverlayTriggerState({})
+  const { open } = cardModalState
   const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
     refetchOnWindowFocus: false,
   })
@@ -157,10 +164,14 @@ export default function Dashboard() {
 
   console.log(cards)
 
+  const openCardModal = () => {
+    open()
+  }
+
   return (
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
-      <CardsTable data={memoizedCards} />
+      <CardsTable data={memoizedCards} openCardModal={openCardModal} />
       <Modal state={cardModalState} />
     </Wrapper>
   )
