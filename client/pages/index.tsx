@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
+import { format } from 'date-fns'
 import { Button, Modal } from '../components'
 import styled from 'styled-components'
 
@@ -34,18 +35,25 @@ const columns: Column<Card>[] = [
   {
     Header: 'Limit',
     accessor: 'creditLimit',
+    width: 100,
   },
   {
     Header: 'Total Spend',
     accessor: 'totalSpend',
+    width: 108,
   },
   {
     Header: 'Min. Spending Requirement',
     accessor: 'minimumSpendingRequirement',
+    width: 224,
   },
   {
     Header: 'Sign up Bonus Due Date',
     accessor: 'signupBonusDueDate',
+    width: 200,
+    Cell: function Cell(props: CellProps<Card, string>) {
+      return <div>{format(new Date(props.value), 'MM/dd/yyyy')}</div>
+    },
   },
 ]
 

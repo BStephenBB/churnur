@@ -92,11 +92,20 @@ export function Modal() {
     openButtonRef
   )
 
+  const isCompleteInformation =
+    cardName.trim() !== '' &&
+    cardLimit.trim() !== '' &&
+    totalSpend.trim() !== '' &&
+    minimumSpendingRequirement.trim() !== '' &&
+    signupBonusDate.trim() !== ''
+
   const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => {
-        console.log('hi')
-        state.close()
+        if (isCompleteInformation) {
+          console.log('hi')
+          state.close()
+        }
       },
     },
     closeButtonRef
@@ -106,7 +115,7 @@ export function Modal() {
   return (
     <>
       <Button {...openButtonProps} ref={openButtonRef}>
-        + New Card
+        + New card
       </Button>
       {state.isOpen ? (
         <OverlayContainer>
@@ -168,8 +177,12 @@ export function Modal() {
                   }}
                 />
               </label>
-              <Button {...closeButtonProps} ref={closeButtonRef}>
-                Submit
+              <Button
+                {...closeButtonProps}
+                ref={closeButtonRef}
+                disabled={!isCompleteInformation}
+              >
+                Create card
               </Button>
             </form>
           </ModalDialog>
