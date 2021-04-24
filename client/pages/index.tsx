@@ -27,6 +27,17 @@ type Cards = Card[]
 
 const currentUser = '1'
 
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+})
+
+const formatMoney = (value: string) => {
+  return formatter.format(Number(value))
+}
+
 const columns: Column<Card>[] = [
   {
     Header: 'Name',
@@ -36,16 +47,25 @@ const columns: Column<Card>[] = [
     Header: 'Limit',
     accessor: 'creditLimit',
     width: 100,
+    Cell: function Cell(props: CellProps<Card, string>) {
+      return <div>{formatMoney(props.value)}</div>
+    },
   },
   {
     Header: 'Total Spend',
     accessor: 'totalSpend',
     width: 108,
+    Cell: function Cell(props: CellProps<Card, string>) {
+      return <div>{formatMoney(props.value)}</div>
+    },
   },
   {
     Header: 'Min. Spending Requirement',
     accessor: 'minimumSpendingRequirement',
     width: 224,
+    Cell: function Cell(props: CellProps<Card, string>) {
+      return <div>{formatMoney(props.value)}</div>
+    },
   },
   {
     Header: 'Sign up Bonus Due Date',
