@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -20,11 +17,11 @@ model Card {
   outstandingBalance         Decimal?  @db.Decimal(15, 2)
   minimumSpendingRequirement Decimal?  @db.Decimal(15, 2)
   annualFee                  Decimal?  @db.Decimal(15, 2)
-  annualFeeDate              DateTime?
-  signupBonusDueDate         DateTime?
-  applicationDate            DateTime?
-  approvalDate               DateTime?
-  lastChargeDate             DateTime?
+  annualFeeDate              DateTime? @db.Date
+  signupBonusDueDate         DateTime? @db.Date
+  applicationDate            DateTime? @db.Date
+  approvalDate               DateTime? @db.Date
+  lastChargeDate             DateTime? @db.Date
   bank                       Bank?
   published                  Boolean?  @default(false)
   owner                      User      @relation(fields: [ownerId], references: [id])

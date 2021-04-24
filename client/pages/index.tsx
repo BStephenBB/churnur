@@ -115,7 +115,7 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
-      <h2>Churnur</h2>
+      <h2 css="margin-bottom: 20px;">Churnur</h2>
       <CardsTable data={memoizedCards} />
     </Wrapper>
   )
