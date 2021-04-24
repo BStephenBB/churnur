@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components'
 import { GlobalStyles } from '../GlobalStyles'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { theme } from '../theme'
+import { OverlayProvider } from '@react-aria/overlays'
 import type { QueryClient as ReactQueryClient } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import type { AppProps } from 'next/app'
@@ -40,14 +41,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="theme-color" content="#2563EB" />
       </Head>
-      <QueryClientProvider client={queryClientRef.current}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
-            <GlobalStyles />
-          </ThemeProvider>
-        </Hydrate>
-      </QueryClientProvider>
+      <OverlayProvider id="overlay-provider">
+        <QueryClientProvider client={queryClientRef.current}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <ThemeProvider theme={theme}>
+              <Component {...pageProps} />
+              <GlobalStyles />
+            </ThemeProvider>
+          </Hydrate>
+        </QueryClientProvider>
+      </OverlayProvider>
     </>
   )
 }

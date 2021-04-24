@@ -1,10 +1,10 @@
 import React from 'react'
 import { useOverlayTriggerState } from '@react-stately/overlays'
+import { Button } from './index'
 import {
   useOverlay,
   usePreventScroll,
   useModal,
-  OverlayProvider,
   OverlayContainer,
 } from '@react-aria/overlays'
 import { useDialog } from '@react-aria/dialog'
@@ -19,20 +19,20 @@ function ModalDialog(props: {
   isDismissable: boolean
   role: 'dialog'
 }) {
-  let { title, children } = props
+  const { title, children } = props
 
   // Handle interacting outside the dialog and pressing
   // the Escape key to close the modal.
-  let ref = React.useRef(null)
-  let { overlayProps } = useOverlay(props, ref)
+  const ref = React.useRef(null)
+  const { overlayProps } = useOverlay(props, ref)
 
   // Prevent scrolling while the modal is open, and hide content
   // outside the modal from screen readers.
   usePreventScroll()
-  let { modalProps } = useModal()
+  const { modalProps } = useModal()
 
   // Get props for the dialog and its title
-  let { dialogProps, titleProps } = useDialog(props, ref)
+  const { dialogProps, titleProps } = useDialog(props, ref)
 
   return (
     <div
@@ -71,33 +71,34 @@ function ModalDialog(props: {
   )
 }
 
-function Example() {
-  let state = useOverlayTriggerState({})
-  let openButtonRef = React.useRef(null)
-  let closeButtonRef = React.useRef(null)
+export function Modal() {
+  const state = useOverlayTriggerState({})
+  const openButtonRef = React.useRef(null)
+  const closeButtonRef = React.useRef(null)
 
   // useButton ensures that focus management is handled correctly,
   // across all browsers. Focus is restored to the button once the
   // dialog closes.
-  let { buttonProps: openButtonProps } = useButton(
+  const { buttonProps: openButtonProps } = useButton(
     {
       onPress: () => state.open(),
     },
     openButtonRef
   )
 
-  let { buttonProps: closeButtonProps } = useButton(
+  const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => state.close(),
     },
     closeButtonRef
   )
 
+  // TODO actually abstract this
   return (
     <>
-      <button {...openButtonProps} ref={openButtonRef}>
-        Open Dialog
-      </button>
+      <Button {...openButtonProps} ref={openButtonRef}>
+        + New Card
+      </Button>
       {state.isOpen ? (
         <OverlayContainer>
           <ModalDialog
@@ -128,9 +129,3 @@ function Example() {
     </>
   )
 }
-
-// Application must be wrapped in an OverlayProvider so that it can be
-// hidden from screen readers when a modal opens.
-//;<OverlayProvider>
-//  <Example />
-//</OverlayProvider>

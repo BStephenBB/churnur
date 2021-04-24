@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
-import { Button } from '../components'
+import { Button, Modal } from '../components'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -121,9 +121,9 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
-      <h2 css="margin-bottom: 20px;">Churnur</h2>
+      <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
       <CardsTable data={memoizedCards} />
-      <Button>+ New Card</Button>
+      <Modal />
     </Wrapper>
   )
 }

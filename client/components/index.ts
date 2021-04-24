@@ -1,2 +1,4 @@
 import { Button } from './Button'
-export { Button }
+import { Modal } from './Modal'
+
+export { Button, Modal }

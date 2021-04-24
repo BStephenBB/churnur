@@ -12,24 +12,19 @@ export const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
 	}
 
-	input,
-	select,
-	textarea {
-		font:inherit;
-	}
-
-	html {
+	html, body, #__next, #overlay-provider {
 		height: 100%;
 	}
 
 	body {
 		color: ${(props) => props.theme.color.text};
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		height: 100%;
 	}
 
-	#__next {
-		height: 100%;
+	input,
+	select,
+	textarea {
+		font:inherit;
 	}
 
 	button {
