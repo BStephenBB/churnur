@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
 import {
@@ -23,7 +23,7 @@ function ModalDialog(props: {
 
   // Handle interacting outside the dialog and pressing
   // the Escape key to close the modal.
-  const ref = React.useRef(null)
+  const ref = useRef(null)
   const { overlayProps } = useOverlay(props, ref)
 
   // Prevent scrolling while the modal is open, and hide content
@@ -73,9 +73,17 @@ function ModalDialog(props: {
 }
 
 export function Modal() {
+  const [cardName, setCardName] = useState('')
+  const [cardLimit, setCardLimit] = useState('')
+  const [totalSpend, setTotalSpend] = useState('')
+  const [minimumSpendingRequirement, setMinimumSpendingRequirement] = useState(
+    ''
+  )
+  const [signupBonusDate, setSignupBonusDate] = useState('')
+
   const state = useOverlayTriggerState({})
-  const openButtonRef = React.useRef<HTMLButtonElement>(null)
-  const closeButtonRef = React.useRef<HTMLButtonElement>(null)
+  const openButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   const { buttonProps: openButtonProps } = useButton(
     {
@@ -111,21 +119,54 @@ export function Modal() {
           >
             <form style={{ display: 'flex', flexDirection: 'column' }}>
               <label>
-                Card Name: <input placeholder="ex: Chase Sapphire Reserve" />
+                Card Name:
+                <input
+                  placeholder="ex: Chase Sapphire Reserve"
+                  value={cardName}
+                  onChange={(event) => {
+                    setCardName(event.target.value)
+                  }}
+                />
               </label>
               <label>
-                Card Limit: <input placeholder="ex: 3000.00" />
+                Card Limit:
+                <input
+                  placeholder="ex: 3000.00"
+                  value={cardLimit}
+                  onChange={(event) => {
+                    setCardLimit(event.target.value)
+                  }}
+                />
               </label>
               <label>
-                Total Spend: <input placeholder="ex: 4321.12" />
+                Total Spend:
+                <input
+                  placeholder="ex: 4321.12"
+                  value={totalSpend}
+                  onChange={(event) => {
+                    setTotalSpend(event.target.value)
+                  }}
+                />
               </label>
               <label>
                 Minimum Spending Requirement:
-                <input placeholder="ex: 8000.00" />
+                <input
+                  placeholder="ex: 8000.00"
+                  value={minimumSpendingRequirement}
+                  onChange={(event) => {
+                    setMinimumSpendingRequirement(event.target.value)
+                  }}
+                />
               </label>
               <label>
                 Signup Bonus Due Date:
-                <input placeholder="yyyy-mm-dd" />
+                <input
+                  placeholder="yyyy-mm-dd"
+                  value={signupBonusDate}
+                  onChange={(event) => {
+                    setSignupBonusDate(event.target.value)
+                  }}
+                />
               </label>
               <Button {...closeButtonProps} ref={closeButtonRef}>
                 Submit
