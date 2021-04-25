@@ -7,7 +7,8 @@ import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
 import { Button, Modal, EditCardModal } from '../components'
 import { EditIcon } from '../icons'
-import { useCardReducer } from '../components/Modal'
+import { useCardReducer, CardActionType } from '../components/Modal'
+import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -98,9 +99,13 @@ const getUsersCards = async () => {
 const CardsTable = ({
   data,
   openCardModal,
+  setEditingCardId,
+  setCardBeingEdited,
 }: {
   data: Cards
   openCardModal: () => void
+  setEditingCardId: React.Dispatch<React.SetStateAction<number | null>>
+  setCardBeingEdited: (cardInfo: CardRepresentation) => void
 }) => {
   const {
     getTableProps,
@@ -138,7 +143,27 @@ const CardsTable = ({
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
               <div>
-                <button onClick={openCardModal}>
+                <button
+                  onClick={() => {
+                    const {
+                      id,
+                      name,
+                      creditLimit,
+                      totalSpend,
+                      minimumSpendingRequirement,
+                      signupBonusDueDate,
+                    } = row.original
+                    setCardBeingEdited({
+                      name: name,
+                      limit: creditLimit.toString(),
+                      totalSpend: totalSpend.toString(),
+                      minimumSpendingRequirement: minimumSpendingRequirement.toString(),
+                      signupBonusDate: signupBonusDueDate,
+                    })
+                    openCardModal()
+                    setEditingCardId(id)
+                  }}
+                >
                   <EditIcon title={`edit ${row.original.name} card`} />
                 </button>
               </div>
@@ -152,11 +177,14 @@ const CardsTable = ({
 
 // TODO optimize re-rendering
 export default function Dashboard() {
+  const [editingCardId, setEditingCardId] = useState<null | number>(null)
   const newCardModalState = useOverlayTriggerState({})
   const editCardModalState = useOverlayTriggerState({})
   const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
     refetchOnWindowFocus: false,
   })
+
+  console.log(editingCardId)
 
   const memoizedCards = useMemo(() => cards, [cards])
 
@@ -183,12 +211,20 @@ export default function Dashboard() {
       <CardsTable
         data={memoizedCards}
         openCardModal={editCardModalState.open}
+        setEditingCardId={setEditingCardId}
+        setCardBeingEdited={(cardInfo: CardRepresentation) => {
+          cardReducerResult[1]({
+            type: CardActionType.SET_CARD,
+            payload: cardInfo,
+          })
+        }}
       />
       <Button {...openButtonProps} ref={openButtonRef}>
         + New card
       </Button>
       <Modal state={newCardModalState} />
       <EditCardModal
+        cardId={editingCardId}
         state={editCardModalState}
         cardReducerResult={cardReducerResult}
       />

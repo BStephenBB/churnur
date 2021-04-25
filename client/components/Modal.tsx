@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useReducer, useRef } from 'react'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
 import { formatISO } from 'date-fns'
@@ -14,6 +14,30 @@ import { useButton } from '@react-aria/button'
 
 const currentUser = '1'
 
+// TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
+const updateCard = async (cardData: {
+  cardId: number
+  cardName?: string
+  creditLimit?: number
+  totalSpend?: number
+  minimumSpendingRequirement?: number
+  signupBonusDueDate?: string
+}) => {
+  const result = await window.fetch(`http://localhost:3000/card`, {
+    method: 'PATCH',
+    headers: {
+      /* 'Access-Control-Allow-Origin': '*', */
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cardData),
+  })
+  const json = await result.json()
+  console.log('add card response')
+  console.log(json)
+  return json
+}
+
+// TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const addCard = async (cardData: {
   userId: number
   cardName: string
@@ -97,7 +121,7 @@ function ModalDialog(props: {
   )
 }
 
-type CardRepresentation = {
+export type CardRepresentation = {
   name: string
   limit: string
   totalSpend: string
@@ -153,7 +177,7 @@ type CardAction =
       payload: string
     }
 
-const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
+function cardReducer(previousState: CardRepresentation, action: CardAction) {
   switch (action.type) {
     case CardActionType.SET_NAME:
       return { ...previousState, name: action.payload }
@@ -320,9 +344,11 @@ export const useCardReducer = () => {
 export function EditCardModal({
   state,
   cardReducerResult,
+  cardId,
 }: {
   state: OverlayTriggerState
   cardReducerResult: [CardRepresentation, React.Dispatch<CardAction>]
+  cardId: number | null
 }) {
   const [card, dispatchCardAction] = cardReducerResult
 
@@ -333,7 +359,7 @@ export function EditCardModal({
   const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => {
-        if (isCompleteInformation) {
+        if (isCompleteInformation && cardId !== null) {
           console.log('updating card')
           const {
             name,
@@ -342,9 +368,9 @@ export function EditCardModal({
             minimumSpendingRequirement,
             signupBonusDate,
           } = card
-          addCard({
-            userId: Number(currentUser),
-            cardName: name.trim(),
+          updateCard({
+            cardId: cardId,
+            cardName: name.trim() ?? undefined,
             creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
             totalSpend: totalSpend.trim()
               ? Number(totalSpend.trim())
