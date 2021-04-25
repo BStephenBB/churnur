@@ -1,12 +1,12 @@
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
-import type { Card } from '@prisma/client'
-import { request } from 'undici'
+import prisma from '../plugins/prisma'
 
 // all CRUD options for cards
 export default async function card(
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
+  const { prisma } = app
   app.post<{
     Body: {
       userId: number
@@ -18,6 +18,7 @@ export default async function card(
     }
   }>(
     '/card',
+    // TODO unify schema types
     {
       schema: {
         body: {
@@ -45,7 +46,7 @@ export default async function card(
         minimumSpendingRequirement,
         signupBonusDueDate,
       } = request.body // add more options here as needed
-      const { prisma } = app
+      // const { prisma } = app
 
       const newCard = await prisma.card.create({
         data: {
@@ -62,12 +63,52 @@ export default async function card(
     }
   )
 
+  app.patch<{
+    Body: {
+      id: number
+      cardName?: string
+      creditLimit?: number
+      totalSpend?: number
+      minimumSpendingRequirement?: number
+      signupBonusDueDate?: string
+    }
+  }>(
+    '/card',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            id: { type: 'number' },
+            cardName: { type: 'string' },
+            creditLimit: { type: 'number' },
+            totalSpend: { type: 'number' },
+            minimumSpendingRequirement: { type: 'number' },
+            signupBonusDueDate: { type: 'string' },
+          },
+          required: ['id'],
+          additionalProperties: false,
+        },
+      },
+    },
+    async (request, reply) => {
+      // TODO obviously clean this up once user is already there --> also remember to not pass it in from FE
+      const { id, ...bodyWithoutId } = request.body
+      // const card = await prisma.card.
+      const card = await prisma.card.update({
+        where: { id: id },
+        data: bodyWithoutId,
+      })
+      reply.send(card)
+    }
+  )
+
   app.get<{ Params: { id: string } }>(
     '/card/:id',
     {}, // TODO schema
     async (request, rely) => {
       const { id } = request.params
-      const { prisma } = app
+      // const { prisma } = app
       const card = await prisma.card.findUnique({ where: { id: Number(id) } })
 
       rely.send(card)

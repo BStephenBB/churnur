@@ -369,7 +369,7 @@ export function EditCardModal({
       {state.isOpen ? (
         <OverlayContainer>
           <ModalDialog
-            title="Enter card information"
+            title="Update card information"
             isOpen={state.isOpen}
             onClose={() => {
               state.close()
