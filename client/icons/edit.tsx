@@ -1,5 +1,6 @@
 import React from 'react'
 
+// TODO probably look into making a more generic icon component
 export const EditIcon = ({ title }: { title: string }) => {
   return (
     <svg

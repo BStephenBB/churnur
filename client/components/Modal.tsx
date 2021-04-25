@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useReducer, useRef, useState } from 'react'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
@@ -12,6 +12,7 @@ import {
 import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
+import { CardModalModes } from '../pages/index'
 
 const currentUser = '1'
 
@@ -98,7 +99,62 @@ function ModalDialog(props: {
   )
 }
 
-export function Modal({ state }: { state: OverlayTriggerState }) {
+type CardRepresentation = {
+  name: string
+  limit: string
+  totalSpend: string
+  minimumSpendingRequirement: string
+  signupBonusDate: string
+}
+
+const emptyCard: CardRepresentation = {
+  name: '',
+  limit: '',
+  totalSpend: '',
+  minimumSpendingRequirement: '',
+  signupBonusDate: '',
+}
+
+export enum CardActionType {
+  SET_NAME = 'UPDATE_NAME',
+  SET_LIMIT = 'UPDATE_LIMIT',
+  SET_TOTAL_SPEND = 'UPDATE_TOTAL_SPEND',
+  SET_MINIMUM_SPENDING_REQUIREMENT = 'SET_MINIMUM_SPENDING_REQUIREMENT',
+  SET_SIGNUP_BONUS_DATE = 'SET_SIGNUP_BONUS_DATE',
+}
+
+// clean up and unify types at some point
+type CardAction = {
+  type: CardActionType
+  value: string
+}
+
+const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
+  switch (action.type) {
+    case CardActionType.SET_NAME:
+      return { ...previousState, name: action.value }
+    case CardActionType.SET_LIMIT:
+      return { ...previousState, limit: action.value }
+    case CardActionType.SET_TOTAL_SPEND:
+      return { ...previousState, totalSpend: action.value }
+    case CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT:
+      return { ...previousState, minimumSpendingRequirement: action.value }
+    case CardActionType.SET_SIGNUP_BONUS_DATE:
+      return { ...previousState, signupBonusDate: action.value }
+    default:
+      // maybe throw an error here?
+      return emptyCard
+  }
+}
+
+export function Modal({
+  state,
+  mode,
+}: {
+  state: OverlayTriggerState
+  mode: CardModalModes
+}) {
+  const [card, dispatch] = useReducer()
   const [cardName, setCardName] = useState('')
   const [cardLimit, setCardLimit] = useState('')
   const [totalSpend, setTotalSpend] = useState('')
@@ -115,15 +171,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
     setSignupBonusDate('')
   }
 
-  const openButtonRef = useRef<HTMLButtonElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
-
-  const { buttonProps: openButtonProps } = useButton(
-    {
-      onPress: () => state.open(),
-    },
-    openButtonRef
-  )
 
   const isCompleteInformation =
     cardName.trim() !== '' &&
@@ -164,9 +212,6 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
   // TODO actually abstract this
   return (
     <>
-      <Button {...openButtonProps} ref={openButtonRef}>
-        + New card
-      </Button>
       {state.isOpen ? (
         <OverlayContainer>
           <ModalDialog
@@ -235,7 +280,9 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 ref={closeButtonRef}
                 disabled={!isCompleteInformation}
               >
-                Create card
+                {mode === CardModalModes.CREATE
+                  ? 'Create card'
+                  : 'Save changes'}
               </Button>
             </form>
           </ModalDialog>

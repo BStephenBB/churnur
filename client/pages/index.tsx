@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
 import { useOverlayTriggerState } from '@react-stately/overlays'
+import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
 import { Button, Modal } from '../components'
 import { EditIcon } from '../icons'
@@ -148,8 +149,16 @@ const CardsTable = ({
   )
 }
 
+export enum CardModalModes {
+  CREATE = 'CREATE',
+  EDIT = 'EDIT',
+}
+
 // TODO optimize re-rendering
 export default function Dashboard() {
+  const [cardModalMode, setCardModalMode] = useState<CardModalModes>(
+    CardModalModes.CREATE
+  )
   const cardModalState = useOverlayTriggerState({})
   const { open } = cardModalState
   const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
@@ -158,21 +167,33 @@ export default function Dashboard() {
 
   const memoizedCards = useMemo(() => cards, [cards])
 
+  const openCardModal = () => {
+    open()
+  }
+
+  // modal open button
+  const openButtonRef = useRef<HTMLButtonElement>(null)
+  const { buttonProps: openButtonProps } = useButton(
+    {
+      onPress: () => cardModalState.open(),
+    },
+    openButtonRef
+  )
+
   if (status === 'loading' || memoizedCards === undefined) {
     return null
   }
 
   console.log(cards)
 
-  const openCardModal = () => {
-    open()
-  }
-
   return (
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
       <CardsTable data={memoizedCards} openCardModal={openCardModal} />
-      <Modal state={cardModalState} />
+      <Button {...openButtonProps} ref={openButtonRef}>
+        + New card
+      </Button>
+      <Modal state={cardModalState} mode={cardModalMode} />
     </Wrapper>
   )
 }
