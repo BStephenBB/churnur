@@ -124,11 +124,13 @@ export enum CardActionType {
   CLEAR = 'CLEAR',
 }
 
-// clean up and unify types at some point, want a way to not need to pass a payload based on action and have specific types for actions etc.
-type CardAction = {
-  type: CardActionType
-  payload: string
-}
+// so we know clean type doesn't come w/ a string as payload. Can make others more specific if we need to
+type CardAction =
+  | { type: CardActionType.CLEAR }
+  | {
+      type: CardActionType
+      payload: string
+    }
 
 const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
   switch (action.type) {
@@ -143,7 +145,7 @@ const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
     case CardActionType.SET_SIGNUP_BONUS_DATE:
       return { ...previousState, signupBonusDate: action.payload }
     case CardActionType.CLEAR:
-      return previousState
+      return emptyCard
     default:
       // maybe throw an error here?
       // for now, just return the old state
@@ -166,14 +168,6 @@ export function Modal({
     ''
   )
   const [signupBonusDate, setSignupBonusDate] = useState('')
-
-  const clearModal = () => {
-    setCardName('')
-    setCardLimit('')
-    setTotalSpend('')
-    setMinimumSpendingRequirement('')
-    setSignupBonusDate('')
-  }
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -206,7 +200,7 @@ export function Modal({
               : undefined,
           })
           state.close()
-          clearModal()
+          dispatchCardAction({ type: CardActionType.CLEAR })
         }
       },
     },
@@ -223,7 +217,7 @@ export function Modal({
             isOpen={state.isOpen}
             onClose={() => {
               state.close()
-              clearModal()
+              dispatchCardAction({ type: CardActionType.CLEAR })
             }}
             isDismissable={true}
             role="dialog"
