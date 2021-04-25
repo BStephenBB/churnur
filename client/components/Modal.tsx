@@ -16,8 +16,8 @@ const currentUser = '1'
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (cardData: {
-  cardId: number
-  cardName?: string
+  id: number
+  name?: string
   creditLimit?: number
   totalSpend?: number
   minimumSpendingRequirement?: number
@@ -369,8 +369,8 @@ export function EditCardModal({
             signupBonusDate,
           } = card
           updateCard({
-            cardId: cardId,
-            cardName: name.trim() ?? undefined,
+            id: cardId,
+            name: name.trim() ?? undefined,
             creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
             totalSpend: totalSpend.trim()
               ? Number(totalSpend.trim())

@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
-import prisma from '../plugins/prisma'
+import type { Card } from '@prisma/client'
 
 // all CRUD options for cards
 export default async function card(
@@ -66,7 +66,7 @@ export default async function card(
   app.patch<{
     Body: {
       id: number
-      cardName?: string
+      name?: string
       creditLimit?: number
       totalSpend?: number
       minimumSpendingRequirement?: number
@@ -80,7 +80,7 @@ export default async function card(
           type: 'object',
           properties: {
             id: { type: 'number' },
-            cardName: { type: 'string' },
+            name: { type: 'string' },
             creditLimit: { type: 'number' },
             totalSpend: { type: 'number' },
             minimumSpendingRequirement: { type: 'number' },

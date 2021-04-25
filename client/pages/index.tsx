@@ -184,8 +184,6 @@ export default function Dashboard() {
     refetchOnWindowFocus: false,
   })
 
-  console.log(editingCardId)
-
   const memoizedCards = useMemo(() => cards, [cards])
 
   const cardReducerResult = useCardReducer()
