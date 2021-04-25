@@ -115,6 +115,10 @@ const emptyCard: CardRepresentation = {
   signupBonusDate: '',
 }
 
+const isValidCard = (card: CardRepresentation) => {
+  return Object.values(card).every((value) => value !== '')
+}
+
 export enum CardActionType {
   SET_NAME = 'UPDATE_NAME',
   SET_LIMIT = 'UPDATE_LIMIT',
@@ -161,34 +165,27 @@ export function Modal({
   mode: CardModalModes
 }) {
   const [card, dispatchCardAction] = useReducer(cardReducer, emptyCard)
-  const [cardName, setCardName] = useState('')
-  const [cardLimit, setCardLimit] = useState('')
-  const [totalSpend, setTotalSpend] = useState('')
-  const [minimumSpendingRequirement, setMinimumSpendingRequirement] = useState(
-    ''
-  )
-  const [signupBonusDate, setSignupBonusDate] = useState('')
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-  const isCompleteInformation =
-    cardName.trim() !== '' &&
-    cardLimit.trim() !== '' &&
-    totalSpend.trim() !== '' &&
-    minimumSpendingRequirement.trim() !== '' &&
-    signupBonusDate.trim() !== ''
+  const isCompleteInformation = isValidCard(card)
 
   const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => {
         if (isCompleteInformation) {
           console.log('trying to make card')
+          const {
+            name,
+            limit,
+            totalSpend,
+            minimumSpendingRequirement,
+            signupBonusDate,
+          } = card
           addCard({
             userId: Number(currentUser),
-            cardName: cardName.trim(),
-            creditLimit: cardLimit.trim()
-              ? Number(cardLimit.trim())
-              : undefined,
+            cardName: name.trim(),
+            creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
             totalSpend: totalSpend.trim()
               ? Number(totalSpend.trim())
               : undefined,
