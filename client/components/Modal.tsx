@@ -1,5 +1,4 @@
 import React, { useReducer, useRef, useState } from 'react'
-import { useOverlayTriggerState } from '@react-stately/overlays'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button } from './index'
 import { formatISO } from 'date-fns'
@@ -12,7 +11,6 @@ import {
 import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
-import { CardModalModes } from '../pages/index'
 
 const currentUser = '1'
 
@@ -126,13 +124,32 @@ export enum CardActionType {
   SET_MINIMUM_SPENDING_REQUIREMENT = 'SET_MINIMUM_SPENDING_REQUIREMENT',
   SET_SIGNUP_BONUS_DATE = 'SET_SIGNUP_BONUS_DATE',
   CLEAR = 'CLEAR',
+  SET_CARD = 'SET_CARD',
 }
 
 // so we know clean type doesn't come w/ a string as payload. Can make others more specific if we need to
+// TODO really should just enumerate all of the other options
 type CardAction =
   | { type: CardActionType.CLEAR }
+  | { type: CardActionType.SET_CARD; payload: CardRepresentation }
   | {
-      type: CardActionType
+      type: CardActionType.SET_NAME
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_LIMIT
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_TOTAL_SPEND
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_SIGNUP_BONUS_DATE
       payload: string
     }
 
@@ -150,6 +167,8 @@ const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
       return { ...previousState, signupBonusDate: action.payload }
     case CardActionType.CLEAR:
       return emptyCard
+    case CardActionType.SET_CARD:
+      return action.payload
     default:
       // maybe throw an error here?
       // for now, just return the old state
@@ -157,13 +176,7 @@ const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
   }
 }
 
-export function Modal({
-  state,
-  mode,
-}: {
-  state: OverlayTriggerState
-  mode: CardModalModes
-}) {
+export function Modal({ state }: { state: OverlayTriggerState }) {
   const [card, dispatchCardAction] = useReducer(cardReducer, emptyCard)
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -204,7 +217,6 @@ export function Modal({
     closeButtonRef
   )
 
-  // TODO actually abstract this
   return (
     <>
       {state.isOpen ? (
@@ -290,9 +302,154 @@ export function Modal({
                 ref={closeButtonRef}
                 disabled={!isCompleteInformation}
               >
-                {mode === CardModalModes.CREATE
-                  ? 'Create card'
-                  : 'Save changes'}
+                Create card
+              </Button>
+            </form>
+          </ModalDialog>
+        </OverlayContainer>
+      ) : null}
+    </>
+  )
+}
+
+export const useCardReducer = () => {
+  return useReducer(cardReducer, emptyCard)
+}
+
+// TODO think of good way to dedupe these modals
+export function EditCardModal({
+  state,
+  cardReducerResult,
+}: {
+  state: OverlayTriggerState
+  cardReducerResult: [CardRepresentation, React.Dispatch<CardAction>]
+}) {
+  const [card, dispatchCardAction] = cardReducerResult
+
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  const isCompleteInformation = isValidCard(card)
+
+  const { buttonProps: closeButtonProps } = useButton(
+    {
+      onPress: () => {
+        if (isCompleteInformation) {
+          console.log('updating card')
+          const {
+            name,
+            limit,
+            totalSpend,
+            minimumSpendingRequirement,
+            signupBonusDate,
+          } = card
+          addCard({
+            userId: Number(currentUser),
+            cardName: name.trim(),
+            creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
+            totalSpend: totalSpend.trim()
+              ? Number(totalSpend.trim())
+              : undefined,
+            minimumSpendingRequirement: minimumSpendingRequirement.trim()
+              ? Number(minimumSpendingRequirement.trim())
+              : undefined,
+            signupBonusDueDate: signupBonusDate.trim()
+              ? formatISO(new Date(signupBonusDate))
+              : undefined,
+          })
+          state.close()
+          dispatchCardAction({ type: CardActionType.CLEAR })
+        }
+      },
+    },
+    closeButtonRef
+  )
+
+  return (
+    <>
+      {state.isOpen ? (
+        <OverlayContainer>
+          <ModalDialog
+            title="Enter card information"
+            isOpen={state.isOpen}
+            onClose={() => {
+              state.close()
+              dispatchCardAction({ type: CardActionType.CLEAR })
+            }}
+            isDismissable={true}
+            role="dialog"
+          >
+            <form style={{ display: 'flex', flexDirection: 'column' }}>
+              <label>
+                Card Name:
+                <input
+                  placeholder="ex: Chase Sapphire Reserve"
+                  value={card.name}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_NAME,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
+              <label>
+                Card Limit:
+                <input
+                  placeholder="ex: 3000.00"
+                  value={card.limit}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_LIMIT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
+              <label>
+                Total Spend:
+                <input
+                  placeholder="ex: 4321.12"
+                  value={card.totalSpend}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_TOTAL_SPEND,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
+              <label>
+                Minimum Spending Requirement:
+                <input
+                  placeholder="ex: 8000.00"
+                  value={card.minimumSpendingRequirement}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
+              <label>
+                Signup Bonus Due Date:
+                <input
+                  placeholder="yyyy-mm-dd"
+                  value={card.signupBonusDate}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
+              <Button
+                {...closeButtonProps}
+                ref={closeButtonRef}
+                disabled={!isCompleteInformation}
+              >
+                Save changes
               </Button>
             </form>
           </ModalDialog>

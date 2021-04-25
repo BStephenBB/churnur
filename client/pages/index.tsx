@@ -5,8 +5,9 @@ import { useBlockLayout, useTable } from 'react-table'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
-import { Button, Modal } from '../components'
+import { Button, Modal, EditCardModal } from '../components'
 import { EditIcon } from '../icons'
+import { useCardReducer } from '../components/Modal'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -149,33 +150,23 @@ const CardsTable = ({
   )
 }
 
-export enum CardModalModes {
-  CREATE = 'CREATE',
-  EDIT = 'EDIT',
-}
-
 // TODO optimize re-rendering
 export default function Dashboard() {
-  const [cardModalMode, setCardModalMode] = useState<CardModalModes>(
-    CardModalModes.CREATE
-  )
-  const cardModalState = useOverlayTriggerState({})
-  const { open } = cardModalState
+  const newCardModalState = useOverlayTriggerState({})
+  const editCardModalState = useOverlayTriggerState({})
   const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
     refetchOnWindowFocus: false,
   })
 
   const memoizedCards = useMemo(() => cards, [cards])
 
-  const openCardModal = () => {
-    open()
-  }
+  const cardReducerResult = useCardReducer()
 
   // modal open button
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const { buttonProps: openButtonProps } = useButton(
     {
-      onPress: () => cardModalState.open(),
+      onPress: () => newCardModalState.open(),
     },
     openButtonRef
   )
@@ -189,11 +180,18 @@ export default function Dashboard() {
   return (
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
-      <CardsTable data={memoizedCards} openCardModal={openCardModal} />
+      <CardsTable
+        data={memoizedCards}
+        openCardModal={editCardModalState.open}
+      />
       <Button {...openButtonProps} ref={openButtonRef}>
         + New card
       </Button>
-      <Modal state={cardModalState} mode={cardModalMode} />
+      <Modal state={newCardModalState} />
+      <EditCardModal
+        state={editCardModalState}
+        cardReducerResult={cardReducerResult}
+      />
     </Wrapper>
   )
 }
