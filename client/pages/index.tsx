@@ -116,14 +116,14 @@ const CardsTable = ({
   } = useTable<Card>({ columns: columns, data: data }, useBlockLayout)
 
   return (
-    <div {...getTableProps()} className="table">
-      <div className="header">
+    <div {...getTableProps()}>
+      <div>
         {headerGroups.map((headerGroup) => {
           return (
-            <div {...headerGroup.getHeaderGroupProps()} className="tr">
+            <div {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
                 return (
-                  <div {...column.getHeaderProps()} className="th">
+                  <div {...column.getHeaderProps()}>
                     {column.render('Header')}
                   </div>
                 )
@@ -138,7 +138,7 @@ const CardsTable = ({
         {rows.map((row) => {
           prepareRow(row)
           return (
-            <div className="row" {...row.getRowProps()}>
+            <div {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
