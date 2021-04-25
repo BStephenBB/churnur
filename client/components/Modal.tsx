@@ -121,29 +121,33 @@ export enum CardActionType {
   SET_TOTAL_SPEND = 'UPDATE_TOTAL_SPEND',
   SET_MINIMUM_SPENDING_REQUIREMENT = 'SET_MINIMUM_SPENDING_REQUIREMENT',
   SET_SIGNUP_BONUS_DATE = 'SET_SIGNUP_BONUS_DATE',
+  CLEAR = 'CLEAR',
 }
 
-// clean up and unify types at some point
+// clean up and unify types at some point, want a way to not need to pass a payload based on action and have specific types for actions etc.
 type CardAction = {
   type: CardActionType
-  value: string
+  payload: string
 }
 
 const cardReducer = (previousState: CardRepresentation, action: CardAction) => {
   switch (action.type) {
     case CardActionType.SET_NAME:
-      return { ...previousState, name: action.value }
+      return { ...previousState, name: action.payload }
     case CardActionType.SET_LIMIT:
-      return { ...previousState, limit: action.value }
+      return { ...previousState, limit: action.payload }
     case CardActionType.SET_TOTAL_SPEND:
-      return { ...previousState, totalSpend: action.value }
+      return { ...previousState, totalSpend: action.payload }
     case CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT:
-      return { ...previousState, minimumSpendingRequirement: action.value }
+      return { ...previousState, minimumSpendingRequirement: action.payload }
     case CardActionType.SET_SIGNUP_BONUS_DATE:
-      return { ...previousState, signupBonusDate: action.value }
+      return { ...previousState, signupBonusDate: action.payload }
+    case CardActionType.CLEAR:
+      return previousState
     default:
       // maybe throw an error here?
-      return emptyCard
+      // for now, just return the old state
+      return previousState
   }
 }
 
@@ -154,7 +158,7 @@ export function Modal({
   state: OverlayTriggerState
   mode: CardModalModes
 }) {
-  const [card, dispatch] = useReducer()
+  const [card, dispatchCardAction] = useReducer(cardReducer, emptyCard)
   const [cardName, setCardName] = useState('')
   const [cardLimit, setCardLimit] = useState('')
   const [totalSpend, setTotalSpend] = useState('')
@@ -229,9 +233,12 @@ export function Modal({
                 Card Name:
                 <input
                   placeholder="ex: Chase Sapphire Reserve"
-                  value={cardName}
+                  value={card.name}
                   onChange={(event) => {
-                    setCardName(event.target.value)
+                    dispatchCardAction({
+                      type: CardActionType.SET_NAME,
+                      payload: event.target.value,
+                    })
                   }}
                 />
               </label>
@@ -239,9 +246,12 @@ export function Modal({
                 Card Limit:
                 <input
                   placeholder="ex: 3000.00"
-                  value={cardLimit}
+                  value={card.limit}
                   onChange={(event) => {
-                    setCardLimit(event.target.value)
+                    dispatchCardAction({
+                      type: CardActionType.SET_LIMIT,
+                      payload: event.target.value,
+                    })
                   }}
                 />
               </label>
@@ -249,9 +259,12 @@ export function Modal({
                 Total Spend:
                 <input
                   placeholder="ex: 4321.12"
-                  value={totalSpend}
+                  value={card.totalSpend}
                   onChange={(event) => {
-                    setTotalSpend(event.target.value)
+                    dispatchCardAction({
+                      type: CardActionType.SET_TOTAL_SPEND,
+                      payload: event.target.value,
+                    })
                   }}
                 />
               </label>
@@ -259,9 +272,12 @@ export function Modal({
                 Minimum Spending Requirement:
                 <input
                   placeholder="ex: 8000.00"
-                  value={minimumSpendingRequirement}
+                  value={card.minimumSpendingRequirement}
                   onChange={(event) => {
-                    setMinimumSpendingRequirement(event.target.value)
+                    dispatchCardAction({
+                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                      payload: event.target.value,
+                    })
                   }}
                 />
               </label>
@@ -269,9 +285,12 @@ export function Modal({
                 Signup Bonus Due Date:
                 <input
                   placeholder="yyyy-mm-dd"
-                  value={signupBonusDate}
+                  value={card.signupBonusDate}
                   onChange={(event) => {
-                    setSignupBonusDate(event.target.value)
+                    dispatchCardAction({
+                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                      payload: event.target.value,
+                    })
                   }}
                 />
               </label>
