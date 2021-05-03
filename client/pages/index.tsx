@@ -180,7 +180,7 @@ const CardsTable = ({
             <div
               {...row.getRowProps()}
               style={{
-                height: '72px',
+                height: '80px',
                 borderBottom: '1px solid #333',
                 display: 'flex',
                 alignItems: 'center',
