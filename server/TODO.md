@@ -3,12 +3,8 @@
 - build endpoints to:
 	- create user (oauth)
 	- login as user (oauth)
-	- get all of a user's cards (permissioned)
-	- make a card for a user
-	- update a card
 	- delete a card
 
-- setup frontend
 - coors?
 - proper sessions and refresh?
 - do I need to keep track of the token?
@@ -18,4 +14,13 @@
 - figure out a way to generate schema from types
 - settup swagger or something similar so don't need to use postman
 - look into relative routes etc.
+- set up nice command to run everything, like nodemon, or that other tool
 
+
+- make readme with steps to run
+# in server folder
+1. docker compose up # for db
+2. npm run dev # for typescript compilation TODO, maybe use nodejs or something
+3. npm run start # for running fastify server
+# in client folder
+1. npm run dev # to run nextjs server in dev mode
