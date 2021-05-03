@@ -11,9 +11,7 @@ export default async function (
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
-  // fastify-autoload loads all plugins found in a directory and automatically configures routes matching the folder structure.
-
-  // register env variables, configuration will be available under `fastify.config`
+  // register env variables; configuration will be available under `fastify.config`
   app.register(Environment, {
     schema: S.object()
       .prop('GOOGLE_CLIENT_ID', S.string().required())
@@ -24,6 +22,8 @@ export default async function (
 
   // add small useful utilitis, like nice http errors to fastify, since fastify is extremely lightweight
   app.register(Sensible)
+
+  // fastify-autoload loads all plugins found in a directory and automatically configures routes matching the folder structure.
 
   // register all plugins
   app.register(AutoLoad, {
@@ -43,6 +43,7 @@ export default async function (
   app.register(Cors, {
     // origin: false, // TODO turn this on in dev
     origin: 'http://localhost:3001', // TODO turn this on in dev (or change the origin)
+    credentials: true,
   })
 
   // register all routes
