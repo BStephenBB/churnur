@@ -17,7 +17,6 @@ import { Card, Cards } from '../types'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   height: 100%;
 `
@@ -33,44 +32,90 @@ const formatMoney = (value: string) => {
   return formatter.format(Number(value))
 }
 
-const columns: Column<Card>[] = [
-  {
-    Header: 'Name',
-    accessor: 'name',
-  },
-  {
-    Header: 'Limit',
-    accessor: 'creditLimit',
-    width: 100,
-    Cell: function Cell(props: CellProps<Card, string>) {
-      return <div>{formatMoney(props.value)}</div>
+const makeCardTableColumns = ({
+  openCardModal,
+  setEditingCardId,
+  setCardBeingEdited,
+}: {
+  openCardModal: () => void
+  setEditingCardId: React.Dispatch<React.SetStateAction<number | null>>
+  setCardBeingEdited: (cardInfo: CardRepresentation) => void
+}): Column<Card>[] => {
+  const columns: Column<Card>[] = [
+    {
+      Header: 'Name',
+      accessor: 'name',
     },
-  },
-  {
-    Header: 'Total Spend',
-    accessor: 'totalSpend',
-    width: 108,
-    Cell: function Cell(props: CellProps<Card, string>) {
-      return <div>{formatMoney(props.value)}</div>
+    {
+      Header: 'Limit',
+      accessor: 'creditLimit',
+      width: 100,
+      Cell: function Cell(props: CellProps<Card, string>) {
+        return <div>{formatMoney(props.value)}</div>
+      },
     },
-  },
-  {
-    Header: 'Min. Spending Requirement',
-    accessor: 'minimumSpendingRequirement',
-    width: 224,
-    Cell: function Cell(props: CellProps<Card, string>) {
-      return <div>{formatMoney(props.value)}</div>
+    {
+      Header: 'Total Spend',
+      accessor: 'totalSpend',
+      width: 108,
+      Cell: function Cell(props: CellProps<Card, string>) {
+        return <div>{formatMoney(props.value)}</div>
+      },
     },
-  },
-  {
-    Header: 'Sign up Bonus Due Date',
-    accessor: 'signupBonusDueDate',
-    width: 200,
-    Cell: function Cell(props: CellProps<Card, string>) {
-      return <div>{format(new Date(props.value), 'MM/dd/yyyy')}</div>
+    {
+      Header: 'Min. Spending Requirement',
+      accessor: 'minimumSpendingRequirement',
+      width: 224,
+      Cell: function Cell(props: CellProps<Card, string>) {
+        return <div>{formatMoney(props.value)}</div>
+      },
     },
-  },
-]
+    {
+      Header: 'Sign up Bonus Due Date',
+      accessor: 'signupBonusDueDate',
+      width: 200,
+      Cell: function Cell(props: CellProps<Card, string>) {
+        return <div>{format(new Date(props.value), 'MM/dd/yyyy')}</div>
+      },
+    },
+    {
+      // may just change this to an option cell
+      Header: '--',
+      accessor: 'id',
+      width: 200,
+      Cell: function Cell(props: CellProps<Card, string>) {
+        console.log(props)
+        return (
+          <button
+            onClick={() => {
+              // TODO this whole edit thing should be a column officially
+              const {
+                id,
+                name,
+                creditLimit,
+                totalSpend,
+                minimumSpendingRequirement,
+                signupBonusDueDate,
+              } = props.row.original
+              setCardBeingEdited({
+                name: name,
+                limit: creditLimit.toString(),
+                totalSpend: totalSpend.toString(),
+                minimumSpendingRequirement: minimumSpendingRequirement.toString(),
+                signupBonusDate: signupBonusDueDate,
+              })
+              openCardModal()
+              setEditingCardId(id)
+            }}
+          >
+            <EditIcon title={`edit ${props.row.original.name} card`} />
+          </button>
+        )
+      },
+    },
+  ]
+  return columns
+}
 
 const getUsersCards = async () => {
   const result = await window.fetch(`http://localhost:3000/cards`, {
@@ -91,14 +136,10 @@ const getUsersCards = async () => {
 
 const CardsTable = ({
   data,
-  openCardModal,
-  setEditingCardId,
-  setCardBeingEdited,
+  columns,
 }: {
   data: Cards
-  openCardModal: () => void
-  setEditingCardId: React.Dispatch<React.SetStateAction<number | null>>
-  setCardBeingEdited: (cardInfo: CardRepresentation) => void
+  columns: Column<Card>[]
 }) => {
   const {
     getTableProps,
@@ -106,7 +147,13 @@ const CardsTable = ({
     headerGroups,
     rows,
     prepareRow,
-  } = useTable<Card>({ columns: columns, data: data }, useBlockLayout)
+  } = useTable<Card>(
+    {
+      columns: columns,
+      data: data,
+    },
+    useBlockLayout
+  )
 
   return (
     <div {...getTableProps()}>
@@ -121,7 +168,6 @@ const CardsTable = ({
                   </div>
                 )
               })}
-              <div>Edit</div>
             </div>
           )
         })}
@@ -131,36 +177,18 @@ const CardsTable = ({
         {rows.map((row) => {
           prepareRow(row)
           return (
-            <div {...row.getRowProps()}>
+            <div
+              {...row.getRowProps()}
+              style={{
+                height: '72px',
+                borderBottom: '1px solid #333',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               {row.cells.map((cell) => {
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
-              <div>
-                <button
-                  onClick={() => {
-                    // TODO this whole edit thing should be a column officially
-                    const {
-                      id,
-                      name,
-                      creditLimit,
-                      totalSpend,
-                      minimumSpendingRequirement,
-                      signupBonusDueDate,
-                    } = row.original
-                    setCardBeingEdited({
-                      name: name,
-                      limit: creditLimit.toString(),
-                      totalSpend: totalSpend.toString(),
-                      minimumSpendingRequirement: minimumSpendingRequirement.toString(),
-                      signupBonusDate: signupBonusDueDate,
-                    })
-                    openCardModal()
-                    setEditingCardId(id)
-                  }}
-                >
-                  <EditIcon title={`edit ${row.original.name} card`} />
-                </button>
-              </div>
             </div>
           )
         })}
@@ -185,6 +213,20 @@ export default function Dashboard() {
   const router = useRouter()
 
   const memoizedCards = useMemo(() => cards, [cards])
+
+  const memoizedColumns = useMemo(() => {
+    return makeCardTableColumns({
+      openCardModal: editCardModalState.open,
+      setEditingCardId,
+      setCardBeingEdited: (cardInfo: CardRepresentation) => {
+        cardReducerResult[1]({
+          type: CardActionType.SET_CARD,
+          payload: cardInfo,
+        })
+      },
+    })
+    // TODO check this dep array
+  }, [])
 
   const cardReducerResult = useCardReducer()
 
@@ -211,28 +253,20 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
-      <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
+      <div style={{ display: 'flex' }}>
+        <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
+        <Button {...openButtonProps} ref={openButtonRef}>
+          + Add card
+        </Button>
+      </div>
       {isError ? (
         <div style={{ color: 'red' }}>
           {error === null ? 'Error!' : 'Error: ' + error.message}
         </div>
       ) : (
         <>
-          <Button onClick={logout}>logout</Button>
-          <CardsTable
-            data={memoizedCards ?? []}
-            openCardModal={editCardModalState.open}
-            setEditingCardId={setEditingCardId}
-            setCardBeingEdited={(cardInfo: CardRepresentation) => {
-              cardReducerResult[1]({
-                type: CardActionType.SET_CARD,
-                payload: cardInfo,
-              })
-            }}
-          />
-          <Button {...openButtonProps} ref={openButtonRef}>
-            + New card
-          </Button>
+          {/* <Button onClick={logout}>logout</Button> */}
+          <CardsTable data={memoizedCards ?? []} columns={memoizedColumns} />
           <Modal state={newCardModalState} />
           <EditCardModal
             cardId={editingCardId}
@@ -244,14 +278,3 @@ export default function Dashboard() {
     </Wrapper>
   )
 }
-
-/* const getUser = async () => { */
-/*   const result = await window.fetch('http://localhost:3000/user/1', { */
-/*     method: 'GET', */
-/*     headers: { */
-/*       /1* 'Access-Control-Allow-Origin': '*', *1/ */
-/*     }, */
-/*   }) */
-/*   const json = await result.json() */
-/*   return json */
-/* } */
