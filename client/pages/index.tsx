@@ -30,8 +30,6 @@ type Card = {
 
 type Cards = Card[]
 
-const currentUser = '1'
-
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -83,17 +81,20 @@ const columns: Column<Card>[] = [
 ]
 
 const getUsersCards = async () => {
-  const result = await window.fetch(
-    `http://localhost:3000/user/${currentUser}/cards`,
-    {
-      method: 'GET',
-      headers: {
-        /* 'Access-Control-Allow-Origin': '*', */
-      },
-    }
-  )
+  const result = await window.fetch(`http://localhost:3000/cards`, {
+    method: 'GET',
+    headers: {
+      /* 'Access-Control-Allow-Origin': '*', */
+    },
+    credentials: 'include',
+    // TODO make a fetch wrapper
+  })
   const json = await result.json()
-  return json
+  if (result.ok) {
+    return json
+  } else {
+    return Promise.reject(json)
+  }
 }
 
 const CardsTable = ({
@@ -117,7 +118,7 @@ const CardsTable = ({
 
   return (
     <div {...getTableProps()}>
-      <div>
+      <div style={{ padding: '12px 0', borderBottom: '2px solid' }}>
         {headerGroups.map((headerGroup) => {
           return (
             <div {...headerGroup.getHeaderGroupProps()}>
@@ -145,6 +146,7 @@ const CardsTable = ({
               <div>
                 <button
                   onClick={() => {
+                    // TODO this whole edit thing should be a column officially
                     const {
                       id,
                       name,
@@ -180,8 +182,12 @@ export default function Dashboard() {
   const [editingCardId, setEditingCardId] = useState<null | number>(null)
   const newCardModalState = useOverlayTriggerState({})
   const editCardModalState = useOverlayTriggerState({})
-  const { data: cards, status } = useQuery<Card[]>('cards', getUsersCards, {
+  const { data: cards, status, error } = useQuery<
+    Card[],
+    { statusCode: number; error: string; message: string }
+  >('cards', getUsersCards, {
     refetchOnWindowFocus: false,
+    retry: false, // TODO probably want some amt of retry?
   })
 
   const memoizedCards = useMemo(() => cards, [cards])
@@ -197,8 +203,10 @@ export default function Dashboard() {
     openButtonRef
   )
 
-  if (status === 'loading' || memoizedCards === undefined) {
-    return null
+  const isError = status === 'error' && error !== null
+
+  if (status === 'loading') {
+    return <div>loading...</div>
   }
 
   console.log(cards)
@@ -206,26 +214,35 @@ export default function Dashboard() {
   return (
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
-      <CardsTable
-        data={memoizedCards}
-        openCardModal={editCardModalState.open}
-        setEditingCardId={setEditingCardId}
-        setCardBeingEdited={(cardInfo: CardRepresentation) => {
-          cardReducerResult[1]({
-            type: CardActionType.SET_CARD,
-            payload: cardInfo,
-          })
-        }}
-      />
-      <Button {...openButtonProps} ref={openButtonRef}>
-        + New card
-      </Button>
-      <Modal state={newCardModalState} />
-      <EditCardModal
-        cardId={editingCardId}
-        state={editCardModalState}
-        cardReducerResult={cardReducerResult}
-      />
+      <a href="http://localhost:3000/login/google">Login with google</a>
+      {isError ? (
+        <div style={{ color: 'red' }}>
+          {error === null ? 'Error!' : 'Error: ' + error.message}
+        </div>
+      ) : (
+        <>
+          <CardsTable
+            data={memoizedCards ?? []}
+            openCardModal={editCardModalState.open}
+            setEditingCardId={setEditingCardId}
+            setCardBeingEdited={(cardInfo: CardRepresentation) => {
+              cardReducerResult[1]({
+                type: CardActionType.SET_CARD,
+                payload: cardInfo,
+              })
+            }}
+          />
+          <Button {...openButtonProps} ref={openButtonRef}>
+            + New card
+          </Button>
+          <Modal state={newCardModalState} />
+          <EditCardModal
+            cardId={editingCardId}
+            state={editCardModalState}
+            cardReducerResult={cardReducerResult}
+          />
+        </>
+      )}
     </Wrapper>
   )
 }
@@ -237,8 +254,6 @@ export default function Dashboard() {
 /*       /1* 'Access-Control-Allow-Origin': '*', *1/ */
 /*     }, */
 /*   }) */
-/*   console.log(result) */
 /*   const json = await result.json() */
-/*   console.log(json) */
 /*   return json */
 /* } */
