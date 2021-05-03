@@ -15,14 +15,17 @@ import { Card, Cards } from '../types'
 import { useQueryClient } from 'react-query'
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
-const updateCard = async (cardData: {
-  id: number
-  name?: string
-  creditLimit?: number
-  totalSpend?: number
-  minimumSpendingRequirement?: number
-  signupBonusDueDate?: string
-}) => {
+const updateCard = async (
+  cardData: {
+    id: number
+    name?: string
+    creditLimit?: number
+    totalSpend?: number
+    minimumSpendingRequirement?: number
+    signupBonusDueDate?: string
+  },
+  updateCardData: (card: Card) => void
+) => {
   const result = await window.fetch(`http://localhost:3000/card`, {
     method: 'PATCH',
     headers: {
@@ -32,9 +35,22 @@ const updateCard = async (cardData: {
     credentials: 'include',
     body: JSON.stringify(cardData),
   })
-  const json = await result.json()
-  console.log(json)
-  return json
+  const {
+    id,
+    name,
+    creditLimit,
+    minimumSpendingRequirement,
+    totalSpend,
+    signupBonusDueDate,
+  } = await result.json()
+  updateCardData({
+    id,
+    name,
+    creditLimit,
+    minimumSpendingRequirement,
+    totalSpend,
+    signupBonusDueDate,
+  })
 }
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
@@ -384,11 +400,28 @@ export function EditCardModal({
 
   const isCompleteInformation = isValidCard(card)
 
+  const queryClient = useQueryClient()
+
+  const updateCardData = (card: Card) => {
+    queryClient.setQueryData<Cards>('cards', (oldData) => {
+      if (oldData === undefined) {
+        return [card]
+      } else {
+        return oldData.map((oldCard) => {
+          if (oldCard.id === card.id) {
+            return card
+          } else {
+            return oldCard
+          }
+        })
+      }
+    })
+  }
+
   const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => {
         if (isCompleteInformation && cardId !== null) {
-          console.log('updating card')
           const {
             name,
             limit,
@@ -396,20 +429,23 @@ export function EditCardModal({
             minimumSpendingRequirement,
             signupBonusDate,
           } = card
-          updateCard({
-            id: cardId,
-            name: name.trim() ?? undefined,
-            creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
-            totalSpend: totalSpend.trim()
-              ? Number(totalSpend.trim())
-              : undefined,
-            minimumSpendingRequirement: minimumSpendingRequirement.trim()
-              ? Number(minimumSpendingRequirement.trim())
-              : undefined,
-            signupBonusDueDate: signupBonusDate.trim()
-              ? formatISO(new Date(signupBonusDate))
-              : undefined,
-          })
+          updateCard(
+            {
+              id: cardId,
+              name: name.trim() ?? undefined,
+              creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
+              totalSpend: totalSpend.trim()
+                ? Number(totalSpend.trim())
+                : undefined,
+              minimumSpendingRequirement: minimumSpendingRequirement.trim()
+                ? Number(minimumSpendingRequirement.trim())
+                : undefined,
+              signupBonusDueDate: signupBonusDate.trim()
+                ? formatISO(new Date(signupBonusDate))
+                : undefined,
+            },
+            updateCardData
+          )
           state.close()
           dispatchCardAction({ type: CardActionType.CLEAR })
         }
