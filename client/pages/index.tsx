@@ -11,6 +11,7 @@ import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
 import { useRouter } from 'next/dist/client/router'
+import { Card, Cards } from '../types'
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,17 +20,6 @@ const Wrapper = styled.div`
   justify-content: center;
   height: 100%;
 `
-
-type Card = {
-  id: number
-  name: string
-  creditLimit: number
-  totalSpend: number
-  minimumSpendingRequirement: number
-  signupBonusDueDate: string
-}
-
-type Cards = Card[]
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

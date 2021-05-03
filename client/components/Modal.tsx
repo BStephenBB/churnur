@@ -11,6 +11,8 @@ import {
 import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
+import { Card, Cards } from '../types'
+import { useQueryClient } from 'react-query'
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (cardData: {
@@ -36,26 +38,41 @@ const updateCard = async (cardData: {
 }
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
-const addCard = async (cardData: {
-  cardName: string
-  creditLimit?: number
-  totalSpend?: number
-  minimumSpendingRequirement?: number
-  signupBonusDueDate?: string
-}) => {
+// TODO yea use a RQ mutation for this eventually
+const addCard = async (
+  cardData: {
+    cardName: string
+    creditLimit?: number
+    totalSpend?: number
+    minimumSpendingRequirement?: number
+    signupBonusDueDate?: string
+  },
+  addNewCard: (card: Card) => void
+) => {
   const result = await window.fetch(`http://localhost:3000/card`, {
     method: 'POST',
     headers: {
-      /* 'Access-Control-Allow-Origin': '*', */
       'Content-Type': 'application/json',
     },
     credentials: 'include',
     body: JSON.stringify(cardData),
   })
-  const json = await result.json()
-  console.log('add card response')
-  console.log(json)
-  return json
+  const {
+    id,
+    name,
+    creditLimit,
+    minimumSpendingRequirement,
+    totalSpend,
+    signupBonusDueDate,
+  } = await result.json()
+  addNewCard({
+    id,
+    name,
+    creditLimit,
+    minimumSpendingRequirement,
+    totalSpend,
+    signupBonusDueDate,
+  })
 }
 
 function ModalDialog(props: {
@@ -205,11 +222,22 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
 
   const isCompleteInformation = isValidCard(card)
 
+  const queryClient = useQueryClient()
+
+  const addNewCard = (card: Card) => {
+    queryClient.setQueryData<Cards>('cards', (oldData) => {
+      if (oldData === undefined) {
+        return [card]
+      } else {
+        return [...oldData, card]
+      }
+    })
+  }
+
   const { buttonProps: closeButtonProps } = useButton(
     {
       onPress: () => {
         if (isCompleteInformation) {
-          console.log('trying to make card')
           const {
             name,
             limit,
@@ -217,19 +245,22 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             minimumSpendingRequirement,
             signupBonusDate,
           } = card
-          addCard({
-            cardName: name.trim(),
-            creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
-            totalSpend: totalSpend.trim()
-              ? Number(totalSpend.trim())
-              : undefined,
-            minimumSpendingRequirement: minimumSpendingRequirement.trim()
-              ? Number(minimumSpendingRequirement.trim())
-              : undefined,
-            signupBonusDueDate: signupBonusDate.trim()
-              ? formatISO(new Date(signupBonusDate))
-              : undefined,
-          })
+          addCard(
+            {
+              cardName: name.trim(),
+              creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
+              totalSpend: totalSpend.trim()
+                ? Number(totalSpend.trim())
+                : undefined,
+              minimumSpendingRequirement: minimumSpendingRequirement.trim()
+                ? Number(minimumSpendingRequirement.trim())
+                : undefined,
+              signupBonusDueDate: signupBonusDate.trim()
+                ? formatISO(new Date(signupBonusDate))
+                : undefined,
+            },
+            addNewCard
+          )
           state.close()
           dispatchCardAction({ type: CardActionType.CLEAR })
         }
