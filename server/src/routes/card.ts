@@ -1,15 +1,14 @@
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
-import type { Card } from '@prisma/client'
 
 // all CRUD options for cards
 export default async function card(
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
+  app.addHook('onRequest', app.authorize)
   const { prisma } = app
   app.post<{
     Body: {
-      userId: number
       cardName: string
       creditLimit?: number
       totalSpend?: number
@@ -24,22 +23,21 @@ export default async function card(
         body: {
           type: 'object',
           properties: {
-            userId: { type: 'number' },
             cardName: { type: 'string' },
             creditLimit: { type: 'number' },
             totalSpend: { type: 'number' },
             minimumSpendingRequirement: { type: 'number' },
             signupBonusDueDate: { type: 'string' },
           },
-          required: ['userId', 'cardName'],
+          required: ['cardName'],
           additionalProperties: false,
         },
       },
     },
     async (request, reply) => {
       // TODO user id won't be needed once we attach the user to each request by default
+      const userId = request.user.id
       const {
-        userId,
         cardName,
         creditLimit,
         totalSpend,
@@ -114,4 +112,15 @@ export default async function card(
       rely.send(card)
     }
   )
+
+  // TODO schema
+  // get cards for current user
+  app.get('/cards', {}, async (request, reply) => {
+    const id = request.user.id
+    // TODO sort by creation date, but seems to do that by default so not urgent
+    const cards = await prisma.card.findMany({
+      where: { ownerId: id },
+    })
+    reply.send(cards)
+  })
 }
