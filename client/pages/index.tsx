@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useEffect } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
@@ -11,6 +11,7 @@ import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
 import { useRouter } from 'next/dist/client/router'
+import { logout } from '../utils'
 import { Card, Cards } from '../types'
 
 const Wrapper = styled.div`
@@ -217,6 +218,7 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
+          <Button onClick={logout}>logout</Button>
           <CardsTable
             data={memoizedCards ?? []}
             openCardModal={editCardModalState.open}

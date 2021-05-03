@@ -39,7 +39,6 @@ export default async function (
   })
 
   // Enable the use of CORS
-  // https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
   app.register(Cors, {
     // origin: false, // TODO turn this on in dev
     origin: 'http://localhost:3001', // TODO turn this on in dev (or change the origin)

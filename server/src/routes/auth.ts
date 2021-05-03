@@ -7,10 +7,17 @@ import type {
 } from 'fastify'
 import { OAuth2Namespace } from 'fastify-oauth2'
 
-export default async function getUser(
+export default async function auth(
   app: FastifyInstance,
   options: FastifyServerOptions
 ) {
+  app.get('/logout', {}, async (_, reply) => {
+    reply.clearCookie('user_session', { path: '/' })
+    // clear user id cookie too
+    reply.clearCookie('user_id', { path: '/' })
+    reply.redirect(302, 'http://localhost:3001/login/')
+  })
+
   app.route({
     method: 'GET',
     url: '/login/google/callback',
