@@ -12,8 +12,6 @@ import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
 
-const currentUser = '1'
-
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (cardData: {
   id: number
@@ -29,17 +27,16 @@ const updateCard = async (cardData: {
       /* 'Access-Control-Allow-Origin': '*', */
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(cardData),
   })
   const json = await result.json()
-  console.log('add card response')
   console.log(json)
   return json
 }
 
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const addCard = async (cardData: {
-  userId: number
   cardName: string
   creditLimit?: number
   totalSpend?: number
@@ -52,6 +49,7 @@ const addCard = async (cardData: {
       /* 'Access-Control-Allow-Origin': '*', */
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(cardData),
   })
   const json = await result.json()
@@ -220,7 +218,6 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             signupBonusDate,
           } = card
           addCard({
-            userId: Number(currentUser),
             cardName: name.trim(),
             creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
             totalSpend: totalSpend.trim()
