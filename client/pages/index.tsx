@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
@@ -10,6 +10,7 @@ import { EditIcon } from '../icons'
 import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
+import { useRouter } from 'next/dist/client/router'
 
 const Wrapper = styled.div`
   display: flex;
@@ -190,6 +191,8 @@ export default function Dashboard() {
     retry: false, // TODO probably want some amt of retry?
   })
 
+  const router = useRouter()
+
   const memoizedCards = useMemo(() => cards, [cards])
 
   const cardReducerResult = useCardReducer()
@@ -205,6 +208,10 @@ export default function Dashboard() {
 
   const isError = status === 'error' && error !== null
 
+  if (error?.error === 'Unauthorized') {
+    router.push('/login')
+  }
+
   if (status === 'loading') {
     return <div>loading...</div>
   }
@@ -214,7 +221,6 @@ export default function Dashboard() {
   return (
     <Wrapper>
       <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
-      <a href="http://localhost:3000/login/google">Login with google</a>
       {isError ? (
         <div style={{ color: 'red' }}>
           {error === null ? 'Error!' : 'Error: ' + error.message}

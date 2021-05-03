@@ -90,6 +90,6 @@ export default async function getUser(
       expires: new Date(Date.now() + 604_800 * 1_000),
     })
 
-    reply.redirect(302, 'http://localhost:3001/dashboard/')
+    reply.redirect(302, 'http://localhost:3001/')
   }
 }

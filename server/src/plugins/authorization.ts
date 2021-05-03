@@ -59,7 +59,6 @@ async function authorization(
     request: FastifyRequest,
     reply: FastifyReply
   ): Promise<void> {
-    console.log('authorizing')
     const { user_session, user_id } = request.cookies
     if (!user_session) {
       throw httpErrors.unauthorized('Missing session cookie')
@@ -89,6 +88,8 @@ async function authorization(
       // clear the cookie as well in case of errors:
       // this way if a user retries the request we'll have an additional request to Google
       reply.clearCookie('user_session', { path: '/' })
+      // clear user id cookie too
+      reply.clearCookie('user_id', { path: '/' })
       throw error
     }
   }

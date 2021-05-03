@@ -1,2 +1,4 @@
 import { EditIcon } from './edit'
-export { EditIcon }
+import { GoogleIcon } from './google'
+
+export { EditIcon, GoogleIcon }
