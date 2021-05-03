@@ -3,7 +3,8 @@ import OAuth from 'fastify-oauth2'
 import Cookie from 'fastify-cookie'
 import Csrf from 'fastify-csrf'
 import undici from 'undici'
-import {
+import type { GoogleUserInfo } from '../types'
+import type {
   FastifyServerOptions,
   FastifyInstance,
   FastifyRequest,
@@ -16,10 +17,10 @@ async function authorization(
 ) {
   const { httpErrors, config } = app
 
-  const client = undici('https://accounts.google.com', {}) // TODO types?? also url
+  const userInfoClient = undici('https://openidconnect.googleapis.com', {}) // TODO types?? also url
 
   app.register(OAuth, {
-    name: 'google',
+    name: 'googleOAuth2',
     credentials: {
       client: {
         id: config.GOOGLE_CLIENT_ID,
@@ -31,13 +32,7 @@ async function authorization(
     startRedirectPath: '/login/google',
     // google redirect here after the user logs in
     callbackUri: 'http://localhost:3000/login/google/callback', // TODO change if in prod? this is where they go afterwards I think? will need to build this route, or can just be a link to the frontend I think?
-    scope: ['user:email', 'user:profile'], // TODO maybe 'userinfo' instead of just user see https://developers.google.com/identity/protocols/oauth2/scopes#oauth2
-
-    // add tags for the scheme TODO look into if/when we need to do this:
-    tags: ['google', 'oauth2'],
-    schema: {
-      tags: ['google', 'oauth2'],
-    },
+    scope: ['email', 'profile'], // TODO maybe 'userinfo' instead of just user see https://developers.google.com/identity/protocols/oauth2/scopes#oauth2
   })
 
   // TODO look into what this secret is for
@@ -53,15 +48,19 @@ async function authorization(
 
   app.decorate('authorize', authorize)
 
-  app.decorate(
-    'isUserAllowed',
-    'testing' === 'testing' ? isUserAllowedMock : isUserAllowed
-  )
+  app.decorate('isUserAllowed', isUserAllowed)
 
+  app.decorate('getGoogleProfileInfo', getGoogleProfileInfo)
+
+  // decorate each request with the user
   app.decorateRequest('user', null)
 
-  async function authorize(request: FastifyRequest, reply: FastifyReply) {
-    const { user_session } = request.cookies
+  async function authorize(
+    request: FastifyRequest,
+    reply: FastifyReply
+  ): Promise<void> {
+    console.log('authorizing')
+    const { user_session, user_id } = request.cookies
     if (!user_session) {
       throw httpErrors.unauthorized('Missing session cookie')
     }
@@ -71,38 +70,77 @@ async function authorization(
       throw httpErrors.unauthorized('Invalid cookie signature')
     }
 
-    let email
+    if (cookie.value === null) {
+      throw httpErrors.unauthorized('missing cookie vaule')
+    }
+
     try {
-      email = await app.isUserAllowed(cookie.value ?? 'NOT REAL USER') // TODO better way to do this
+      const isAllowed = await app.isUserAllowed(cookie.value) // TODO better way to do this
+      const userId = request.unsignCookie(user_id)
+      if (isAllowed && userId.value) {
+        request.user = { id: Number(userId.value) }
+      } else {
+        // TODO here is where we should get the user from their googleID from db (needs to be returned from isUserAllowed), and then set
+      }
     } catch (error) {
       request.log.warn(
         `Invalid user tried to authenticate: ${JSON.stringify(error.user)}`
       )
       // clear the cookie as well in case of errors:
       // this way if a user retries the request we'll have an additional request to Google
-      // reply.clearCookie('user_session', { path: '/' }) // TODO what do I use for path? TODO see if we need to add path like <-- this
-      reply.clearCookie('user_session')
+      reply.clearCookie('user_session', { path: '/' })
       throw error
-    }
-
-    // TODO this is where we should probably create the user if the user doesn't already exist
-    // behavior etc. will be different depending on if user exists or not
-
-    // add the user's email to the request object
-    // prob would normally add real user
-    // think about if try/catch and if block is best here...?
-    if (email) {
-      request.user = { email: email }
     }
   }
 
-  async function isUserAllowed(token: string): Promise<string | void> {
-    // TODO the undici types seem really poor
-    const response = await client.request({
+  async function isUserAllowed(token: string): Promise<boolean | void> {
+    const response = await userInfoClient.request({
       method: 'GET',
-      path: '/o/oauth2/v2/auth',
+      path: '/v1/userinfo',
       headers: {
-        // 'User-Agent': 'scurte', // TODO figure out this user agent thing?
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (response.statusCode >= 400) {
+      throw httpErrors.unauthorized('Authenticate again')
+    } else {
+      // if the reponse didn't fail, user must be allowed
+      return true
+    }
+
+    // let payload: any = ''
+    // response.body.setEncoding('utf8')
+    // for await (const chunk of response.body) {
+    //   payload += chunk
+    // }
+    // payload = JSON.parse(payload)
+
+    // const allowedUsers = ['sbrownbourne@gmail.com']
+    // const isAllowed = payload.some((element: any) =>
+    //   allowedUsers.includes(element.email)
+    // )
+    // if (!isAllowed) {
+    //   const error = httpErrors.forbidden('You are not allowed to access this')
+    //   // let's store the user info so we can log them later
+    //   error.user = payload
+    //   throw error
+    // }
+
+    // for (const element of payload) {
+    //   if (element.primary) {
+    //     return element.email
+    //   }
+    // }
+    // throw httpErrors.badRequest('The user does not have a primary email')
+  }
+
+  // TODO probably just move this to the user section
+  async function getGoogleProfileInfo(token: string): Promise<GoogleUserInfo> {
+    const response = await userInfoClient.request({
+      method: 'GET',
+      path: '/v1/userinfo',
+      headers: {
         Authorization: `Bearer ${token}`,
       },
     })
@@ -117,35 +155,7 @@ async function authorization(
       payload += chunk
     }
     payload = JSON.parse(payload) // TODO really need to log this out and figure out what the types are
-
-    // TODO don't really need this, but good to keep here cuz might be a useful pattern for roles/permissions
-    const allowedUsers = ['sbrownbourne@gmail.com']
-    const isAllowed = payload.some((element: any) =>
-      allowedUsers.includes(element.email)
-    )
-    if (!isAllowed) {
-      const error = httpErrors.forbidden('You are not allowed to access this')
-      // let's store the user info so we can log them later
-      error.user = payload
-      throw error
-    }
-
-    for (const element of payload) {
-      if (element.primary) {
-        return element.email
-      }
-    }
-    throw httpErrors.badRequest('The user does not have a primary email')
-  }
-
-  // this mock only tests the success case, make sure to test/mock the failure case
-  async function isUserAllowedMock(token: string) {
-    // TODO magic number
-    if (token === 'invalid') {
-      throw httpErrors.forbidden('You are not allowed to access this')
-    }
-    const allowedUsers = ['sbrownbourne@gmail.com']
-    return allowedUsers[0]
+    return payload
   }
 }
 
