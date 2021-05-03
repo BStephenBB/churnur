@@ -29,10 +29,14 @@ model Card {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  cards Card[]
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String?
+  firstName String?
+  lastName  String?
+  googleId  String? @unique
+  picture   String?
+  cards     Card[]
 }
 
 enum Bank {
