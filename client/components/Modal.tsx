@@ -1,6 +1,6 @@
 import React, { useReducer, useRef } from 'react'
 import type { OverlayTriggerState } from '@react-stately/overlays'
-import { Button } from './index'
+import { Button, Text } from './index'
 import { formatISO } from 'date-fns'
 import {
   useOverlay,
@@ -153,14 +153,13 @@ function ModalDialog(props: {
           ref={ref}
           style={{
             background: 'white',
-            color: 'black',
             padding: 30,
             borderRadius: '8px',
           }}
         >
-          <h3 {...titleProps} style={{ marginTop: 0 }}>
+          <Text {...titleProps} size={4}>
             {title}
-          </h3>
+          </Text>
           {children}
         </div>
       </FocusScope>

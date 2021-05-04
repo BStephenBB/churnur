@@ -15,7 +15,9 @@ const DEFAULT_ELEMENT_FOR_SIZE: Record<Sizes, string> = {
 } as const
 
 type TextProps = { size?: Sizes }
+
 // maybe use 1.5 linexport height
+// TODO add weight
 export const Text = styled.div.attrs<TextProps>(({ size }) => ({
   as: size ? DEFAULT_ELEMENT_FOR_SIZE[size] : 'div',
 }))<TextProps>`
