@@ -21,9 +21,17 @@ export const TableHeader = styled.div`
   border-bottom: 2px solid ${({ theme }) => theme.color.gray2};
 `
 
-export const DefaultCell = styled.div`
+const ALIGNMENT_OPTIONS = {
+  left: 'left',
+  right: 'right',
+  center: 'center',
+} as const
+
+export const DefaultCell = styled.div<{ align?: 'left' | 'right' | 'center' }>`
   flex-shrink: 0;
   flex-grow: 1;
+  text-align: ${(props) =>
+    props.align ? ALIGNMENT_OPTIONS[props.align] : ALIGNMENT_OPTIONS['left']};
 `
 
 export const DefaultHeaderCell = styled.div`

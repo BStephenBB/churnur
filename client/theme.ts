@@ -19,7 +19,7 @@ export const theme = {
   text7: '48px',
   // colors from https://primer.style/css/support/color-system (github's color scheme)
   color: {
-    text: '#0a2540',
+    text: '#24292e',
     primary: '#2563EB',
     white: 'white',
     black: 'black',
@@ -33,7 +33,7 @@ export const theme = {
     gray6: '#586069',
     gray7: '#444d56',
     gray8: '#2f363d',
-    gray9: '#24292e',
+    gray9: '#24292e', // text color
 
     blue0: '#f1f8ff',
     blue1: '#dbedff',

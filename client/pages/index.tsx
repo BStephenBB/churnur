@@ -105,21 +105,21 @@ const makeCardTableColumns = ({
       Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: makeHeaderComponent('Min. Spending Requirement'),
+      Header: makeHeaderComponent('MSP'),
       accessor: 'minimumSpendingRequirement',
       Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: makeHeaderComponent('Sign up Bonus Due Date'),
+      Header: makeHeaderComponent('SUB DUE DATE'),
       accessor: 'signupBonusDueDate',
       Cell: makeCellComponent('DATE'),
     },
     {
-      Header: makeHeaderComponent('--'),
+      Header: makeHeaderComponent(''),
       accessor: 'id',
       Cell: function Cell(props: CardTableCellProps) {
         return (
-          <DefaultCell {...props.calculatedProps}>
+          <DefaultCell {...props.calculatedProps} align="right">
             <button
               onClick={() => {
                 // TODO this whole edit thing should be a column officially
@@ -155,6 +155,7 @@ const makeCardTableColumns = ({
 const Test = styled.div`
   font-size: 35px;
   font-variation-settings: 'wght' 650;
+  margin-bottom: ${({ theme }) => theme.space3};
 `
 
 const getUsersCards = async () => {
@@ -296,10 +297,16 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
-      <div style={{ display: 'flex' }}>
+      <div
+        style={{
+          display: 'flex',
+          padding: '0 24px',
+          justifyContent: 'space-between',
+        }}
+      >
         <Test>Cards</Test>
         <Button {...openButtonProps} ref={openButtonRef}>
-          + Add card
+          + ADD CARD
         </Button>
       </div>
       {isError ? (

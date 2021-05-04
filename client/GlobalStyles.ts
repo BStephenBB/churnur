@@ -31,6 +31,7 @@ export const GlobalStyles = createGlobalStyle`
 		text-decoration: none;
 	}
 
+	button,
 	input,
 	select,
 	textarea {
