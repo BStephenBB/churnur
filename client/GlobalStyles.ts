@@ -25,6 +25,7 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		color: ${(props) => props.theme.color.text};
 		font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+		font-size: ${({ theme }) => theme.text[2]};
 	}
 
 	a {

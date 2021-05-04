@@ -114,6 +114,22 @@ function ModalDialog(props: {
   // Get props for the dialog and its title
   const { dialogProps, titleProps } = useDialog(props, ref)
 
+  /* @keyframes slide-down { */
+  /* 0% { */
+  /*   opacity: 0; */
+  /*   transform: translateY(-10px); */
+  /* } */
+  /* 100% { */
+  /*   opacity: 1; */
+  /*   transform: translateY(0); */
+  /* } */
+  /* } */
+  /* .slide-down[data-reach-menu-list], */
+  /* .slide-down[data-reach-menu-items] { */
+  /* border-radius: 5px; */
+  /* animation: slide-down 0.2s ease; */
+  /* } */
+
   return (
     <div
       style={{
@@ -123,7 +139,7 @@ function ModalDialog(props: {
         left: 0,
         bottom: 0,
         right: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
+        background: 'rgba(0, 0, 0, 0.6)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

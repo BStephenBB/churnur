@@ -14,10 +14,10 @@ export const Button = styled.button`
   color: ${({ theme }) => theme.color.white};
   letter-spacing: 0.025em;
   transition: all 0.15s ease;
+  outline: 0 !important;
   &:hover {
     background: ${({ theme }) => theme.color.blue5};
     transform: translateY(-1px);
-    outline: 0;
   }
   &:disabled {
     background: rgba(0, 0, 0, 0.1);

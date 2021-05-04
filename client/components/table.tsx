@@ -38,6 +38,6 @@ export const DefaultHeaderCell = styled.div`
   flex-shrink: 0;
   flex-grow: 1;
   font-variation-settings: 'wght' 600;
-  font-size: ${({ theme }) => theme.text1};
+  font-size: ${({ theme }) => theme.text[1]};
   color: ${({ theme }) => theme.color.gray5};
 `
