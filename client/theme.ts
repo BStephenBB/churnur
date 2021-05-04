@@ -1,9 +1,29 @@
 export const theme = {
+  space: (multiple: number) => `${multiple * 4}px`,
+  space0: '0px',
+  space1: '4px',
+  space2: '8px',
+  space3: '16px',
+  space4: '24px',
+  space5: '32px',
+  space6: '40px',
+
+  text: {
+    '0': '12px',
+    '1': '14px',
+    '2': '16px',
+    '3': '20px',
+    '4': '24px',
+    '5': '32px',
+    '6': '40px',
+    '7': '48px',
+  },
   // colors from https://primer.style/css/support/color-system (github's color scheme)
   color: {
     text: '#0a2540',
     primary: '#2563EB',
     white: 'white',
+    black: 'black',
 
     gray0: '#fafbfc',
     gray1: '#f6f8fa',
@@ -20,7 +40,7 @@ export const theme = {
     blue1: '#dbedff',
     blue2: '#c8e1ff',
     blue3: '#79b8ff',
-    blue4: '#2188ff',
+    blue4: '#2188ff', // make this primary
     blue5: '#0366d6',
     blue6: '#005cc5',
     blue7: '#044289',

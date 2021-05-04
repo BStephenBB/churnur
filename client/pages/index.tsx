@@ -6,6 +6,7 @@ import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
 import { Button, Modal, EditCardModal } from '../components'
+import { TableRow, TableHeader, DefaultCell } from '../components/table'
 import { EditIcon } from '../icons'
 import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
@@ -45,19 +46,20 @@ const makeCardTableColumns = ({
     {
       Header: 'Name',
       accessor: 'name',
+      /* width: undefined, */
     },
     {
       Header: 'Limit',
       accessor: 'creditLimit',
-      width: 100,
+      /* width: 100, */
       Cell: function Cell(props: CellProps<Card, string>) {
-        return <div>{formatMoney(props.value)}</div>
+        return <DefaultCell>{formatMoney(props.value)}</DefaultCell>
       },
     },
     {
       Header: 'Total Spend',
       accessor: 'totalSpend',
-      width: 108,
+      /* width: 108, */
       Cell: function Cell(props: CellProps<Card, string>) {
         return <div>{formatMoney(props.value)}</div>
       },
@@ -65,7 +67,7 @@ const makeCardTableColumns = ({
     {
       Header: 'Min. Spending Requirement',
       accessor: 'minimumSpendingRequirement',
-      width: 224,
+      /* width: 224, */
       Cell: function Cell(props: CellProps<Card, string>) {
         return <div>{formatMoney(props.value)}</div>
       },
@@ -73,7 +75,7 @@ const makeCardTableColumns = ({
     {
       Header: 'Sign up Bonus Due Date',
       accessor: 'signupBonusDueDate',
-      width: 200,
+      /* width: 200, */
       Cell: function Cell(props: CellProps<Card, string>) {
         return <div>{format(new Date(props.value), 'MM/dd/yyyy')}</div>
       },
@@ -82,9 +84,8 @@ const makeCardTableColumns = ({
       // may just change this to an option cell
       Header: '--',
       accessor: 'id',
-      width: 200,
+      /* width: 200, */
       Cell: function Cell(props: CellProps<Card, string>) {
-        console.log(props)
         return (
           <button
             onClick={() => {
@@ -116,6 +117,12 @@ const makeCardTableColumns = ({
   ]
   return columns
 }
+
+const Test = styled.div`
+  font-family: 'Inter';
+  font-size: 35px;
+  font-variation-settings: 'wght' 600;
+`
 
 const getUsersCards = async () => {
   const result = await window.fetch(`http://localhost:3000/cards`, {
@@ -157,39 +164,34 @@ const CardsTable = ({
 
   return (
     <div {...getTableProps()}>
-      <div style={{ padding: '12px 0', borderBottom: '2px solid' }}>
-        {headerGroups.map((headerGroup) => {
-          return (
-            <div {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => {
-                return (
-                  <div {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
-      </div>
+      {headerGroups.map((headerGroup) => {
+        // there is only 1 header, maybe do this in a way w/out mapping...?
+        const headerProps = headerGroup.getHeaderGroupProps()
+        const { style, ...rest } = headerProps // need to remove the style prop
+        return (
+          <TableHeader {...rest}>
+            {headerGroup.headers.map((column) => {
+              return (
+                <div {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                </div>
+              )
+            })}
+          </TableHeader>
+        )
+      })}
 
       <div {...getTableBodyProps()}>
         {rows.map((row) => {
           prepareRow(row)
+          const rowProps = row.getRowProps()
+          const { style, ...rest } = rowProps // need to remove the style prop
           return (
-            <div
-              {...row.getRowProps()}
-              style={{
-                height: '80px',
-                borderBottom: '1px solid #333',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
+            <TableRow {...rest}>
               {row.cells.map((cell) => {
                 return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
               })}
-            </div>
+            </TableRow>
           )
         })}
       </div>
@@ -254,7 +256,7 @@ export default function Dashboard() {
   return (
     <Wrapper>
       <div style={{ display: 'flex' }}>
-        <h2 style={{ marginBottom: '20px' }}>Churnur</h2>
+        <Test>Cards</Test>
         <Button {...openButtonProps} ref={openButtonRef}>
           + Add card
         </Button>

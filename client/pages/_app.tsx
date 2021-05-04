@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import Head from 'next/head'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { GlobalStyles } from '../GlobalStyles'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { theme } from '../theme'
@@ -45,10 +45,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <OverlayProvider id="overlay-provider">
         <QueryClientProvider client={queryClientRef.current}>
           <Hydrate state={pageProps.dehydratedState}>
-            <ThemeProvider theme={theme}>
-              <Component {...pageProps} />
-              <GlobalStyles />
-            </ThemeProvider>
+            <StyleSheetManager disableVendorPrefixes={true}>
+              <ThemeProvider theme={theme}>
+                <Component {...pageProps} />
+                <GlobalStyles />
+              </ThemeProvider>
+            </StyleSheetManager>
           </Hydrate>
         </QueryClientProvider>
       </OverlayProvider>

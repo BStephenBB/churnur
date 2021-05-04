@@ -1,6 +1,12 @@
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
+	@font-face {
+		font-family: 'Inter';
+		src: url('/fonts/Inter.var.woff2') format('woff2');
+		font-display: swap;
+	}
+
 	*,
 	*:before,
 	*:after {
