@@ -2,6 +2,11 @@ import styled from 'styled-components'
 
 /* TODO not sure if these should be exported from components/index */
 
+export const TableWrapper = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
+  border-top: 1px solid ${({ theme }) => theme.color.gray1};
+`
+
 export const TableRow = styled.div`
   height: ${({ theme }) => theme.space(20)};
   padding: 0 ${({ theme }) => theme.space4};

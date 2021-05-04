@@ -11,6 +11,7 @@ import {
   TableHeader,
   DefaultCell,
   DefaultHeaderCell,
+  TableWrapper,
 } from '../components/table'
 import { EditIcon } from '../icons'
 import { useCardReducer, CardActionType } from '../components/Modal'
@@ -58,7 +59,8 @@ type CardHeaderCellProps = HeaderProps<Card> & {
 const CELL_FORMATERS = {
   DEFAULT: (input: string) => input,
   DOLLARS: (input: string) => formatMoney(input),
-  DATE: (input: string) => format(new Date(input), 'MM/dd/yyyy'),
+  DATE: (input: string) => format(new Date(input), 'MMM do, yyyy'),
+  /* DATE: (input: string) => format(new Date(input), 'MM-dd-yyyy'), */
 }
 
 const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
@@ -110,7 +112,7 @@ const makeCardTableColumns = ({
       Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: makeHeaderComponent('SUB DUE DATE'),
+      Header: makeHeaderComponent('SUB. DUE DATE'),
       accessor: 'signupBonusDueDate',
       Cell: makeCellComponent('DATE'),
     },
@@ -153,7 +155,7 @@ const makeCardTableColumns = ({
 }
 
 const Test = styled.div`
-  font-size: 35px;
+  font-size: ${({ theme }) => theme.text[6]};
   font-variation-settings: 'wght' 650;
   margin-bottom: ${({ theme }) => theme.space3};
 `
@@ -197,7 +199,7 @@ const CardsTable = ({
   )
 
   return (
-    <div {...getTableProps()}>
+    <TableWrapper {...getTableProps()}>
       {headerGroups.map((headerGroup) => {
         // there is only 1 header, maybe do this in a way w/out mapping...?
         const headerProps = headerGroup.getHeaderGroupProps()
@@ -237,7 +239,7 @@ const CardsTable = ({
           )
         })}
       </div>
-    </div>
+    </TableWrapper>
   )
 }
 
