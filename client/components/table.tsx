@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 /* TODO not sure if these should be exported from components/index */
@@ -24,4 +23,13 @@ export const TableHeader = styled.div`
 
 export const DefaultCell = styled.div`
   flex-shrink: 0;
+  flex-grow: 1;
+`
+
+export const DefaultHeaderCell = styled.div`
+  flex-shrink: 0;
+  flex-grow: 1;
+  font-variation-settings: 'wght' 600;
+  font-size: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.color.gray5};
 `

@@ -1,3 +1,4 @@
+// lots of inspo from Github's design system
 export const theme = {
   space: (multiple: number) => `${multiple * 4}px`,
   space0: '0px',
@@ -8,16 +9,14 @@ export const theme = {
   space5: '32px',
   space6: '40px',
 
-  text: {
-    '0': '12px',
-    '1': '14px',
-    '2': '16px',
-    '3': '20px',
-    '4': '24px',
-    '5': '32px',
-    '6': '40px',
-    '7': '48px',
-  },
+  text0: '12px',
+  text1: '14px',
+  text2: '16px',
+  text3: '20px',
+  text4: '24px',
+  text5: '32px',
+  text6: '40px',
+  text7: '48px',
   // colors from https://primer.style/css/support/color-system (github's color scheme)
   color: {
     text: '#0a2540',

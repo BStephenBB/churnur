@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, Fragment } from 'react'
 import { useQuery } from 'react-query'
 import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
@@ -6,7 +6,12 @@ import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
 import { Button, Modal, EditCardModal } from '../components'
-import { TableRow, TableHeader, DefaultCell } from '../components/table'
+import {
+  TableRow,
+  TableHeader,
+  DefaultCell,
+  DefaultHeaderCell,
+} from '../components/table'
 import { EditIcon } from '../icons'
 import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
@@ -33,6 +38,47 @@ const formatMoney = (value: string) => {
   return formatter.format(Number(value))
 }
 
+type CardTableCellProps = CellProps<Card, string> & {
+  calculatedProps: {
+    key: string
+    role: 'cell'
+    style: Record<string, string>
+  }
+}
+
+type CardHeaderCellProps = HeaderProps<Card> & {
+  calculatedProps: {
+    key: string
+    colSpan: number
+    role: 'columnheader'
+    style: Record<string, string>
+  }
+}
+
+const CELL_FORMATERS = {
+  DEFAULT: (input: string) => input,
+  DOLLARS: (input: string) => formatMoney(input),
+  DATE: (input: string) => format(new Date(input), 'MM/dd/yyyy'),
+}
+
+const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
+  return function Cell(props: CardTableCellProps) {
+    return (
+      <DefaultCell {...props.calculatedProps}>
+        {CELL_FORMATERS[type](props.value)}
+      </DefaultCell>
+    )
+  }
+}
+
+const makeHeaderComponent = (text: string) => {
+  return function Header(props: CardHeaderCellProps) {
+    return (
+      <DefaultHeaderCell {...props.calculatedProps}>{text}</DefaultHeaderCell>
+    )
+  }
+}
+
 const makeCardTableColumns = ({
   openCardModal,
   setEditingCardId,
@@ -44,73 +90,61 @@ const makeCardTableColumns = ({
 }): Column<Card>[] => {
   const columns: Column<Card>[] = [
     {
-      Header: 'Name',
+      Header: makeHeaderComponent('NAME'),
       accessor: 'name',
-      /* width: undefined, */
+      Cell: makeCellComponent(),
     },
     {
-      Header: 'Limit',
+      Header: makeHeaderComponent('LIMIT'),
       accessor: 'creditLimit',
-      /* width: 100, */
-      Cell: function Cell(props: CellProps<Card, string>) {
-        return <DefaultCell>{formatMoney(props.value)}</DefaultCell>
-      },
+      Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: 'Total Spend',
+      Header: makeHeaderComponent('TOTAL SPEND'),
       accessor: 'totalSpend',
-      /* width: 108, */
-      Cell: function Cell(props: CellProps<Card, string>) {
-        return <div>{formatMoney(props.value)}</div>
-      },
+      Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: 'Min. Spending Requirement',
+      Header: makeHeaderComponent('Min. Spending Requirement'),
       accessor: 'minimumSpendingRequirement',
-      /* width: 224, */
-      Cell: function Cell(props: CellProps<Card, string>) {
-        return <div>{formatMoney(props.value)}</div>
-      },
+      Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: 'Sign up Bonus Due Date',
+      Header: makeHeaderComponent('Sign up Bonus Due Date'),
       accessor: 'signupBonusDueDate',
-      /* width: 200, */
-      Cell: function Cell(props: CellProps<Card, string>) {
-        return <div>{format(new Date(props.value), 'MM/dd/yyyy')}</div>
-      },
+      Cell: makeCellComponent('DATE'),
     },
     {
-      // may just change this to an option cell
-      Header: '--',
+      Header: makeHeaderComponent('--'),
       accessor: 'id',
-      /* width: 200, */
-      Cell: function Cell(props: CellProps<Card, string>) {
+      Cell: function Cell(props: CardTableCellProps) {
         return (
-          <button
-            onClick={() => {
-              // TODO this whole edit thing should be a column officially
-              const {
-                id,
-                name,
-                creditLimit,
-                totalSpend,
-                minimumSpendingRequirement,
-                signupBonusDueDate,
-              } = props.row.original
-              setCardBeingEdited({
-                name: name,
-                limit: creditLimit.toString(),
-                totalSpend: totalSpend.toString(),
-                minimumSpendingRequirement: minimumSpendingRequirement.toString(),
-                signupBonusDate: signupBonusDueDate,
-              })
-              openCardModal()
-              setEditingCardId(id)
-            }}
-          >
-            <EditIcon title={`edit ${props.row.original.name} card`} />
-          </button>
+          <DefaultCell {...props.calculatedProps}>
+            <button
+              onClick={() => {
+                // TODO this whole edit thing should be a column officially
+                const {
+                  id,
+                  name,
+                  creditLimit,
+                  totalSpend,
+                  minimumSpendingRequirement,
+                  signupBonusDueDate,
+                } = props.row.original
+                setCardBeingEdited({
+                  name: name,
+                  limit: creditLimit.toString(),
+                  totalSpend: totalSpend.toString(),
+                  minimumSpendingRequirement: minimumSpendingRequirement.toString(),
+                  signupBonusDate: signupBonusDueDate,
+                })
+                openCardModal()
+                setEditingCardId(id)
+              }}
+            >
+              <EditIcon title={`edit ${props.row.original.name} card`} />
+            </button>
+          </DefaultCell>
         )
       },
     },
@@ -119,9 +153,8 @@ const makeCardTableColumns = ({
 }
 
 const Test = styled.div`
-  font-family: 'Inter';
   font-size: 35px;
-  font-variation-settings: 'wght' 600;
+  font-variation-settings: 'wght' 650;
 `
 
 const getUsersCards = async () => {
@@ -172,9 +205,11 @@ const CardsTable = ({
           <TableHeader {...rest}>
             {headerGroup.headers.map((column) => {
               return (
-                <div {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                </div>
+                <Fragment key={column.id}>
+                  {column.render('Header', {
+                    calculatedProps: column.getHeaderProps(),
+                  })}
+                </Fragment>
               )
             })}
           </TableHeader>
@@ -189,7 +224,13 @@ const CardsTable = ({
           return (
             <TableRow {...rest}>
               {row.cells.map((cell) => {
-                return <div {...cell.getCellProps()}>{cell.render('Cell')}</div>
+                return (
+                  <Fragment key={cell.column.id}>
+                    {cell.render('Cell', {
+                      calculatedProps: cell.getCellProps(),
+                    })}
+                  </Fragment>
+                )
               })}
             </TableRow>
           )
