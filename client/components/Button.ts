@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+// height 36px is a good default size probably
+
 // TODO use react aria button
 export const Button = styled.button`
   flex-grow: 0;

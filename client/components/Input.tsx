@@ -27,41 +27,8 @@ const Box = styled.div`
   font-size: ${({ theme }) => theme.text['1']};
 `
 
-export enum InputTypes {
-  DOLLAR = 'DOLLAR',
-  TEXT = 'TEXT',
-  DATE = 'DATE',
-}
-
-const INPUT_TYPE_SYMBOL = {
-  [InputTypes.DOLLAR]: '$',
-  [InputTypes.TEXT]: null,
-  [InputTypes.DATE]: <CalendarIcon />,
-}
-
-// TODO clean up all the meh logic in this component
-export const Input_ = (
-  props: StyledComponentProps<
-    'input',
-    DefaultTheme,
-    { type?: InputTypes },
-    never
-  >
-) => {
-  const { type, ...rest } = props
-  let acctualType = type ?? InputTypes.TEXT
-  return (
-    <Wrapper>
-      {acctualType === InputTypes.TEXT ? null : (
-        <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
-      )}
-      <Input {...rest} hasBox={acctualType !== InputTypes.TEXT} />
-    </Wrapper>
-  )
-}
-
 // TODO disabled state
-export const Input = styled.input<{ hasBox: boolean }>`
+const InputElement = styled.input<{ hasBox: boolean }>`
   display: block;
   flex-grow: 0;
   min-width: 0;
@@ -81,3 +48,36 @@ export const Input = styled.input<{ hasBox: boolean }>`
     box-shadow: 0 0 0 3px ${({ theme }) => theme.color.blue4 + '40'};
   }
 `
+
+export enum InputTypes {
+  DOLLAR = 'DOLLAR',
+  TEXT = 'TEXT',
+  DATE = 'DATE',
+}
+
+const INPUT_TYPE_SYMBOL = {
+  [InputTypes.DOLLAR]: '$',
+  [InputTypes.TEXT]: null,
+  [InputTypes.DATE]: <CalendarIcon />,
+}
+
+// TODO clean up all the meh logic in this component
+export const Input = (
+  props: StyledComponentProps<
+    'input',
+    DefaultTheme,
+    { type?: InputTypes },
+    never
+  >
+) => {
+  const { type, ...rest } = props
+  let acctualType = type ?? InputTypes.TEXT
+  return (
+    <Wrapper>
+      {acctualType === InputTypes.TEXT ? null : (
+        <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
+      )}
+      <InputElement {...rest} hasBox={acctualType !== InputTypes.TEXT} />
+    </Wrapper>
+  )
+}
