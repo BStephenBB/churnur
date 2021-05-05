@@ -29,7 +29,9 @@ export const Button = styled.button`
       0 3px 7px -3px rgb(0 0 0 / 30%);
   }
   &:disabled {
-    background: rgba(0, 0, 0, 0.1);
+    background: ${({ theme }) => theme.color.gray3};
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
   }
 `

@@ -1,6 +1,7 @@
 import React, { useReducer, useRef } from 'react'
 import type { OverlayTriggerState } from '@react-stately/overlays'
-import { Button, Text } from './index'
+import { Button, Text, Input } from './index'
+import { InputTypes, Input_ } from './Input'
 import { formatISO } from 'date-fns'
 import {
   useOverlay,
@@ -317,7 +318,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             <form style={{ display: 'flex', flexDirection: 'column' }}>
               <label>
                 Card Name:
-                <input
+                <Input
                   placeholder="ex: Chase Sapphire Reserve"
                   value={card.name}
                   onChange={(event) => {
@@ -330,7 +331,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Card Limit:
-                <input
+                <Input
                   placeholder="ex: 3000.00"
                   value={card.limit}
                   onChange={(event) => {
@@ -343,7 +344,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Total Spend:
-                <input
+                <Input
                   placeholder="ex: 4321.12"
                   value={card.totalSpend}
                   onChange={(event) => {
@@ -356,7 +357,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Minimum Spending Requirement:
-                <input
+                <Input
                   placeholder="ex: 8000.00"
                   value={card.minimumSpendingRequirement}
                   onChange={(event) => {
@@ -369,7 +370,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Signup Bonus Due Date:
-                <input
+                <Input
                   placeholder="yyyy-mm-dd"
                   value={card.signupBonusDate}
                   onChange={(event) => {
@@ -483,10 +484,12 @@ export function EditCardModal({
             isDismissable={true}
             role="dialog"
           >
-            <form style={{ display: 'flex', flexDirection: 'column' }}>
+            <form
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+            >
               <label>
                 Card Name:
-                <input
+                <Input
                   placeholder="ex: Chase Sapphire Reserve"
                   value={card.name}
                   onChange={(event) => {
@@ -497,22 +500,20 @@ export function EditCardModal({
                   }}
                 />
               </label>
-              <label>
-                Card Limit:
-                <input
-                  placeholder="ex: 3000.00"
-                  value={card.limit}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_LIMIT,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
+              <Input_
+                type={InputTypes.DOLLAR}
+                placeholder="ex: 3000.00"
+                value={card.limit}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_LIMIT,
+                    payload: event.target.value,
+                  })
+                }}
+              />
               <label>
                 Total Spend:
-                <input
+                <Input
                   placeholder="ex: 4321.12"
                   value={card.totalSpend}
                   onChange={(event) => {
@@ -525,7 +526,7 @@ export function EditCardModal({
               </label>
               <label>
                 Minimum Spending Requirement:
-                <input
+                <Input
                   placeholder="ex: 8000.00"
                   value={card.minimumSpendingRequirement}
                   onChange={(event) => {
@@ -538,7 +539,7 @@ export function EditCardModal({
               </label>
               <label>
                 Signup Bonus Due Date:
-                <input
+                <Input
                   placeholder="yyyy-mm-dd"
                   value={card.signupBonusDate}
                   onChange={(event) => {

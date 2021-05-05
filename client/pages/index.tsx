@@ -59,8 +59,8 @@ type CardHeaderCellProps = HeaderProps<Card> & {
 const CELL_FORMATERS = {
   DEFAULT: (input: string) => input,
   DOLLARS: (input: string) => formatMoney(input),
-  DATE: (input: string) => format(new Date(input), 'MMM do, yyyy'),
-  /* DATE: (input: string) => format(new Date(input), 'MM-dd-yyyy'), */
+  /* DATE: (input: string) => format(new Date(input), 'MMM do, yyyy'), */
+  DATE: (input: string) => format(new Date(input), 'MM/dd/yyyy'),
 }
 
 const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
@@ -157,7 +157,6 @@ const makeCardTableColumns = ({
 const Test = styled.div`
   font-size: ${({ theme }) => theme.text[6]};
   font-variation-settings: 'wght' 650;
-  margin-bottom: ${({ theme }) => theme.space3};
 `
 
 const getUsersCards = async () => {
@@ -304,6 +303,8 @@ export default function Dashboard() {
           display: 'flex',
           padding: '0 24px',
           justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '16px',
         }}
       >
         <Test>Cards</Test>
