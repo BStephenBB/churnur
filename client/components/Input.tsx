@@ -1,6 +1,6 @@
 import styled, { DefaultTheme } from 'styled-components'
-import type { StyledComponentProps, StyledComponent } from 'styled-components'
-import type { ComponentType } from 'react'
+import type { StyledComponentProps } from 'styled-components'
+import { CalendarIcon } from '../icons'
 
 // TODO use react-aria for this
 
@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   width: ${({ theme }) => theme.space(48)};
 `
 const Box = styled.div`
-  width: ${({ theme }) => theme.space(8)};
+  width: ${({ theme }) => theme.space(9)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,6 +33,13 @@ export enum InputTypes {
   DATE = 'DATE',
 }
 
+const INPUT_TYPE_SYMBOL = {
+  [InputTypes.DOLLAR]: '$',
+  [InputTypes.TEXT]: null,
+  [InputTypes.DATE]: <CalendarIcon />,
+}
+
+// TODO clean up all the meh logic in this component
 export const Input_ = (
   props: StyledComponentProps<
     'input',
@@ -45,11 +52,14 @@ export const Input_ = (
   let acctualType = type ?? InputTypes.TEXT
   return (
     <Wrapper>
-      {acctualType === InputTypes.TEXT ? null : <Box>$</Box>}
+      {acctualType === InputTypes.TEXT ? null : (
+        <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
+      )}
       <Input {...rest} hasBox={acctualType !== InputTypes.TEXT} />
     </Wrapper>
   )
 }
+
 // TODO disabled state
 export const Input = styled.input<{ hasBox: boolean }>`
   display: block;

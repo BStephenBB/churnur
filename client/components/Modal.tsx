@@ -318,7 +318,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             <form style={{ display: 'flex', flexDirection: 'column' }}>
               <label>
                 Card Name:
-                <Input
+                <Input_
                   placeholder="ex: Chase Sapphire Reserve"
                   value={card.name}
                   onChange={(event) => {
@@ -331,7 +331,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Card Limit:
-                <Input
+                <Input_
                   placeholder="ex: 3000.00"
                   value={card.limit}
                   onChange={(event) => {
@@ -344,7 +344,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Total Spend:
-                <Input
+                <Input_
                   placeholder="ex: 4321.12"
                   value={card.totalSpend}
                   onChange={(event) => {
@@ -357,7 +357,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Minimum Spending Requirement:
-                <Input
+                <Input_
                   placeholder="ex: 8000.00"
                   value={card.minimumSpendingRequirement}
                   onChange={(event) => {
@@ -370,7 +370,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               </label>
               <label>
                 Signup Bonus Due Date:
-                <Input
+                <Input_
                   placeholder="yyyy-mm-dd"
                   value={card.signupBonusDate}
                   onChange={(event) => {
@@ -489,7 +489,7 @@ export function EditCardModal({
             >
               <label>
                 Card Name:
-                <Input
+                <Input_
                   placeholder="ex: Chase Sapphire Reserve"
                   value={card.name}
                   onChange={(event) => {
@@ -500,20 +500,24 @@ export function EditCardModal({
                   }}
                 />
               </label>
-              <Input_
-                type={InputTypes.DOLLAR}
-                placeholder="ex: 3000.00"
-                value={card.limit}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_LIMIT,
-                    payload: event.target.value,
-                  })
-                }}
-              />
+              <label>
+                Card Limit:
+                <Input_
+                  type={InputTypes.DOLLAR}
+                  placeholder="ex: 3000.00"
+                  value={card.limit}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_LIMIT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </label>
               <label>
                 Total Spend:
-                <Input
+                <Input_
+                  type={InputTypes.DOLLAR}
                   placeholder="ex: 4321.12"
                   value={card.totalSpend}
                   onChange={(event) => {
@@ -526,7 +530,8 @@ export function EditCardModal({
               </label>
               <label>
                 Minimum Spending Requirement:
-                <Input
+                <Input_
+                  type={InputTypes.DOLLAR}
                   placeholder="ex: 8000.00"
                   value={card.minimumSpendingRequirement}
                   onChange={(event) => {
@@ -539,7 +544,8 @@ export function EditCardModal({
               </label>
               <label>
                 Signup Bonus Due Date:
-                <Input
+                <Input_
+                  type={InputTypes.DATE}
                   placeholder="yyyy-mm-dd"
                   value={card.signupBonusDate}
                   onChange={(event) => {
