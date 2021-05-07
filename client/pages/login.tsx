@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 const Card = styled.div`
   display: flex;
   width: ${({ theme }) => theme.space(90)};
-  height: ${({ theme }) => theme.space(69)};
+  height: ${({ theme }) => theme.space(55)};
   background: ${({ theme }) => theme.color.white};
   box-shadow: ${({ theme }) => theme.shadow.medium};
   border-radius: 4px;

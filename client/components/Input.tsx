@@ -8,8 +8,9 @@ const Wrapper = styled.div`
   display: flex;
   height: ${({ theme }) => theme.space(10)};
   border-radius: 4px;
-  width: ${({ theme }) => theme.space(48)};
 `
+/* width: ${({ theme }) => theme.space(48)}; */
+
 const Box = styled.div`
   width: ${({ theme }) => theme.space(9)};
   display: flex;
@@ -30,13 +31,13 @@ const Box = styled.div`
 const Label = styled.label`
   margin-bottom: ${({ theme }) => theme.space1};
   display: block;
-  font-variation-settings: 'wght' 450;
+  font-variation-settings: 'wght' 500;
 `
 
 // TODO disabled state
-const InputElement = styled.input<{ hasBox: boolean }>`
+const InputElement = styled.input<{ hasBox: boolean; isNumeric: boolean }>`
+  flex-grow: 1;
   display: block;
-  flex-grow: 0;
   min-width: 0;
   height: ${({ theme }) => theme.space(10)};
   border-radius: ${({ hasBox }) => (hasBox ? '0 4px 4px 0' : '4px')};
@@ -44,6 +45,7 @@ const InputElement = styled.input<{ hasBox: boolean }>`
   padding: 0 ${({ theme }) => theme.space(3)};
   outline: none !important;
   transition: 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  text-align: ${(props) => (props.isNumeric ? 'right' : 'left')};
 
   &:hover,
   &:focus {
@@ -85,7 +87,11 @@ export const Input = (
         {acctualType === InputTypes.TEXT ? null : (
           <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
         )}
-        <InputElement {...rest} hasBox={acctualType !== InputTypes.TEXT} />
+        <InputElement
+          {...rest}
+          hasBox={acctualType !== InputTypes.TEXT}
+          isNumeric={acctualType === InputTypes.DOLLAR}
+        />
       </Wrapper>
     </div>
   )

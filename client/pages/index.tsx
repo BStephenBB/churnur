@@ -107,7 +107,7 @@ const makeCardTableColumns = ({
       Cell: makeCellComponent('DOLLARS'),
     },
     {
-      Header: makeHeaderComponent('MSP'),
+      Header: makeHeaderComponent('MSR'),
       accessor: 'minimumSpendingRequirement',
       Cell: makeCellComponent('DOLLARS'),
     },

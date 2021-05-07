@@ -1,4 +1,5 @@
 import React, { useReducer, useRef } from 'react'
+import styled from 'styled-components'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button, Text } from './index'
 import { InputTypes, Input } from './Input'
@@ -92,6 +93,27 @@ const addCard = async (
   })
 }
 
+const ModalTitleWrapper = styled.div`
+  display: flex;
+  padding: ${({ theme }) => theme.space4};
+  background: ${({ theme }) => theme.color.gray1};
+  border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
+  border-radius: 6px 6px 0 0;
+`
+
+const ModalBody = styled.div`
+  padding: ${({ theme }) => theme.space4};
+  display: grid;
+  width: ${({ theme }) => theme.space(150)};
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: ${({ theme }) => theme.space5};
+  grid-row-gap: ${({ theme }) => theme.space5};
+
+  > div:first-child {
+    grid-column-start: span 2;
+  }
+`
+
 function ModalDialog(props: {
   title: string
   children: React.ReactElement
@@ -153,13 +175,17 @@ function ModalDialog(props: {
           {...modalProps}
           ref={ref}
           style={{
+            // TODO use css var when we can
             background: 'white',
             borderRadius: '6px',
           }}
         >
-          <Text {...titleProps} size={4}>
-            {title}
-          </Text>
+          <ModalTitleWrapper>
+            <Text {...titleProps} size={4}>
+              {title}
+            </Text>
+          </ModalTitleWrapper>
+
           {children}
         </div>
       </FocusScope>
@@ -473,7 +499,7 @@ export function EditCardModal({
             isDismissable={true}
             role="dialog"
           >
-            <div>
+            <ModalBody>
               <Input
                 label="Card Name"
                 placeholder="ex: Chase Sapphire Reserve"
@@ -540,7 +566,7 @@ export function EditCardModal({
               >
                 SAVE CHANGES
               </Button>
-            </div>
+            </ModalBody>
           </ModalDialog>
         </OverlayContainer>
       ) : null}
