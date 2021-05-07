@@ -104,7 +104,7 @@ const ModalTitleWrapper = styled.div`
 const ModalBody = styled.div`
   padding: ${({ theme }) => theme.space4};
   display: grid;
-  width: ${({ theme }) => theme.space(140)};
+  width: ${({ theme }) => theme.space(150)};
   grid-template-columns: 1fr 1fr;
   grid-column-gap: ${({ theme }) => theme.space5};
   grid-row-gap: ${({ theme }) => theme.space4};
@@ -411,6 +411,16 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
   )
 }
 
+const ActionPanel = styled.div`
+  display: flex;
+  background: ${({ theme }) => theme.color.gray1};
+  padding: ${({ theme }) => theme.space3} ${({ theme }) => theme.space4};
+  border-top: 1px solid ${({ theme }) => theme.color.gray2};
+  border-radius: 0 0 6px 6px;
+  justify-content: flex-end;
+  gap: ${({ theme }) => theme.space2};
+`
+
 export const useCardReducer = () => {
   return useReducer(cardReducer, emptyCard)
 }
@@ -427,7 +437,12 @@ export function EditCardModal({
 }) {
   const [card, dispatchCardAction] = cardReducerResult
 
-  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const saveButtonRef = useRef<HTMLButtonElement>(null)
+
+  const closeAndClearModal = () => {
+    state.close()
+    dispatchCardAction({ type: CardActionType.CLEAR })
+  }
 
   const isCompleteInformation = isValidCard(card)
 
@@ -482,7 +497,7 @@ export function EditCardModal({
         }
       },
     },
-    closeButtonRef
+    saveButtonRef
   )
 
   return (
@@ -561,13 +576,16 @@ export function EditCardModal({
                   }}
                 />
               </ModalBody>
-              <Button
-                {...closeButtonProps}
-                ref={closeButtonRef}
-                disabled={!isCompleteInformation}
-              >
-                SAVE CHANGES
-              </Button>
+              <ActionPanel>
+                <Button onClick={closeAndClearModal}>CANCEL</Button>
+                <Button
+                  {...closeButtonProps}
+                  ref={saveButtonRef}
+                  disabled={!isCompleteInformation}
+                >
+                  SAVE CHANGES
+                </Button>
+              </ActionPanel>
             </>
           </ModalDialog>
         </OverlayContainer>

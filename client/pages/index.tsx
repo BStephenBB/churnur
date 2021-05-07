@@ -308,7 +308,7 @@ export default function Dashboard() {
         }}
       >
         <Test>Cards</Test>
-        <Button {...openButtonProps} ref={openButtonRef}>
+        <Button {...openButtonProps} ref={openButtonRef} variant="PRIMARY">
           + ADD CARD
         </Button>
       </div>

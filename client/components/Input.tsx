@@ -1,4 +1,5 @@
 import styled, { DefaultTheme } from 'styled-components'
+import type { FocusEvent } from 'react'
 import type { StyledComponentProps } from 'styled-components'
 import { CalendarIcon } from '../icons'
 
@@ -9,7 +10,6 @@ const Wrapper = styled.div`
   height: ${({ theme }) => theme.space(10)};
   border-radius: 4px;
 `
-/* width: ${({ theme }) => theme.space(48)}; */
 
 const Box = styled.div`
   flex-basis: ${({ theme }) => theme.space(9)};
@@ -92,6 +92,10 @@ export const Input = (
           {...rest}
           hasBox={acctualType !== InputTypes.TEXT}
           isNumeric={acctualType === InputTypes.DOLLAR}
+          /* onSelect={(event: FocusEvent<HTMLInputElement>) => { */
+          /*   // TODO why doesn't the react type suport `.select()`? */
+          /*   event.target.select() */
+          /* }} */
         />
       </Wrapper>
     </div>
