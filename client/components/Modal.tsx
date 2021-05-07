@@ -104,10 +104,10 @@ const ModalTitleWrapper = styled.div`
 const ModalBody = styled.div`
   padding: ${({ theme }) => theme.space4};
   display: grid;
-  width: ${({ theme }) => theme.space(150)};
+  width: ${({ theme }) => theme.space(140)};
   grid-template-columns: 1fr 1fr;
   grid-column-gap: ${({ theme }) => theme.space5};
-  grid-row-gap: ${({ theme }) => theme.space5};
+  grid-row-gap: ${({ theme }) => theme.space4};
 
   > div:first-child {
     grid-column-start: span 2;
@@ -499,66 +499,68 @@ export function EditCardModal({
             isDismissable={true}
             role="dialog"
           >
-            <ModalBody>
-              <Input
-                label="Card Name"
-                placeholder="ex: Chase Sapphire Reserve"
-                value={card.name}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_NAME,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Card Limit"
-                type={InputTypes.DOLLAR}
-                placeholder="ex: 3000.00"
-                value={card.limit}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_LIMIT,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Total Spend"
-                type={InputTypes.DOLLAR}
-                placeholder="ex: 4321.12"
-                value={card.totalSpend}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_TOTAL_SPEND,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Minimum Spending Requirement"
-                type={InputTypes.DOLLAR}
-                placeholder="ex: 8000.00"
-                value={card.minimumSpendingRequirement}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Signup Bonus Due Date"
-                type={InputTypes.DATE}
-                placeholder="yyyy-mm-dd"
-                value={card.signupBonusDate}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                    payload: event.target.value,
-                  })
-                }}
-              />
+            <>
+              <ModalBody>
+                <Input
+                  label="Card Name"
+                  placeholder="ex: Chase Sapphire Reserve"
+                  value={card.name}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_NAME,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Card Limit"
+                  type={InputTypes.DOLLAR}
+                  placeholder="ex: 3000.00"
+                  value={card.limit}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_LIMIT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Total Spend"
+                  type={InputTypes.DOLLAR}
+                  placeholder="ex: 4321.12"
+                  value={card.totalSpend}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_TOTAL_SPEND,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Minimum Spending Requirement"
+                  type={InputTypes.DOLLAR}
+                  placeholder="ex: 8000.00"
+                  value={card.minimumSpendingRequirement}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Signup Bonus Due Date"
+                  type={InputTypes.DATE}
+                  placeholder="yyyy-mm-dd"
+                  value={card.signupBonusDate}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </ModalBody>
               <Button
                 {...closeButtonProps}
                 ref={closeButtonRef}
@@ -566,7 +568,7 @@ export function EditCardModal({
               >
                 SAVE CHANGES
               </Button>
-            </ModalBody>
+            </>
           </ModalDialog>
         </OverlayContainer>
       ) : null}

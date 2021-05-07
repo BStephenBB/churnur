@@ -12,7 +12,8 @@ const Wrapper = styled.div`
 /* width: ${({ theme }) => theme.space(48)}; */
 
 const Box = styled.div`
-  width: ${({ theme }) => theme.space(9)};
+  flex-basis: ${({ theme }) => theme.space(9)};
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +23,6 @@ const Box = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.color.gray3};
   border-left: 1px solid ${({ theme }) => theme.color.gray3};
   height: 100%;
-  flex-shrink: 0;
   border-radius: 4px 0 0 4px;
   font-variation-settings: 'wght' 550;
   font-size: ${({ theme }) => theme.text['1']};
@@ -36,13 +36,13 @@ const Label = styled.label`
 
 // TODO disabled state
 const InputElement = styled.input<{ hasBox: boolean; isNumeric: boolean }>`
-  flex-grow: 1;
+  padding: 0 ${({ theme }) => theme.space(3)};
   display: block;
+  flex-grow: 1;
   min-width: 0;
   height: ${({ theme }) => theme.space(10)};
   border-radius: ${({ hasBox }) => (hasBox ? '0 4px 4px 0' : '4px')};
   border: 1px solid ${({ theme }) => theme.color.gray3};
-  padding: 0 ${({ theme }) => theme.space(3)};
   outline: none !important;
   transition: 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   text-align: ${(props) => (props.isNumeric ? 'right' : 'left')};
@@ -80,6 +80,7 @@ export const Input = (
 ) => {
   const { type, label, ...rest } = props
   let acctualType = type ?? InputTypes.TEXT
+
   return (
     <div>
       <Label>{label}</Label>
