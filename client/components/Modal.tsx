@@ -154,8 +154,7 @@ function ModalDialog(props: {
           ref={ref}
           style={{
             background: 'white',
-            padding: 30,
-            borderRadius: '8px',
+            borderRadius: '6px',
           }}
         >
           <Text {...titleProps} size={4}>
@@ -315,80 +314,70 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             isDismissable={true}
             role="dialog"
           >
-            <form style={{ display: 'flex', flexDirection: 'column' }}>
-              <label>
-                Card Name:
-                <Input
-                  placeholder="ex: Chase Sapphire Reserve"
-                  value={card.name}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_NAME,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Card Limit:
-                <Input
-                  placeholder="ex: 3000.00"
-                  value={card.limit}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_LIMIT,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Total Spend:
-                <Input
-                  placeholder="ex: 4321.12"
-                  value={card.totalSpend}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_TOTAL_SPEND,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Minimum Spending Requirement:
-                <Input
-                  placeholder="ex: 8000.00"
-                  value={card.minimumSpendingRequirement}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Signup Bonus Due Date:
-                <Input
-                  placeholder="yyyy-mm-dd"
-                  value={card.signupBonusDate}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
+            <div>
+              <Input
+                label="Card Name"
+                placeholder="ex: Chase Sapphire Reserve"
+                value={card.name}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_NAME,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Card Limit"
+                placeholder="ex: 3000.00"
+                value={card.limit}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_LIMIT,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Total Spend"
+                placeholder="ex: 4321.12"
+                value={card.totalSpend}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_TOTAL_SPEND,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Minimum Spending Requirement"
+                placeholder="ex: 8000.00"
+                value={card.minimumSpendingRequirement}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Signup Bonus Due Date"
+                placeholder="yyyy-mm-dd"
+                value={card.signupBonusDate}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                    payload: event.target.value,
+                  })
+                }}
+              />
               <Button
                 {...closeButtonProps}
                 ref={closeButtonRef}
                 disabled={!isCompleteInformation}
               >
-                Create card
+                CREATE CARD
               </Button>
-            </form>
+            </div>
           </ModalDialog>
         </OverlayContainer>
       ) : null}
@@ -484,86 +473,74 @@ export function EditCardModal({
             isDismissable={true}
             role="dialog"
           >
-            <form
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-            >
-              <label>
-                Card Name:
-                <Input
-                  placeholder="ex: Chase Sapphire Reserve"
-                  value={card.name}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_NAME,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Card Limit:
-                <Input
-                  type={InputTypes.DOLLAR}
-                  placeholder="ex: 3000.00"
-                  value={card.limit}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_LIMIT,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Total Spend:
-                <Input
-                  type={InputTypes.DOLLAR}
-                  placeholder="ex: 4321.12"
-                  value={card.totalSpend}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_TOTAL_SPEND,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Minimum Spending Requirement:
-                <Input
-                  type={InputTypes.DOLLAR}
-                  placeholder="ex: 8000.00"
-                  value={card.minimumSpendingRequirement}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
-              <label>
-                Signup Bonus Due Date:
-                <Input
-                  type={InputTypes.DATE}
-                  placeholder="yyyy-mm-dd"
-                  value={card.signupBonusDate}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
-              </label>
+            <div>
+              <Input
+                label="Card Name"
+                placeholder="ex: Chase Sapphire Reserve"
+                value={card.name}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_NAME,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Card Limit"
+                type={InputTypes.DOLLAR}
+                placeholder="ex: 3000.00"
+                value={card.limit}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_LIMIT,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Total Spend"
+                type={InputTypes.DOLLAR}
+                placeholder="ex: 4321.12"
+                value={card.totalSpend}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_TOTAL_SPEND,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Minimum Spending Requirement"
+                type={InputTypes.DOLLAR}
+                placeholder="ex: 8000.00"
+                value={card.minimumSpendingRequirement}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                    payload: event.target.value,
+                  })
+                }}
+              />
+              <Input
+                label="Signup Bonus Due Date"
+                type={InputTypes.DATE}
+                placeholder="yyyy-mm-dd"
+                value={card.signupBonusDate}
+                onChange={(event) => {
+                  dispatchCardAction({
+                    type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                    payload: event.target.value,
+                  })
+                }}
+              />
               <Button
                 {...closeButtonProps}
                 ref={closeButtonRef}
                 disabled={!isCompleteInformation}
               >
-                Save changes
+                SAVE CHANGES
               </Button>
-            </form>
+            </div>
           </ModalDialog>
         </OverlayContainer>
       ) : null}

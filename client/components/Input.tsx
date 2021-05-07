@@ -27,6 +27,12 @@ const Box = styled.div`
   font-size: ${({ theme }) => theme.text['1']};
 `
 
+const Label = styled.label`
+  margin-bottom: ${({ theme }) => theme.space1};
+  display: block;
+  font-variation-settings: 'wght' 450;
+`
+
 // TODO disabled state
 const InputElement = styled.input<{ hasBox: boolean }>`
   display: block;
@@ -66,18 +72,21 @@ export const Input = (
   props: StyledComponentProps<
     'input',
     DefaultTheme,
-    { type?: InputTypes },
+    { type?: InputTypes; label: string },
     never
   >
 ) => {
-  const { type, ...rest } = props
+  const { type, label, ...rest } = props
   let acctualType = type ?? InputTypes.TEXT
   return (
-    <Wrapper>
-      {acctualType === InputTypes.TEXT ? null : (
-        <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
-      )}
-      <InputElement {...rest} hasBox={acctualType !== InputTypes.TEXT} />
-    </Wrapper>
+    <div>
+      <Label>{label}</Label>
+      <Wrapper>
+        {acctualType === InputTypes.TEXT ? null : (
+          <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
+        )}
+        <InputElement {...rest} hasBox={acctualType !== InputTypes.TEXT} />
+      </Wrapper>
+    </div>
   )
 }

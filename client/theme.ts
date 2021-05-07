@@ -9,6 +9,13 @@ export const theme = {
   space5: '32px',
   space6: '40px',
 
+  shadow: {
+    small: '0 1px 0 rgba(27,31,35,0.04)',
+    medium: '0 3px 6px rgba(149,157,165,0.15)',
+    large: '0 8px 24px rgba(149,157,165,0.2)',
+    extraLarge: '0 12px 48px',
+  },
+
   text: {
     0: '12px',
     1: '14px',
