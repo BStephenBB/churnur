@@ -52,7 +52,9 @@ export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
     theme.color[BUTTON_TYPES[variant ?? 'DEFAULT'].colors.default.text]};
   letter-spacing: 0.025em;
   transition: all 0.15s ease;
-  outline: 0 !important;
+  &:focus {
+    outline: none;
+  }
 
   &:hover,
   &:focus {

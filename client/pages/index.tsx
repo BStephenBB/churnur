@@ -80,6 +80,32 @@ const makeHeaderComponent = (text: string) => {
   }
 }
 
+const EditButton = styled.button`
+  border: 1px solid ${({ theme }) => theme.color.gray3};
+  padding: ${({ theme }) => theme.space1} ${({ theme }) => theme.space2};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  border-radius: 4px;
+  background: ${({ theme }) => theme.color.gray0};
+
+  transition: all 0.15s ease;
+
+  &:focus {
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.color.blue4 + '40'};
+    outline: none;
+  }
+
+  &:hover,
+  &:focus {
+    background: ${({ theme }) => theme.color.gray1};
+  }
+  &:active {
+    background: ${({ theme }) => theme.color.gray2};
+  }
+`
+
 const makeCardTableColumns = ({
   openCardModal,
   setEditingCardId,
@@ -121,9 +147,8 @@ const makeCardTableColumns = ({
       Cell: function Cell(props: CardTableCellProps) {
         return (
           <DefaultCell {...props.calculatedProps} align="right">
-            <button
+            <EditButton
               onClick={() => {
-                // TODO this whole edit thing should be a column officially
                 const {
                   id,
                   name,
@@ -144,7 +169,7 @@ const makeCardTableColumns = ({
               }}
             >
               <EditIcon title={`edit ${props.row.original.name} card`} />
-            </button>
+            </EditButton>
           </DefaultCell>
         )
       },
