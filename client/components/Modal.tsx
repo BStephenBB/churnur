@@ -277,6 +277,11 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
+  const closeAndClearModal = () => {
+    state.close()
+    dispatchCardAction({ type: CardActionType.CLEAR })
+  }
+
   const isCompleteInformation = isValidCard(card)
 
   const queryClient = useQueryClient()
@@ -340,70 +345,76 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             isDismissable={true}
             role="dialog"
           >
-            <div>
-              <Input
-                label="Card Name"
-                placeholder="ex: Chase Sapphire Reserve"
-                value={card.name}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_NAME,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Card Limit"
-                placeholder="ex: 3000.00"
-                value={card.limit}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_LIMIT,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Total Spend"
-                placeholder="ex: 4321.12"
-                value={card.totalSpend}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_TOTAL_SPEND,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Minimum Spending Requirement"
-                placeholder="ex: 8000.00"
-                value={card.minimumSpendingRequirement}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Input
-                label="Signup Bonus Due Date"
-                placeholder="yyyy-mm-dd"
-                value={card.signupBonusDate}
-                onChange={(event) => {
-                  dispatchCardAction({
-                    type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                    payload: event.target.value,
-                  })
-                }}
-              />
-              <Button
-                {...closeButtonProps}
-                ref={closeButtonRef}
-                disabled={!isCompleteInformation}
-              >
-                CREATE CARD
-              </Button>
-            </div>
+            <>
+              <ModalBody>
+                <Input
+                  label="Card Name"
+                  placeholder="ex: Chase Sapphire Reserve"
+                  value={card.name}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_NAME,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Card Limit"
+                  placeholder="ex: 3000.00"
+                  value={card.limit}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_LIMIT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Total Spend"
+                  placeholder="ex: 4321.12"
+                  value={card.totalSpend}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_TOTAL_SPEND,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Minimum Spending Requirement"
+                  placeholder="ex: 8000.00"
+                  value={card.minimumSpendingRequirement}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+                <Input
+                  label="Signup Bonus Due Date"
+                  placeholder="yyyy-mm-dd"
+                  value={card.signupBonusDate}
+                  onChange={(event) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                      payload: event.target.value,
+                    })
+                  }}
+                />
+              </ModalBody>
+              <ActionPanel>
+                <Button onClick={closeAndClearModal}>CANCEL</Button>
+                <Button
+                  {...closeButtonProps}
+                  ref={closeButtonRef}
+                  disabled={!isCompleteInformation}
+                  variant="PRIMARY"
+                >
+                  CREATE CARD
+                </Button>
+              </ActionPanel>
+            </>
           </ModalDialog>
         </OverlayContainer>
       ) : null}

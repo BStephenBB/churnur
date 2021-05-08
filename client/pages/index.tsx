@@ -94,6 +94,7 @@ const EditButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 3px ${({ theme }) => theme.color.blue4 + '40'};
+    border-color: ${({ theme }) => theme.color.blue2};
     outline: none;
   }
 
