@@ -582,6 +582,7 @@ export function EditCardModal({
                   {...closeButtonProps}
                   ref={saveButtonRef}
                   disabled={!isCompleteInformation}
+                  variant="PRIMARY"
                 >
                   SAVE CHANGES
                 </Button>

@@ -92,10 +92,10 @@ export const Input = (
           {...rest}
           hasBox={acctualType !== InputTypes.TEXT}
           isNumeric={acctualType === InputTypes.DOLLAR}
-          /* onSelect={(event: FocusEvent<HTMLInputElement>) => { */
-          /*   // TODO why doesn't the react type suport `.select()`? */
-          /*   event.target.select() */
-          /* }} */
+          onFocus={(event: FocusEvent<HTMLInputElement>) => {
+            // TODO why doesn't the react type suport `.select()`?
+            event.target.select()
+          }}
         />
       </Wrapper>
     </div>

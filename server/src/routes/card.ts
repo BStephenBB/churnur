@@ -120,6 +120,9 @@ export default async function card(
     // TODO sort by creation date, but seems to do that by default so not urgent
     const cards = await prisma.card.findMany({
       where: { ownerId: id },
+      orderBy: {
+        createdAt: 'asc',
+      },
     })
     reply.send(cards)
   })
