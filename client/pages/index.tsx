@@ -5,7 +5,7 @@ import { useBlockLayout, useTable } from 'react-table'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
 import { format } from 'date-fns'
-import { Button, Modal, EditCardModal } from '../components'
+import { Button, Modal, EditCardModal, Text } from '../components'
 import {
   TableRow,
   TableHeader,
@@ -24,7 +24,6 @@ import { Card, Cards } from '../types'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   height: 100%;
 `
 
@@ -298,12 +297,26 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
+      <Text
+        size={7}
+        align="center"
+        style={{
+          marginTop: '200px',
+          marginBottom: '8px',
+        }}
+      >
+        Churnur
+      </Text>
+      <Text size={4} align="center">
+        Credit Card Management for Churning
+      </Text>
       <div
         style={{
           display: 'flex',
           padding: '0 24px',
           justifyContent: 'space-between',
           alignItems: 'center',
+          marginTop: '40px',
           marginBottom: '16px',
         }}
       >
