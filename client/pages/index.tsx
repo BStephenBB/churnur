@@ -4,7 +4,8 @@ import type { CellProps, Column, HeaderProps } from 'react-table'
 import { useBlockLayout, useTable } from 'react-table'
 import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
-import { format } from 'date-fns'
+import { parseISO } from 'date-fns'
+import { format, utcToZonedTime } from 'date-fns-tz'
 import { Button, Modal, EditCardModal, Text } from '../components'
 import {
   TableRow,
@@ -58,8 +59,10 @@ type CardHeaderCellProps = HeaderProps<Card> & {
 const CELL_FORMATERS = {
   DEFAULT: (input: string) => input,
   DOLLARS: (input: string) => formatMoney(input),
-  /* DATE: (input: string) => format(new Date(input), 'MMM do, yyyy'), */
-  DATE: (input: string) => format(new Date(input), 'MM/dd/yyyy'),
+  DATE: (input: string) =>
+    format(utcToZonedTime(parseISO(input), 'UTC'), 'MM/dd/yyyy', {
+      timeZone: 'UTC',
+    }),
 }
 
 const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
