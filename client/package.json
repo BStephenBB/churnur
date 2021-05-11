@@ -1,0 +1,38 @@
+{
+  "name": "with-typescript-styled-components",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next -p 3001",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@react-aria/button": "^3.3.1",
+    "@react-aria/dialog": "^3.1.2",
+    "@react-aria/overlays": "^3.6.2",
+    "date-fns": "^2.21.1",
+    "date-fns-tz": "^1.1.4",
+    "next": "latest",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-query": "^3.13.10",
+    "react-table": "^7.6.3",
+    "styled-components": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "12.0.12",
+    "@types/react": "16.8.23",
+    "@types/react-dom": "16.8.4",
+    "@types/react-table": "^7.0.29",
+    "@types/styled-components": "^5.0.0",
+    "babel-plugin-styled-components": "^1.10.0",
+    "typescript": "^4.2.4"
+  },
+  "files": [
+    "styled.d.ts"
+  ],
+  "engines": {
+    "node": "15.x"
+  },
+  "license": "MIT"
+}
