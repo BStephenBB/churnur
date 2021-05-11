@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "fastify start --watch --log-level info --pretty-logs dist/app.js",
+    "prod": "node dist/index.js",
     "build": "tsc --project tsconfig.json",
     "studio": "prisma studio",
     "dev": "tsc --project tsconfig.json --watch",

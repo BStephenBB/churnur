@@ -22,6 +22,8 @@ declare module 'fastify' {
       GOOGLE_CLIENT_SECRET: string
       COOKIE_SECRET: string
       NODE_ENV: 'production' | 'development'
+      SERVER_DOMAIN: string
+      CLIENT_DOMAIN: string
     }
   }
   export interface FastifyRequest {

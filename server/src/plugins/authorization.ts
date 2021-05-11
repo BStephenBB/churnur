@@ -31,7 +31,8 @@ async function authorization(
     // register a fastify url to start the redirect flow
     startRedirectPath: '/login/google',
     // google redirect here after the user logs in
-    callbackUri: 'http://localhost:3000/login/google/callback', // TODO change if in prod? this is where they go afterwards I think? will need to build this route, or can just be a link to the frontend I think?
+    // callbackUri: `http://localhost:3000/login/google/callback`, // TODO change if in prod? this is where they go afterwards I think?
+    callbackUri: `http://${config.SERVER_DOMAIN}/login/google/callback`, // TODO change if in prod → just change env variables in prod
     scope: ['email', 'profile'], // TODO maybe 'userinfo' instead of just user see https://developers.google.com/identity/protocols/oauth2/scopes#oauth2
   })
 

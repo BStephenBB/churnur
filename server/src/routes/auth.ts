@@ -33,7 +33,7 @@ export default async function auth(
     request: FastifyRequest,
     reply: FastifyReply
   ) {
-    const { prisma } = app
+    const { prisma, config } = app
     // TODO error handling, or maybe just pass in a callback for that. Prob just use try/catch though
     const token = await this.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(
       request
@@ -97,6 +97,7 @@ export default async function auth(
       expires: new Date(Date.now() + 604_800 * 1_000),
     })
 
-    reply.redirect(302, 'http://localhost:3001/')
+    // reply.redirect(302, 'http://localhost:3001/')
+    reply.redirect(302, `http://${config.CLIENT_DOMAIN}/`)
   }
 }

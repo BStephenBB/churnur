@@ -31,5 +31,8 @@
   "files": [
     "styled.d.ts"
   ],
+  "engines": {
+    "node": "15.x"
+  },
   "license": "MIT"
 }

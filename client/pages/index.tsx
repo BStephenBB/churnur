@@ -56,13 +56,16 @@ type CardHeaderCellProps = HeaderProps<Card> & {
   }
 }
 
+const formatISOStringAsUTC = (isoString: string, dateFormat: string) => {
+  return format(utcToZonedTime(parseISO(isoString), 'UTC'), dateFormat, {
+    timeZone: 'UTC',
+  })
+}
+
 const CELL_FORMATERS = {
   DEFAULT: (input: string) => input,
   DOLLARS: (input: string) => formatMoney(input),
-  DATE: (input: string) =>
-    format(utcToZonedTime(parseISO(input), 'UTC'), 'MM/dd/yyyy', {
-      timeZone: 'UTC',
-    }),
+  DATE: (input: string) => formatISOStringAsUTC(input, 'MM/dd/yyyy'),
 }
 
 const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
@@ -166,7 +169,10 @@ const makeCardTableColumns = ({
                   limit: creditLimit.toString(),
                   totalSpend: totalSpend.toString(),
                   minimumSpendingRequirement: minimumSpendingRequirement.toString(),
-                  signupBonusDate: signupBonusDueDate,
+                  signupBonusDate: formatISOStringAsUTC(
+                    signupBonusDueDate,
+                    'yyyy-MM-dd'
+                  ),
                 })
                 openCardModal()
                 setEditingCardId(id)

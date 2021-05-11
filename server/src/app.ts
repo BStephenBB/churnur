@@ -17,6 +17,8 @@ export default async function (
       .prop('GOOGLE_CLIENT_ID', S.string().required())
       .prop('GOOGLE_CLIENT_SECRET', S.string().required())
       .prop('COOKIE_SECRET', S.string().required())
+      .prop('SERVER_DOMAIN', S.string().required())
+      .prop('CLIENT_DOMAIN', S.string().required())
       .valueOf(),
   })
 
@@ -41,7 +43,8 @@ export default async function (
   // Enable the use of CORS
   app.register(Cors, {
     // origin: false, // TODO turn this on in dev
-    origin: 'http://localhost:3001', // TODO turn this on in dev (or change the origin)
+    // origin: 'http://localhost:3001', // TODO turn this on in dev (or change the origin)
+    origin: `http://${app.config.CLIENT_DOMAIN}`, // TODO turn this on in dev (or change the origin)
     credentials: true,
   })
 
