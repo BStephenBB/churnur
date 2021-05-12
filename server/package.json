@@ -5,13 +5,12 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm run build",
     "start": "fastify start dist/app.js",
     "start-dev": "fastify start --watch --log-level info --pretty-logs dist/app.js",
     "build": "tsc --project tsconfig.json",
     "studio": "prisma studio",
-    "dev": "tsc --project tsconfig.json --watch",
-    "db": "docker compose up"
+    "db": "prisma migrate deploy",
+    "dev": "tsc --project tsconfig.json --watch"
   },
   "keywords": [
     "credit",
