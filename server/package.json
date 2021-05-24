@@ -10,6 +10,7 @@
     "build": "tsc --project tsconfig.json",
     "studio": "prisma studio",
     "db": "prisma migrate deploy",
+    "db-generate": "prisma generate",
     "dev": "tsc --project tsconfig.json --watch"
   },
   "keywords": [

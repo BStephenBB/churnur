@@ -13,7 +13,9 @@ RUN npm run build
 
 RUN npm run db
 
-EXPOSE 4000
+RUN npm run db-generate
+
+EXPOSE 3000
 CMD [ "npm", "start"]
 
 
