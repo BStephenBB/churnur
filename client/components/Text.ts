@@ -35,4 +35,6 @@ export const Text = styled.div.attrs<TextProps>(({ size }) => ({
   font-size: ${({ size, theme }) => theme.text[size ?? 2]};
   line-height: 1.25;
   text-align: ${(props) => (props.align ? 'center' : undefined)};
+  font-variation-settings: 'wght'
+    ${(props) => (props.weight === WEIGHTS.medium ? '550' : '400')};
 `

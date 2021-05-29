@@ -8,15 +8,17 @@ import {
 import { ArrowLeft, ArrowRight } from '../icons'
 import type { Calendar } from 'dayzed'
 import styled from 'styled-components'
+import { Text } from './Text'
+
+const GRID_SIZE = 12
 
 const CalendarWrapper = styled.div`
   display: grid;
-  grid-template-rows: repeat(6, ${({ theme }) => theme.space(12)});
-  grid-template-columns: repeat(7, ${({ theme }) => theme.space(12)});
+  grid-template-rows: repeat(6, ${({ theme }) => theme.space(GRID_SIZE)});
+  grid-template-columns: repeat(7, ${({ theme }) => theme.space(GRID_SIZE)});
 `
 
 const Wrapper = styled.div`
-  padding: ${({ theme }) => theme.space(3)};
   box-shadow: ${({ theme }) => theme.shadow.large};
   display: inline-block;
 `
@@ -25,6 +27,18 @@ const TopWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding: ${({ theme }) => theme.space(1)} 0;
+`
+
+const DaysOfWeekWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: ${({ theme }) => theme.space(1)} 0;
+
+  & > * {
+    text-align: center;
+    width: ${({ theme }) => theme.space(GRID_SIZE)};
+  }
 `
 
 const DateButton = styled.button<{ selected: boolean; today: boolean }>`
@@ -80,32 +94,25 @@ function CalendarUi({
       <>
         {calendars.map((calendar) => (
           <Wrapper key={`${calendar.month}${calendar.year}`}>
-            <TopWrapper>
-              <button {...getBackProps({ calendars })}>
-                <ArrowLeft />
-              </button>
-              <div>
-                {monthNamesShort[calendar.month]} {calendar.year}
-              </div>
-              <button {...getForwardProps({ calendars })}>
-                <ArrowRight />
-              </button>
-            </TopWrapper>
-            <div style={{ width: '100%', display: 'flex' }}>
-              {weekdayNamesShort.map((weekday, index) => (
-                <div
-                  key={`${calendar.month}${calendar.year}${index}`}
-                  style={{
-                    display: 'inline-block',
-                    textAlign: 'center',
-                    width: '48px',
-                    border: 'none',
-                    background: 'transparent',
-                  }}
-                >
-                  {weekday}
-                </div>
-              ))}
+            <div style={{ background: 'gray' }}>
+              <TopWrapper>
+                <button {...getBackProps({ calendars })}>
+                  <ArrowLeft />
+                </button>
+                <Text weight="medium">
+                  {monthNamesShort[calendar.month]} {calendar.year}
+                </Text>
+                <button {...getForwardProps({ calendars })}>
+                  <ArrowRight />
+                </button>
+              </TopWrapper>
+              <DaysOfWeekWrapper>
+                {weekdayNamesShort.map((weekday, index) => (
+                  <div key={`${calendar.month}${calendar.year}${index}`}>
+                    {weekday}
+                  </div>
+                ))}
+              </DaysOfWeekWrapper>
             </div>
             <CalendarWrapper>
               {calendar.weeks.map((week, weekIndex) =>

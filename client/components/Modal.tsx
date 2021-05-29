@@ -360,6 +360,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 />
                 <Input
                   label="Card Limit"
+                  type={InputTypes.DOLLAR}
                   placeholder="ex: 3000.00"
                   value={card.limit}
                   onChange={(event) => {
@@ -371,6 +372,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 />
                 <Input
                   label="Total Spend"
+                  type={InputTypes.DOLLAR}
                   placeholder="ex: 4321.12"
                   value={card.totalSpend}
                   onChange={(event) => {
@@ -382,6 +384,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 />
                 <Input
                   label="Minimum Spending Requirement"
+                  type={InputTypes.DOLLAR}
                   placeholder="ex: 8000.00"
                   value={card.minimumSpendingRequirement}
                   onChange={(event) => {
@@ -393,6 +396,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 />
                 <Input
                   label="Signup Bonus Due Date"
+                  type={InputTypes.DATE}
                   placeholder="yyyy-mm-dd"
                   value={card.signupBonusDate}
                   onChange={(event) => {
