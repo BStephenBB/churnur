@@ -16,6 +16,7 @@ const CalendarWrapper = styled.div`
   display: grid;
   grid-template-rows: repeat(6, ${({ theme }) => theme.space(GRID_SIZE)});
   grid-template-columns: repeat(7, ${({ theme }) => theme.space(GRID_SIZE)});
+  padding: ${({ theme }) => theme.space(2)};
 `
 
 const Wrapper = styled.div`
@@ -23,7 +24,7 @@ const Wrapper = styled.div`
   display: inline-block;
 `
 
-const TopWrapper = styled.div`
+const ControlsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -34,6 +35,7 @@ const DaysOfWeekWrapper = styled.div`
   display: flex;
   width: 100%;
   padding: ${({ theme }) => theme.space(1)} 0;
+  margin-top: ${({ theme }) => theme.space(2)};
 
   & > * {
     text-align: center;
@@ -60,6 +62,16 @@ const DateButton = styled.button<{ selected: boolean; today: boolean }>`
   &:active {
     border-color: ${({ theme }) => theme.color.blue4};
   }
+`
+
+const ArrowButton = styled.button`
+  width: ${({ theme }) => theme.space(GRID_SIZE)};
+`
+
+const TopWrapper = styled.div`
+  background: ${({ theme }) => theme.color.gray2};
+  padding: ${({ theme }) => theme.space(2)} ${({ theme }) => theme.space(2)}
+    ${({ theme }) => theme.space(2)}; ;
 `
 
 const monthNamesShort = [
@@ -94,18 +106,18 @@ function CalendarUi({
       <>
         {calendars.map((calendar) => (
           <Wrapper key={`${calendar.month}${calendar.year}`}>
-            <div style={{ background: 'gray' }}>
-              <TopWrapper>
-                <button {...getBackProps({ calendars })}>
+            <TopWrapper>
+              <ControlsWrapper>
+                <ArrowButton {...getBackProps({ calendars })}>
                   <ArrowLeft />
-                </button>
+                </ArrowButton>
                 <Text weight="medium">
                   {monthNamesShort[calendar.month]} {calendar.year}
                 </Text>
-                <button {...getForwardProps({ calendars })}>
+                <ArrowButton {...getForwardProps({ calendars })}>
                   <ArrowRight />
-                </button>
-              </TopWrapper>
+                </ArrowButton>
+              </ControlsWrapper>
               <DaysOfWeekWrapper>
                 {weekdayNamesShort.map((weekday, index) => (
                   <div key={`${calendar.month}${calendar.year}${index}`}>
@@ -113,7 +125,7 @@ function CalendarUi({
                   </div>
                 ))}
               </DaysOfWeekWrapper>
-            </div>
+            </TopWrapper>
             <CalendarWrapper>
               {calendar.weeks.map((week, weekIndex) =>
                 week.map((dateObj, index) => {
