@@ -5,6 +5,7 @@ import {
   Props,
   useDayzed,
 } from 'dayzed'
+import { ArrowLeft, ArrowRight } from '../icons'
 import type { Calendar } from 'dayzed'
 import styled from 'styled-components'
 
@@ -22,6 +23,8 @@ const Wrapper = styled.div`
 
 const TopWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
+  width: 100%;
 `
 
 const DateButton = styled.button<{ selected: boolean; today: boolean }>`
@@ -78,11 +81,15 @@ function CalendarUi({
         {calendars.map((calendar) => (
           <Wrapper key={`${calendar.month}${calendar.year}`}>
             <TopWrapper>
-              <button {...getBackProps({ calendars })}>Back</button>
+              <button {...getBackProps({ calendars })}>
+                <ArrowLeft />
+              </button>
               <div>
                 {monthNamesShort[calendar.month]} {calendar.year}
               </div>
-              <button {...getForwardProps({ calendars })}>Next</button>
+              <button {...getForwardProps({ calendars })}>
+                <ArrowRight />
+              </button>
             </TopWrapper>
             <div style={{ width: '100%', display: 'flex' }}>
               {weekdayNamesShort.map((weekday, index) => (
