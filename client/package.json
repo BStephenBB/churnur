@@ -12,6 +12,7 @@
     "@react-aria/overlays": "^3.6.2",
     "date-fns": "^2.21.1",
     "date-fns-tz": "^1.1.4",
+    "dayzed": "^3.2.2",
     "next": "latest",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
