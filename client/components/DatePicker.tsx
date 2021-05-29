@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   GetBackForwardPropsOptions,
   GetDatePropsOptions,
@@ -7,6 +7,16 @@ import {
 } from 'dayzed'
 import type { Calendar } from 'dayzed'
 import styled from 'styled-components'
+
+const DateButton = styled.button`
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 100%;
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.color.blue4};
+  }
+`
 
 const monthNamesShort = [
   'Jan',
@@ -37,7 +47,13 @@ function CalendarUi({
 }) {
   if (calendars.length) {
     return (
-      <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+      <div
+        style={{
+          maxWidth: 800,
+          textAlign: 'center',
+          border: '1px solid blue',
+        }}
+      >
         <div>
           <button {...getBackProps({ calendars })}>Back</button>
           <button {...getForwardProps({ calendars })}>Next</button>
@@ -49,6 +65,7 @@ function CalendarUi({
               display: 'inline-block',
               width: '50%',
               padding: '0 10px 30px',
+              border: '1px solid red',
               boxSizing: 'border-box',
             }}
           >
@@ -84,23 +101,20 @@ function CalendarUi({
                     />
                   )
                 }
-                let { date, selected, selectable, today } = dateObj
+                const { date, selected, selectable, today } = dateObj
                 let background = today ? 'cornflowerblue' : ''
                 background = selected ? 'purple' : background
                 background = !selectable ? 'teal' : background
                 return (
-                  <button
+                  <DateButton
                     style={{
-                      display: 'inline-block',
-                      width: 'calc(100% / 7)',
-                      border: 'none',
                       background,
                     }}
                     key={key}
                     {...getDateProps({ dateObj })}
                   >
                     {selectable ? date.getDate() : 'X'}
-                  </button>
+                  </DateButton>
                 )
               })
             )}
@@ -117,10 +131,10 @@ function Datepicker(props: Omit<Props, 'children' | 'render'>) {
   return <CalendarUi {...dayzedData} />
 }
 
-class Single extends React.Component {
-  state: { selectedDate: Date | undefined } = { selectedDate: undefined }
+export const SingleDate = () => {
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(undefined)
 
-  _handleOnDateSelected = ({
+  const _handleOnDateSelected = ({
     selected,
     selectable,
     date,
@@ -129,26 +143,21 @@ class Single extends React.Component {
     selectable: boolean
     date: Date
   }) => {
-    this.setState(() => ({ selectedDate: date }))
+    setSelectedDate(date)
   }
 
-  render() {
-    const { selectedDate } = this.state
-    return (
-      <div>
-        <Datepicker
-          selected={this.state.selectedDate}
-          onDateSelected={this._handleOnDateSelected}
-        />
-        {this.state.selectedDate && (
-          <div style={{ paddingTop: 20, textAlign: 'center' }}>
-            <p>Selected:</p>
-            <p>{`${selectedDate?.toLocaleDateString()}`}</p>
-          </div>
-        )}
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Datepicker
+        selected={selectedDate}
+        onDateSelected={_handleOnDateSelected}
+      />
+      {selectedDate && (
+        <div style={{ paddingTop: 20, textAlign: 'center' }}>
+          <p>Selected:</p>
+          <p>{`${selectedDate?.toLocaleDateString()}`}</p>
+        </div>
+      )}
+    </div>
+  )
 }
-
-export { Single }
