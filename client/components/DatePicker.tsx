@@ -14,7 +14,7 @@ const CalendarWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(7, auto);
   padding: ${({ theme }) => theme.space(2)};
-  background: ${({ theme }) => theme.color.gray1};
+  background: ${({ theme }) => theme.color.white};
 `
 
 const Wrapper = styled.div<{ show: boolean }>`
@@ -27,13 +27,14 @@ const Wrapper = styled.div<{ show: boolean }>`
   left: 50%;
   transform: translateX(-50%);
   opacity: ${(props) => (props.show ? '1' : '0')};
+  pointer-events: ${(props) => (props.show ? 'auto' : 'none')};
 `
 
 const ControlsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: ${({ theme }) => theme.space(1)} 0;
+  padding: ${({ theme }) => theme.space(2)} 0;
 `
 
 const SQUARE_SIZE = 12
@@ -51,26 +52,25 @@ const DaysOfWeekWrapper = styled.div`
   }
 `
 
-const DateButton = styled.button<{ selected: boolean; today: boolean }>`
+const DateButton = styled.button<{ selected: boolean }>`
   border-radius: 100%;
   height: ${({ theme }) => theme.space(SQUARE_SIZE)};
   width: ${({ theme }) => theme.space(SQUARE_SIZE)};
   color: ${({ theme }) => theme.color.text};
   transition: all 0.15s ease;
   font-variation-settings: 'wght' ${(props) => (props.selected ? '600' : '500')};
-  border: 2px solid ${({ theme }) => theme.color.gray1};
-  background: ${({ selected, today, theme }) =>
-    selected
-      ? theme.color.blue3
-      : today
-      ? theme.color.green2
-      : theme.color.gray1};
+  border: 2px solid ${({ theme }) => theme.color.white};
+  background: ${({ selected, theme }) =>
+    selected ? theme.color.gray8 : theme.color.white};
+  color: ${({ selected, theme }) =>
+    selected ? theme.color.white : theme.color.text};
   &:hover {
-    border-color: ${({ theme, today, selected }) =>
-      today || selected ? undefined : theme.color.gray6};
+    border-color: ${({ theme, selected }) =>
+      selected ? undefined : theme.color.gray7};
   }
   &:active {
-    border-color: ${({ theme }) => theme.color.blue4};
+    background: ${({ theme }) => theme.color.gray2};
+    border-color: ${({ theme }) => theme.color.gray2};
   }
 `
 
@@ -79,7 +79,7 @@ const ArrowButton = styled.button`
 `
 
 const TopWrapper = styled.div`
-  background: ${({ theme }) => theme.color.gray3};
+  background: ${({ theme }) => theme.color.gray2};
   padding: ${({ theme }) => theme.space(2)} ${({ theme }) => theme.space(2)}
     ${({ theme }) => theme.space(2)}; ;
 `
@@ -190,7 +190,6 @@ function CalendarUi({
                   return (
                     <DateButton
                       selected={selected}
-                      today={today}
                       key={key}
                       {...getDateProps({ dateObj })}
                     >

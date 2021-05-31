@@ -397,14 +397,21 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 <Input
                   label="Signup Bonus Due Date"
                   type={InputTypes.DATE}
-                  placeholder="yyyy-mm-dd"
+                  placeholder="mm/dd/yyyy"
                   value={card.signupBonusDate}
-                  onChange={(event) => {
+                  onChange={() => {}}
+                  setDate={(date: string) => {
                     dispatchCardAction({
                       type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                      payload: event.target.value,
+                      payload: date,
                     })
                   }}
+                  /* onChange={(event) => { */
+                  /*   dispatchCardAction({ */
+                  /*     type: CardActionType.SET_SIGNUP_BONUS_DATE, */
+                  /*     payload: event.target.value, */
+                  /*   }) */
+                  /* }} */
                 />
               </ModalBody>
               <ActionPanel>
@@ -581,14 +588,21 @@ export function EditCardModal({
                 <Input
                   label="Signup Bonus Due Date"
                   type={InputTypes.DATE}
-                  placeholder="yyyy-mm-dd"
+                  placeholder="mm/dd/yyyy"
                   value={card.signupBonusDate}
-                  onChange={(event) => {
+                  onChange={() => {}}
+                  setDate={(date: string) => {
                     dispatchCardAction({
                       type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                      payload: event.target.value,
+                      payload: date,
                     })
                   }}
+                  // onChange={(event) => {
+                  //   dispatchCardAction({
+                  //     type: CardActionType.SET_SIGNUP_BONUS_DATE,
+                  //     payload: event.target.value,
+                  //   })
+                  // }}
                 />
               </ModalBody>
               <ActionPanel>

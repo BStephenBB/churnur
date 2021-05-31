@@ -3,9 +3,10 @@ import styled, { DefaultTheme } from 'styled-components'
 import type { FocusEvent } from 'react'
 import type { StyledComponentProps } from 'styled-components'
 import { Datepicker } from './DatePicker'
+import { format } from 'date-fns'
 import { CalendarIcon } from '../icons'
 
-// TODO use react-aria for this
+// TODO use react-aria for this (for input)
 
 const Wrapper = styled.div`
   display: flex;
@@ -76,14 +77,13 @@ export const Input = (
   props: StyledComponentProps<
     'input',
     DefaultTheme,
-    { type?: InputTypes; label: string },
+    { type?: InputTypes; label: string; setDate?: (date: string) => void },
     never
   >
 ) => {
-  const { type, label, ...rest } = props
+  const { type, label, setDate, ...rest } = props
   let acctualType = type ?? InputTypes.TEXT
 
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(undefined)
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
   const hideDatePicker = () => {
@@ -99,7 +99,9 @@ export const Input = (
     selectable: boolean
     date: Date
   }) => {
-    setSelectedDate(date)
+    if (setDate !== undefined) {
+      setDate(format(date, 'MM/dd/yyyy'))
+    }
     hideDatePicker()
   }
 
@@ -130,7 +132,8 @@ export const Input = (
           <Datepicker
             inputRef={dateInputRef}
             show={isDatePickerOpen}
-            selected={selectedDate}
+            selected={new Date(rest.value as string)}
+            date={rest.value ? new Date(rest.value as string) : new Date()}
             onDateSelected={_handleOnDateSelected}
             hideDatePicker={hideDatePicker}
           />

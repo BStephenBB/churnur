@@ -171,7 +171,7 @@ const makeCardTableColumns = ({
                   minimumSpendingRequirement: minimumSpendingRequirement.toString(),
                   signupBonusDate: formatISOStringAsUTC(
                     signupBonusDueDate,
-                    'yyyy-MM-dd'
+                    'MM/dd/yyyy'
                   ),
                 })
                 openCardModal()
