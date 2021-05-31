@@ -19,7 +19,7 @@ RUN npm run build
 # ARG CLIENT_DOMAIN
 
 # ENV DATABASE_URL=$DATABASE_URL
-# ENV DATABASE_URL=postgres://postgres:b5e21b9801a1f3874aa0194e9d17c0b5@dokku-postgres-pg:5432/pg
+ENV DATABASE_URL=postgres://postgres:b5e21b9801a1f3874aa0194e9d17c0b5@dokku-postgres-pg:5432/pg
 # RUN echo "HERE"
 # RUN echo $DATABASE_URL
 
