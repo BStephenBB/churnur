@@ -29,9 +29,9 @@ ENV DATABASE_URL=postgres://postgres:b5e21b9801a1f3874aa0194e9d17c0b5@dokku-post
 # ENV SERVER_DOMAIN=$SERVER_DOMAIN
 # ENV CLIENT_DOMAIN=$CLIENT_DOMAIN
 
-RUN npm run db
-
 RUN npm run db-generate
+
+RUN npm run db
 
 EXPOSE 3000
 CMD [ "npm", "start"]
