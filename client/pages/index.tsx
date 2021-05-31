@@ -6,7 +6,7 @@ import { useOverlayTriggerState } from '@react-stately/overlays'
 import { useButton } from '@react-aria/button'
 import { parseISO } from 'date-fns'
 import { format, utcToZonedTime } from 'date-fns-tz'
-import { Button, Modal, EditCardModal, Text, SingleDate } from '../components'
+import { Button, Modal, EditCardModal, Text } from '../components'
 import {
   TableRow,
   TableHeader,
@@ -332,7 +332,6 @@ export default function Dashboard() {
 
   return (
     <Wrapper>
-      <SingleDate />
       <Text
         size={7}
         align="center"

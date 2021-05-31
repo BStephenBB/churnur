@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   GetBackForwardPropsOptions,
   GetDatePropsOptions,
@@ -17,9 +17,16 @@ const CalendarWrapper = styled.div`
   background: ${({ theme }) => theme.color.gray1};
 `
 
-const Wrapper = styled.div`
-  box-shadow: ${({ theme }) => theme.shadow.large};
-  display: inline-block;
+const Wrapper = styled.div<{ show: boolean }>`
+  box-shadow: ${({ theme }) => theme.shadow.medium};
+  border-radius: 6px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + ${({ theme }) => theme.space(3)});
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: ${(props) => (props.show ? '1' : '0')};
 `
 
 const ControlsWrapper = styled.div`
@@ -40,6 +47,7 @@ const DaysOfWeekWrapper = styled.div`
   & > * {
     text-align: center;
     width: ${({ theme }) => theme.space(SQUARE_SIZE)};
+    font-variation-settings: 'wght' 550;
   }
 `
 
@@ -55,7 +63,7 @@ const DateButton = styled.button<{ selected: boolean; today: boolean }>`
     selected
       ? theme.color.blue3
       : today
-      ? theme.color.green3
+      ? theme.color.green2
       : theme.color.gray1};
   &:hover {
     border-color: ${({ theme, today, selected }) =>
@@ -97,17 +105,48 @@ function CalendarUi({
   getBackProps,
   getForwardProps,
   getDateProps,
+  show,
+  inputRef,
+  hideDatePicker,
 }: {
   calendars: Calendar[]
   getBackProps: (options: GetBackForwardPropsOptions) => Record<string, any>
   getForwardProps: (options: GetBackForwardPropsOptions) => Record<string, any>
   getDateProps: (data: GetDatePropsOptions) => Record<string, any>
+  show: boolean
+  inputRef: React.RefObject<HTMLInputElement>
+  hideDatePicker: () => void
 }) {
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const clickedOutsideCalendar =
+        calendarRef.current && !calendarRef.current.contains(e.target as Node)
+      const clickedOutsideInput =
+        inputRef.current && !inputRef.current.contains(e.target as Node)
+
+      if (clickedOutsideCalendar && clickedOutsideInput) {
+        hideDatePicker()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   if (calendars.length) {
     return (
       <>
         {calendars.map((calendar) => (
-          <Wrapper key={`${calendar.month}${calendar.year}`}>
+          <Wrapper
+            key={`${calendar.month}${calendar.year}`}
+            show={show}
+            ref={calendarRef}
+          >
             <TopWrapper>
               <ControlsWrapper>
                 <ArrowButton {...getBackProps({ calendars })}>
@@ -169,35 +208,49 @@ function CalendarUi({
   return null
 }
 
-function Datepicker(props: Omit<Props, 'children' | 'render'>) {
+export function Datepicker(
+  props: Omit<
+    Props & {
+      show: boolean
+      inputRef: React.RefObject<HTMLInputElement>
+      hideDatePicker: () => void
+    },
+    'children' | 'render'
+  >
+) {
   const dayzedData = useDayzed(props)
-  return <CalendarUi {...dayzedData} />
-}
-
-export const SingleDate = () => {
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(undefined)
-
-  const _handleOnDateSelected = ({
-    selected,
-    selectable,
-    date,
-  }: {
-    selected: boolean
-    selectable: boolean
-    date: Date
-  }) => {
-    setSelectedDate(date)
-  }
-
   return (
-    <div>
-      <Datepicker
-        selected={selectedDate}
-        onDateSelected={_handleOnDateSelected}
-      />
-    </div>
+    <CalendarUi
+      {...dayzedData}
+      show={props.show}
+      inputRef={props.inputRef}
+      hideDatePicker={props.hideDatePicker}
+    />
   )
 }
+
+/* export const SingleDate = () => { */
+/*   const [selectedDate, setSelectedDate] = useState<undefined | Date>(undefined) */
+/*   const _handleOnDateSelected = ({ */
+/*     selected, */
+/*     selectable, */
+/*     date, */
+/*   }: { */
+/*     selected: boolean */
+/*     selectable: boolean */
+/*     date: Date */
+/*   }) => { */
+/*     setSelectedDate(date) */
+/*   } */
+/*   return ( */
+/*     <Datepicker */
+/*       show={true} */
+/*       selected={selectedDate} */
+/*       onDateSelected={_handleOnDateSelected} */
+/*     /> */
+/*   ) */
+/* } */
+
 /* {selectedDate && ( */
 /*       <div style={{ paddingTop: 20, textAlign: 'center' }}> */
 /*       <p>Selected:</p> */

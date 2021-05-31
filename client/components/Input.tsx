@@ -1,6 +1,8 @@
+import { useState, useRef } from 'react'
 import styled, { DefaultTheme } from 'styled-components'
 import type { FocusEvent } from 'react'
 import type { StyledComponentProps } from 'styled-components'
+import { Datepicker } from './DatePicker'
 import { CalendarIcon } from '../icons'
 
 // TODO use react-aria for this
@@ -81,23 +83,79 @@ export const Input = (
   const { type, label, ...rest } = props
   let acctualType = type ?? InputTypes.TEXT
 
-  return (
-    <div>
-      <Label>{label}</Label>
-      <Wrapper>
-        {acctualType === InputTypes.TEXT ? null : (
-          <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
-        )}
-        <InputElement
-          {...rest}
-          hasBox={acctualType !== InputTypes.TEXT}
-          isNumeric={acctualType === InputTypes.DOLLAR}
-          onFocus={(event: FocusEvent<HTMLInputElement>) => {
-            // TODO why doesn't the react type suport `.select()`?
-            event.target.select()
-          }}
-        />
-      </Wrapper>
-    </div>
-  )
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(undefined)
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
+
+  const hideDatePicker = () => {
+    setIsDatePickerOpen(false)
+  }
+
+  const _handleOnDateSelected = ({
+    selected,
+    selectable,
+    date,
+  }: {
+    selected: boolean
+    selectable: boolean
+    date: Date
+  }) => {
+    setSelectedDate(date)
+    hideDatePicker()
+  }
+
+  const dateInputRef = useRef<HTMLInputElement>(null)
+
+  if (type === InputTypes.DATE) {
+    return (
+      <div>
+        <Label>{label}</Label>
+        <Wrapper>
+          {acctualType === InputTypes.TEXT ? null : (
+            <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
+          )}
+          <InputElement
+            {...rest}
+            ref={dateInputRef}
+            hasBox={acctualType !== InputTypes.TEXT}
+            isNumeric={acctualType === InputTypes.DOLLAR}
+            onFocus={(event: FocusEvent<HTMLInputElement>) => {
+              // TODO why doesn't the react type suport `.select()`?
+              event.target.select()
+              setIsDatePickerOpen(true)
+            }}
+            onBlur={() => {
+              /* setIsDatePickerOpen(false) */
+            }}
+          />
+          <Datepicker
+            inputRef={dateInputRef}
+            show={isDatePickerOpen}
+            selected={selectedDate}
+            onDateSelected={_handleOnDateSelected}
+            hideDatePicker={hideDatePicker}
+          />
+        </Wrapper>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Label>{label}</Label>
+        <Wrapper>
+          {acctualType === InputTypes.TEXT ? null : (
+            <Box>{INPUT_TYPE_SYMBOL[acctualType]}</Box>
+          )}
+          <InputElement
+            {...rest}
+            hasBox={acctualType !== InputTypes.TEXT}
+            isNumeric={acctualType === InputTypes.DOLLAR}
+            onFocus={(event: FocusEvent<HTMLInputElement>) => {
+              // TODO why doesn't the react type suport `.select()`?
+              event.target.select()
+            }}
+          />
+        </Wrapper>
+      </div>
+    )
+  }
 }
