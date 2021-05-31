@@ -10,13 +10,11 @@ import type { Calendar } from 'dayzed'
 import styled from 'styled-components'
 import { Text } from './Text'
 
-const GRID_SIZE = 12
-
 const CalendarWrapper = styled.div`
   display: grid;
-  grid-template-rows: repeat(6, ${({ theme }) => theme.space(GRID_SIZE)});
-  grid-template-columns: repeat(7, ${({ theme }) => theme.space(GRID_SIZE)});
+  grid-template-columns: repeat(7, auto);
   padding: ${({ theme }) => theme.space(2)};
+  background: ${({ theme }) => theme.color.gray1};
 `
 
 const Wrapper = styled.div`
@@ -31,6 +29,8 @@ const ControlsWrapper = styled.div`
   padding: ${({ theme }) => theme.space(1)} 0;
 `
 
+const SQUARE_SIZE = 12
+
 const DaysOfWeekWrapper = styled.div`
   display: flex;
   width: 100%;
@@ -39,22 +39,24 @@ const DaysOfWeekWrapper = styled.div`
 
   & > * {
     text-align: center;
-    width: ${({ theme }) => theme.space(GRID_SIZE)};
+    width: ${({ theme }) => theme.space(SQUARE_SIZE)};
   }
 `
 
 const DateButton = styled.button<{ selected: boolean; today: boolean }>`
   border-radius: 100%;
+  height: ${({ theme }) => theme.space(SQUARE_SIZE)};
+  width: ${({ theme }) => theme.space(SQUARE_SIZE)};
   color: ${({ theme }) => theme.color.text};
   transition: all 0.15s ease;
   font-variation-settings: 'wght' ${(props) => (props.selected ? '600' : '500')};
-  border: 2px solid ${({ theme }) => theme.color.white};
+  border: 2px solid ${({ theme }) => theme.color.gray1};
   background: ${({ selected, today, theme }) =>
     selected
-      ? theme.color.blue2
+      ? theme.color.blue3
       : today
-      ? theme.color.green2
-      : theme.color.white};
+      ? theme.color.green3
+      : theme.color.gray1};
   &:hover {
     border-color: ${({ theme, today, selected }) =>
       today || selected ? undefined : theme.color.gray6};
@@ -65,11 +67,11 @@ const DateButton = styled.button<{ selected: boolean; today: boolean }>`
 `
 
 const ArrowButton = styled.button`
-  width: ${({ theme }) => theme.space(GRID_SIZE)};
+  width: ${({ theme }) => theme.space(SQUARE_SIZE)};
 `
 
 const TopWrapper = styled.div`
-  background: ${({ theme }) => theme.color.gray2};
+  background: ${({ theme }) => theme.color.gray3};
   padding: ${({ theme }) => theme.space(2)} ${({ theme }) => theme.space(2)}
     ${({ theme }) => theme.space(2)}; ;
 `
