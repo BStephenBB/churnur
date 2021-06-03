@@ -19,7 +19,7 @@ import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
 import { useRouter } from 'next/dist/client/router'
-import { logout } from '../utils'
+/* import { logout } from '../utils' */
 import { Card, Cards } from '../types'
 
 const Wrapper = styled.div`

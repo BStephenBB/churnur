@@ -91,12 +91,12 @@ export const Input = (
   }
 
   const _handleOnDateSelected = ({
-    selected,
-    selectable,
+    /* selected, */
+    /* selectable, */
     date,
   }: {
-    selected: boolean
-    selectable: boolean
+    /* selected: boolean */
+    /* selectable: boolean */
     date: Date
   }) => {
     if (setDate !== undefined) {
