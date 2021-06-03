@@ -18,8 +18,8 @@ ARG DATABASE_URL
 # ARG SERVER_DOMAIN
 # ARG CLIENT_DOMAIN
 
-ENV DATABASE_URL=${DATABASE_URL}
-# ENV DATABASE_URL=postgres://postgres:b5e21b9801a1f3874aa0194e9d17c0b5@dokku-postgres-pg:5432/pg
+# ENV DATABASE_URL=${DATABASE_URL}
+ENV DATABASE_URL=postgres://postgres:b5e21b9801a1f3874aa0194e9d17c0b5@dokku-postgres-pg:5432/pg
 # RUN echo "HERE"
 # RUN echo $DATABASE_URL
 
@@ -29,11 +29,11 @@ ENV DATABASE_URL=${DATABASE_URL}
 # ENV SERVER_DOMAIN=$SERVER_DOMAIN
 # ENV CLIENT_DOMAIN=$CLIENT_DOMAIN
 
-RUN npm run db
+# RUN npm run db
 
 RUN npm run db-generate
 
 EXPOSE 3000
-CMD [ "npm", "start"]
+CMD ["npm", "start"]
 
 
