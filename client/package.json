@@ -33,7 +33,7 @@
     "styled.d.ts"
   ],
   "engines": {
-    "node": "15.x"
+    "node": "14.x"
   },
   "license": "MIT"
 }
