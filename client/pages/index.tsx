@@ -18,7 +18,7 @@ import { EditIcon } from '../icons'
 import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
-import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/router'
 /* import { logout } from '../utils' */
 import { Card, Cards } from '../types'
 
