@@ -193,18 +193,21 @@ const Test = styled.div`
   font-variation-settings: 'wght' 650;
 `
 
-const SERVER_DOMAIN = process.env.SERVER_DOMAIN
+const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 /* const result = await window.fetch(`http://localhost:3000/cards`, { */
 
 const getUsersCards = async () => {
-  const result = await window.fetch(`http://${SERVER_DOMAIN}/cards`, {
-    method: 'GET',
-    headers: {
-      /* 'Access-Control-Allow-Origin': '*', */
-    },
-    credentials: 'include',
-    // TODO make a fetch wrapper
-  })
+  const result = await window.fetch(
+    `https://${NEXT_PUBLIC_SERVER_DOMAIN}/cards`,
+    {
+      method: 'GET',
+      headers: {
+        /* 'Access-Control-Allow-Origin': '*', */
+      },
+      credentials: 'include',
+      // TODO make a fetch wrapper
+    }
+  )
   const json = await result.json()
   if (result.ok) {
     return json
@@ -333,7 +336,7 @@ export default function Dashboard() {
 
   console.log(cards)
 
-  console.log(process.env.SERVER_DOMAIN)
+  console.log(process.env.NEXT_PUBLIC_SERVER_DOMAIN)
 
   return (
     <Wrapper>

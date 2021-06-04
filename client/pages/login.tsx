@@ -41,14 +41,17 @@ const GoogleButton = styled(Button).attrs(() => ({ variant: 'PRIMARY' }))`
   }
 `
 
-const SERVER_DOMAIN = process.env.SERVER_DOMAIN
+const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 
 export default function Dashboard() {
   return (
     <Wrapper>
       <Card>
         <Text size={6}>Churnur</Text>
-        <GoogleButton href={`http://${SERVER_DOMAIN}/login/google`} as="a">
+        <GoogleButton
+          href={`https://${NEXT_PUBLIC_SERVER_DOMAIN}/login/google`}
+          as="a"
+        >
           <GoogleIcon />
           Login with Google
         </GoogleButton>
