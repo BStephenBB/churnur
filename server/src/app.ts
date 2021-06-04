@@ -43,8 +43,7 @@ export default async function (
 
   // Enable the use of CORS
   app.register(Cors, {
-    // origin: 'http://localhost:3001', // TODO turn this on in dev (or change the origin)
-    origin: `http://${app.config.CLIENT_DOMAIN}`, // TODO turn this on in dev (or change the origin)
+    origin: `https://${app.config.CLIENT_DOMAIN}`, // TODO turn this on in dev (or change the origin)
     credentials: true,
   })
 
