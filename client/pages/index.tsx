@@ -330,6 +330,8 @@ export default function Dashboard() {
 
   console.log(cards)
 
+  console.log(process.env.SERVER_DOMAIN)
+
   return (
     <Wrapper>
       <Text
