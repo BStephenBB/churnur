@@ -16,6 +16,8 @@ import { useButton } from '@react-aria/button'
 import { Card, Cards } from '../types'
 import { useQueryClient } from 'react-query'
 
+const SERVER_DOMAIN = process.env.SERVER_DOMAIN
+
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (
   cardData: {
@@ -28,7 +30,7 @@ const updateCard = async (
   },
   updateCardData: (card: Card) => void
 ) => {
-  const result = await window.fetch(`http://localhost:3000/card`, {
+  const result = await window.fetch(`http://${SERVER_DOMAIN}/card`, {
     method: 'PATCH',
     headers: {
       /* 'Access-Control-Allow-Origin': '*', */
@@ -67,7 +69,7 @@ const addCard = async (
   },
   addNewCard: (card: Card) => void
 ) => {
-  const result = await window.fetch(`http://localhost:3000/card`, {
+  const result = await window.fetch(`http://${SERVER_DOMAIN}/card`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

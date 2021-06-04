@@ -193,8 +193,11 @@ const Test = styled.div`
   font-variation-settings: 'wght' 650;
 `
 
+const SERVER_DOMAIN = process.env.SERVER_DOMAIN
+/* const result = await window.fetch(`http://localhost:3000/cards`, { */
+
 const getUsersCards = async () => {
-  const result = await window.fetch(`http://localhost:3000/cards`, {
+  const result = await window.fetch(`http://${SERVER_DOMAIN}/cards`, {
     method: 'GET',
     headers: {
       /* 'Access-Control-Allow-Origin': '*', */

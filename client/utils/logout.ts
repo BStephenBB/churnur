@@ -1,5 +1,7 @@
+const SERVER_DOMAIN = process.env.SERVER_DOMAIN
+
 export const logout = async () => {
-  const result = await window.fetch(`http://localhost:3000/logout`, {
+  const result = await window.fetch(`http://${SERVER_DOMAIN}/logout`, {
     method: 'GET',
     credentials: 'include',
   })
