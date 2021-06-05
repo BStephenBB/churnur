@@ -45,7 +45,10 @@ const GoogleButton = styled(Button).attrs(() => ({ variant: 'PRIMARY' }))`
 const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 
 const ping = () => {
-  fetch(`https://${NEXT_PUBLIC_SERVER_DOMAIN}/ping`)
+  fetch(`https://${NEXT_PUBLIC_SERVER_DOMAIN}/ping`, {
+    method: 'GET',
+    credentials: 'include',
+  })
     .then((res) => res.json())
     .then((d) => console.log(d))
 }
