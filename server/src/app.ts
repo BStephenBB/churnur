@@ -20,6 +20,7 @@ export default async function (
       .prop('COOKIE_SECRET', S.string().required())
       .prop('SERVER_DOMAIN', S.string().required())
       .prop('CLIENT_DOMAIN', S.string().required())
+      .prop('NODE_ENV', S.string().required())
       .valueOf(),
   })
 
@@ -43,7 +44,10 @@ export default async function (
 
   // Enable the use of CORS
   app.register(Cors, {
-    origin: `https://${app.config.CLIENT_DOMAIN}`, // TODO turn this on in dev (or change the origin)
+    // origin: `https://${app.config.CLIENT_DOMAIN}`,
+    origin: `http${app.config.NODE_ENV === 'development' ? '' : 's'}://${
+      app.config.CLIENT_DOMAIN
+    }`,
     credentials: true,
   })
 

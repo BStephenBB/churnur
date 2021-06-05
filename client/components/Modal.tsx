@@ -15,6 +15,7 @@ import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
 import { Card, Cards } from '../types'
 import { useQueryClient } from 'react-query'
+import { api } from '../utils'
 
 const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 
@@ -30,18 +31,27 @@ const updateCard = async (
   },
   updateCardData: (card: Card) => void
 ) => {
-  const result = await window.fetch(
-    `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`,
-    {
-      method: 'PATCH',
-      headers: {
-        /* 'Access-Control-Allow-Origin': '*', */
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(cardData),
-    }
-  )
+  const result = await api.PATCH('/card', cardData)
+  /* const result = await window.fetch( */
+  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`, */
+  /*   { */
+  /*     method: 'PATCH', */
+  /*     headers: { */
+  /*       'Content-Type': 'application/json', */
+  /*     }, */
+  /*     credentials: 'include', */
+  /*     body: JSON.stringify(cardData), */
+  /*   } */
+  /* ) */
+  /* const { */
+  /*   id, */
+  /*   name, */
+  /*   creditLimit, */
+  /*   minimumSpendingRequirement, */
+  /*   totalSpend, */
+  /*   signupBonusDueDate, */
+  /* } = await result.json() */
+
   const {
     id,
     name,
@@ -49,7 +59,8 @@ const updateCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
-  } = await result.json()
+  } = result
+
   updateCardData({
     id,
     name,
@@ -72,17 +83,26 @@ const addCard = async (
   },
   addNewCard: (card: Card) => void
 ) => {
-  const result = await window.fetch(
-    `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(cardData),
-    }
-  )
+  const result = await api.POST('/card', cardData)
+  /* const result = await window.fetch( */
+  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`, */
+  /*   { */
+  /*     method: 'POST', */
+  /*     headers: { */
+  /*       'Content-Type': 'application/json', */
+  /*     }, */
+  /*     credentials: 'include', */
+  /*     body: JSON.stringify(cardData), */
+  /*   } */
+  /* ) */
+  /* const { */
+  /*   id, */
+  /*   name, */
+  /*   creditLimit, */
+  /*   minimumSpendingRequirement, */
+  /*   totalSpend, */
+  /*   signupBonusDueDate, */
+  /* } = await result.json() */
   const {
     id,
     name,
@@ -90,7 +110,7 @@ const addCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
-  } = await result.json()
+  } = await result
   addNewCard({
     id,
     name,

@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import styled from 'styled-components'
 import { Button, Text } from '../components'
 import { GoogleIcon } from '../icons'
@@ -44,26 +43,15 @@ const GoogleButton = styled(Button).attrs(() => ({ variant: 'PRIMARY' }))`
 
 const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 
-const ping = () => {
-  fetch(`https://${NEXT_PUBLIC_SERVER_DOMAIN}/ping`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((res) => res.json())
-    .then((d) => console.log(d))
-}
-
 export default function Dashboard() {
-  useEffect(() => {
-    ping()
-  }, [])
-
   return (
     <Wrapper>
       <Card>
         <Text size={6}>Churnur</Text>
         <GoogleButton
-          href={`https://${NEXT_PUBLIC_SERVER_DOMAIN}/login/google`}
+          href={`http${
+            process.env.NODE_ENV === 'development' ? '' : 's'
+          }://${NEXT_PUBLIC_SERVER_DOMAIN}/login/google`}
           as="a"
         >
           <GoogleIcon />

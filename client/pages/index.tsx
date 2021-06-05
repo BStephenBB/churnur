@@ -19,8 +19,8 @@ import { useCardReducer, CardActionType } from '../components/Modal'
 import type { CardRepresentation } from '../components/Modal'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-/* import { logout } from '../utils' */
 import { Card, Cards } from '../types'
+import { api } from '../utils'
 
 const Wrapper = styled.div`
   display: flex;
@@ -193,27 +193,23 @@ const Test = styled.div`
   font-variation-settings: 'wght' 650;
 `
 
-const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
-/* const result = await window.fetch(`http://localhost:3000/cards`, { */
+/* const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN */
 
 const getUsersCards = async () => {
-  const result = await window.fetch(
-    `https://${NEXT_PUBLIC_SERVER_DOMAIN}/cards`,
-    {
-      method: 'GET',
-      headers: {
-        /* 'Access-Control-Allow-Origin': '*', */
-      },
-      credentials: 'include',
-      // TODO make a fetch wrapper
-    }
-  )
-  const json = await result.json()
-  if (result.ok) {
-    return json
-  } else {
-    return Promise.reject(json)
-  }
+  return api.GET('/cards')
+  /* const result = await window.fetch( */
+  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/cards`, */
+  /*   { */
+  /*     method: 'GET', */
+  /*     credentials: 'include', */
+  /*   } */
+  /* ) */
+  /* const json = await result.json() */
+  /* if (result.ok) { */
+  /*   return json */
+  /* } else { */
+  /*   return Promise.reject(json) */
+  /* } */
 }
 
 const CardsTable = ({
@@ -334,10 +330,6 @@ export default function Dashboard() {
     return <div>loading...</div>
   }
 
-  console.log(cards)
-
-  console.log(process.env.NEXT_PUBLIC_SERVER_DOMAIN)
-
   return (
     <Wrapper>
       <Text
@@ -374,7 +366,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-          {/* <Button onClick={logout}>logout</Button> */}
           <CardsTable data={memoizedCards ?? []} columns={memoizedColumns} />
           <Modal state={newCardModalState} />
           <EditCardModal
