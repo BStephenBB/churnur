@@ -23,9 +23,11 @@ const Wrapper = styled.div<{ show: boolean }>`
   overflow: hidden;
   position: absolute;
   z-index: 10;
-  top: calc(100% + ${({ theme }) => theme.space(3)});
+  top: calc(100% + ${({ theme }) => theme.space(2)});
   left: 50%;
-  transform: translateX(-50%);
+  transition: all 0.15s ease;
+  transform: translateX(-50%)
+    translateY(${({ show }) => (show ? '4px' : '0px')});
   opacity: ${(props) => (props.show ? '1' : '0')};
   pointer-events: ${(props) => (props.show ? 'auto' : 'none')};
 `
