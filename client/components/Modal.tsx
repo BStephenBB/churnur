@@ -17,8 +17,6 @@ import { Card, Cards } from '../types'
 import { useQueryClient } from 'react-query'
 import { api } from '../utils'
 
-const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
-
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (
   cardData: {
@@ -32,25 +30,6 @@ const updateCard = async (
   updateCardData: (card: Card) => void
 ) => {
   const result = await api.PATCH('/card', cardData)
-  /* const result = await window.fetch( */
-  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`, */
-  /*   { */
-  /*     method: 'PATCH', */
-  /*     headers: { */
-  /*       'Content-Type': 'application/json', */
-  /*     }, */
-  /*     credentials: 'include', */
-  /*     body: JSON.stringify(cardData), */
-  /*   } */
-  /* ) */
-  /* const { */
-  /*   id, */
-  /*   name, */
-  /*   creditLimit, */
-  /*   minimumSpendingRequirement, */
-  /*   totalSpend, */
-  /*   signupBonusDueDate, */
-  /* } = await result.json() */
 
   const {
     id,
@@ -84,25 +63,6 @@ const addCard = async (
   addNewCard: (card: Card) => void
 ) => {
   const result = await api.POST('/card', cardData)
-  /* const result = await window.fetch( */
-  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/card`, */
-  /*   { */
-  /*     method: 'POST', */
-  /*     headers: { */
-  /*       'Content-Type': 'application/json', */
-  /*     }, */
-  /*     credentials: 'include', */
-  /*     body: JSON.stringify(cardData), */
-  /*   } */
-  /* ) */
-  /* const { */
-  /*   id, */
-  /*   name, */
-  /*   creditLimit, */
-  /*   minimumSpendingRequirement, */
-  /*   totalSpend, */
-  /*   signupBonusDueDate, */
-  /* } = await result.json() */
   const {
     id,
     name,

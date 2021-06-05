@@ -188,28 +188,21 @@ const makeCardTableColumns = ({
   return columns
 }
 
-const Test = styled.div`
-  font-size: ${({ theme }) => theme.text[6]};
-  font-variation-settings: 'wght' 650;
+const CreateCardSection = styled.section<{ userHasNoCards: boolean }>`
+  display: flex;
+  flex-direction: ${(props) => (props.userHasNoCards ? 'column' : 'row')};
+  gap: ${({ userHasNoCards, theme }) =>
+    userHasNoCards ? theme.space(4) : '0'};
+  padding: 0 ${({ theme }) => theme.space(6)};
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${({ theme, userHasNoCards }) =>
+    userHasNoCards ? theme.space(22) : theme.space(10)};
+  margin-bottom: ${({ theme }) => theme.space(4)};
 `
-
-/* const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN */
 
 const getUsersCards = async () => {
   return api.GET('/cards')
-  /* const result = await window.fetch( */
-  /*   `https://${NEXT_PUBLIC_SERVER_DOMAIN}/cards`, */
-  /*   { */
-  /*     method: 'GET', */
-  /*     credentials: 'include', */
-  /*   } */
-  /* ) */
-  /* const json = await result.json() */
-  /* if (result.ok) { */
-  /*   return json */
-  /* } else { */
-  /*   return Promise.reject(json) */
-  /* } */
 }
 
 const CardsTable = ({
@@ -232,6 +225,10 @@ const CardsTable = ({
     },
     useBlockLayout
   )
+
+  if (data.length === 0) {
+    return null
+  }
 
   return (
     <TableWrapper {...getTableProps()}>
@@ -330,6 +327,8 @@ export default function Dashboard() {
     return <div>loading...</div>
   }
 
+  const userHasNoCards = memoizedCards?.length === 0
+
   return (
     <Wrapper>
       <Text
@@ -345,21 +344,17 @@ export default function Dashboard() {
       <Text size={4} align="center">
         Credit Card Management for Churning
       </Text>
-      <div
-        style={{
-          display: 'flex',
-          padding: '0 24px',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: '40px',
-          marginBottom: '16px',
-        }}
-      >
-        <Test>Cards</Test>
+      <CreateCardSection userHasNoCards={userHasNoCards}>
+        <Text
+          size={userHasNoCards ? 3 : 6}
+          weight={userHasNoCards ? 'default' : 'medium'}
+        >
+          {userHasNoCards ? 'Get started by adding a card' : 'Cards'}
+        </Text>
         <Button {...openButtonProps} ref={openButtonRef} variant="PRIMARY">
           + ADD CARD
         </Button>
-      </div>
+      </CreateCardSection>
       {isError ? (
         <div style={{ color: 'red' }}>
           {error === null ? 'Error!' : 'Error: ' + error.message}
