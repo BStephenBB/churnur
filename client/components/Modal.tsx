@@ -17,6 +17,11 @@ import { Card, Cards } from '../types'
 import { useQueryClient } from 'react-query'
 import { api } from '../utils'
 
+const processMoney = (money: string) => {
+  const trimmed = money.trim()
+  return trimmed ? Number(trimmed.replace(/\,/g, '')) : undefined
+}
+
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (
   cardData: {
@@ -30,7 +35,6 @@ const updateCard = async (
   updateCardData: (card: Card) => void
 ) => {
   const result = await api.PATCH('/card', cardData)
-
   const {
     id,
     name,
@@ -298,13 +302,11 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
           addCard(
             {
               cardName: name.trim(),
-              creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
-              totalSpend: totalSpend.trim()
-                ? Number(totalSpend.trim())
-                : undefined,
-              minimumSpendingRequirement: minimumSpendingRequirement.trim()
-                ? Number(minimumSpendingRequirement.trim())
-                : undefined,
+              creditLimit: processMoney(limit),
+              totalSpend: processMoney(totalSpend),
+              minimumSpendingRequirement: processMoney(
+                minimumSpendingRequirement
+              ),
               signupBonusDueDate: signupBonusDate.trim()
                 ? formatISO(new Date(signupBonusDate))
                 : undefined,
@@ -489,13 +491,11 @@ export function EditCardModal({
             {
               id: cardId,
               name: name.trim() ?? undefined,
-              creditLimit: limit.trim() ? Number(limit.trim()) : undefined,
-              totalSpend: totalSpend.trim()
-                ? Number(totalSpend.trim())
-                : undefined,
-              minimumSpendingRequirement: minimumSpendingRequirement.trim()
-                ? Number(minimumSpendingRequirement.trim())
-                : undefined,
+              creditLimit: processMoney(limit),
+              totalSpend: processMoney(totalSpend),
+              minimumSpendingRequirement: processMoney(
+                minimumSpendingRequirement
+              ),
               signupBonusDueDate: signupBonusDate.trim()
                 ? formatISO(new Date(signupBonusDate))
                 : undefined,
