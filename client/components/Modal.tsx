@@ -16,6 +16,7 @@ import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { useButton } from '@react-aria/button'
 import { Card, Cards } from '../types'
+import { cards } from '../constants'
 import { useQueryClient } from 'react-query'
 import { api } from '../utils'
 
@@ -339,17 +340,22 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
           >
             <>
               <ModalBody>
-                <Input
+                <ComboBox
+                  // TODO figure out a way to make this select the input on click too
                   label="Card Name"
+                  allowsCustomValue={true}
+                  defaultItems={cards}
                   placeholder="ex: Chase Sapphire Reserve"
-                  value={card.name}
-                  onChange={(event) => {
+                  inputValue={card.name}
+                  onInputChange={(value: string) => {
                     dispatchCardAction({
                       type: CardActionType.SET_NAME,
-                      payload: event.target.value,
+                      payload: value,
                     })
                   }}
-                />
+                >
+                  {(item: any) => <Item>{item.name}</Item>}
+                </ComboBox>
                 <Input
                   label="Card Limit"
                   type={InputTypes.DOLLAR}
@@ -528,22 +534,22 @@ export function EditCardModal({
           >
             <>
               <ModalBody>
-                <ComboBox label="Card Name" allowsCustomValue={true}>
-                  <Item key="cat">Cat</Item>
-                  <Item key="dog">Dog</Item>
-                  <Item key="bird">Bird</Item>
+                <ComboBox
+                  // TODO figure out a way to make this select the input on click too
+                  label="Card Name"
+                  allowsCustomValue={true}
+                  defaultItems={cards}
+                  placeholder="ex: Chase Sapphire Reserve"
+                  inputValue={card.name}
+                  onInputChange={(value: string) => {
+                    dispatchCardAction({
+                      type: CardActionType.SET_NAME,
+                      payload: value,
+                    })
+                  }}
+                >
+                  {(item: any) => <Item>{item.name}</Item>}
                 </ComboBox>
-                {/* <Input */}
-                {/*   label="Card Name" */}
-                {/*   placeholder="ex: Chase Sapphire Reserve" */}
-                {/*   value={card.name} */}
-                {/*   onChange={(event) => { */}
-                {/*     dispatchCardAction({ */}
-                {/*       type: CardActionType.SET_NAME, */}
-                {/*       payload: event.target.value, */}
-                {/*     }) */}
-                {/*   }} */}
-                {/* /> */}
                 <Input
                   label="Card Limit"
                   type={InputTypes.DOLLAR}

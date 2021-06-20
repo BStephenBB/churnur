@@ -150,7 +150,7 @@ function ListBoxPopup(props: any) {
   return (
     <div {...overlayProps} ref={popoverRef}>
       <ListWrapper {...mergeProps(listBoxProps, otherProps)} ref={listBoxRef}>
-        {[...state.collection].map((item) => (
+        {[...state.collection].slice(0, 5).map((item) => (
           <Option
             shouldUseVirtualFocus
             key={item.key}
