@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { InputElement, Label } from './Input'
 import { mergeProps } from '@react-aria/utils'
 import { useComboBoxState } from '@react-stately/combobox'
+import type { Color } from '../theme'
 import type { ComboBoxStateProps } from '@react-stately/combobox'
 import { useFilter } from '@react-aria/i18n'
 import { useComboBox } from '@react-aria/combobox'
@@ -25,17 +26,33 @@ const ComboInputAndListWrapper = styled.div`
 const ListWrapper = styled.ul`
   position: absolute;
   width: 100%;
-  margin: 4px 0 0 0;
+  z-index: 1;
+  margin-top: ${({ theme }) => theme.space2};
   padding: 0;
   list-style: none;
+  box-shadow: ${({ theme }) => theme.shadow.large};
+  border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.color.gray2};
+  background: ${({ theme }) => theme.color.white};
 `
 
-const ListItem = styled.li<{ backgroundColor: string; color: string }>`
-  background: ${(props) => props.backgroundColor};
-  color: ${(props) => props.color};
-  padding: 2px 5px;
+const ListItem = styled.li<{ backgroundColor: Color; color: Color }>`
+  background: ${({ backgroundColor, theme }) => theme.color[backgroundColor]};
+  color: ${({ color, theme }) => theme.color[color]};
+  padding: ${({ theme }) => theme.space(3)} ${({ theme }) => theme.space3};
   outline: none;
+  font-variation-settings: 'wght' 450;
   cursor: pointer;
+  font-size: ${({ theme }) => theme.text[1]};
+  &:first-of-type {
+    border-radius: 4px 4px 0 0;
+  }
+  &:last-of-type {
+    border-radius: 0 0 4px 4px;
+  }
+  &:not(:last-of-type) {
+    border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
+  }
 `
 
 export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
@@ -178,17 +195,17 @@ function Option({
     ref
   )
 
-  let backgroundColor = 'white'
-  let color = 'black'
+  let backgroundColor: Color = 'white'
+  let color: Color = 'black'
 
   if (isSelected) {
-    backgroundColor = 'blueviolet'
-    color = 'white'
+    backgroundColor = 'gray2'
   } else if (isFocused) {
-    backgroundColor = 'gray'
+    backgroundColor = 'gray1'
   } else if (isDisabled) {
-    backgroundColor = 'transparent'
-    color = 'gray'
+    // TODO if we actually want a disabled one, then these colors should be changed
+    backgroundColor = 'gray4'
+    color = 'gray3'
   }
 
   return (

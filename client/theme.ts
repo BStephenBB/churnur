@@ -124,4 +124,6 @@ export const theme = {
   },
 } as const
 
+export type Color = keyof typeof theme.color
+
 export type Theme = typeof theme
