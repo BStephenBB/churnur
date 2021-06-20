@@ -1,7 +1,7 @@
 import React from 'react'
-import { Item } from '@react-stately/collections'
+import styled from 'styled-components'
+import { InputElement, Label } from './Input'
 import { mergeProps } from '@react-aria/utils'
-import { useButton } from '@react-aria/button'
 import { useComboBoxState } from '@react-stately/combobox'
 import type { ComboBoxStateProps } from '@react-stately/combobox'
 import { useFilter } from '@react-aria/i18n'
@@ -10,6 +10,33 @@ import { useListBox, useOption } from '@react-aria/listbox'
 import { useOverlay, DismissButton } from '@react-aria/overlays'
 
 // TODO improve some of the any types when you're a lil less lazy
+
+const ComboboxWrapper = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  flex-grow: 1;
+`
+
+const ComboInputAndListWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`
+
+const ListWrapper = styled.ul`
+  position: absolute;
+  width: 100%;
+  margin: 4px 0 0 0;
+  padding: 0;
+  list-style: none;
+`
+
+const ListItem = styled.li<{ backgroundColor: string; color: string }>`
+  background: ${(props) => props.backgroundColor};
+  color: ${(props) => props.color};
+  padding: 2px 5px;
+  outline: none;
+  cursor: pointer;
+`
 
 export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
   // Get a basic "contains" filter function for input value
@@ -28,12 +55,7 @@ export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
   let popoverRef = React.useRef<HTMLDivElement>(null)
 
   // Get props for child elements from useComboBox
-  let {
-    buttonProps: triggerProps,
-    inputProps,
-    listBoxProps,
-    labelProps,
-  } = useComboBox(
+  let { inputProps, listBoxProps, labelProps } = useComboBox(
     {
       ...props,
       inputRef,
@@ -45,35 +67,17 @@ export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
     state
   )
 
-  // Get props for the trigger button based on the
-  // button props from useComboBox
-  let { buttonProps } = useButton(triggerProps, triggerRef)
-
   return (
-    <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
-      <label {...labelProps}>{props.label}</label>
-      <div style={{ position: 'relative', display: 'inline-block' }}>
-        <input
+    <ComboboxWrapper>
+      <Label {...labelProps}>{props.label}</Label>
+      <ComboInputAndListWrapper>
+        <InputElement
           {...inputProps}
           ref={inputRef}
-          style={{
-            height: 22,
-            boxSizing: 'border-box',
-            marginRight: 0,
-          }}
+          hasBox={false}
+          isNumeric={false}
+          fullWidth={true}
         />
-        <button
-          {...buttonProps}
-          ref={triggerRef}
-          style={{
-            height: 22,
-            marginLeft: 0,
-          }}
-        >
-          <span aria-hidden="true" style={{ padding: '0 2px' }}>
-            ▼
-          </span>
-        </button>
         {state.isOpen && (
           <ListBoxPopup
             {...listBoxProps}
@@ -85,8 +89,8 @@ export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
             state={state}
           />
         )}
-      </div>
-    </div>
+      </ComboInputAndListWrapper>
+    </ComboboxWrapper>
   )
 }
 
@@ -128,19 +132,7 @@ function ListBoxPopup(props: any) {
   // to allow screen reader users to dismiss the popup easily.
   return (
     <div {...overlayProps} ref={popoverRef}>
-      <ul
-        {...mergeProps(listBoxProps, otherProps)}
-        ref={listBoxRef}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          margin: '4px 0 0 0',
-          padding: 0,
-          listStyle: 'none',
-          border: '1px solid gray',
-          background: 'lightgray',
-        }}
-      >
+      <ListWrapper {...mergeProps(listBoxProps, otherProps)} ref={listBoxRef}>
         {[...state.collection].map((item) => (
           <Option
             shouldUseVirtualFocus
@@ -149,7 +141,7 @@ function ListBoxPopup(props: any) {
             state={state}
           />
         ))}
-      </ul>
+      </ListWrapper>
       <DismissButton onDismiss={() => state.close()} />
     </div>
   )
@@ -186,7 +178,7 @@ function Option({
     ref
   )
 
-  let backgroundColor
+  let backgroundColor = 'white'
   let color = 'black'
 
   if (isSelected) {
@@ -200,18 +192,13 @@ function Option({
   }
 
   return (
-    <li
+    <ListItem
       {...optionProps}
       ref={ref}
-      style={{
-        background: backgroundColor,
-        color: color,
-        padding: '2px 5px',
-        outline: 'none',
-        cursor: 'pointer',
-      }}
+      color={color}
+      backgroundColor={backgroundColor}
     >
       {item.rendered}
-    </li>
+    </ListItem>
   )
 }

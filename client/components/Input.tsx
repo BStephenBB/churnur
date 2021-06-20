@@ -31,18 +31,23 @@ const Box = styled.div`
   font-size: ${({ theme }) => theme.text['1']};
 `
 
-const Label = styled.label`
+export const Label = styled.label`
   margin-bottom: ${({ theme }) => theme.space1};
   display: block;
   font-variation-settings: 'wght' 500;
 `
 
 // TODO disabled state
-const InputElement = styled.input<{ hasBox: boolean; isNumeric: boolean }>`
+export const InputElement = styled.input<{
+  hasBox: boolean
+  isNumeric: boolean
+  fullWidth?: boolean
+}>`
   padding: 0 ${({ theme }) => theme.space(3)};
   display: block;
   flex-grow: 1;
   min-width: 0;
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : undefined)};
   height: ${({ theme }) => theme.space(10)};
   border-radius: ${({ hasBox }) => (hasBox ? '0 4px 4px 0' : '4px')};
   border: 1px solid ${({ theme }) => theme.color.gray3};

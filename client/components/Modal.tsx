@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button, Text } from './index'
 import { InputTypes, Input } from './Input'
+import { ComboBox } from './Combobox'
+import { Item } from '@react-stately/collections'
 import { formatISO } from 'date-fns'
 import {
   useOverlay,
@@ -526,17 +528,22 @@ export function EditCardModal({
           >
             <>
               <ModalBody>
-                <Input
-                  label="Card Name"
-                  placeholder="ex: Chase Sapphire Reserve"
-                  value={card.name}
-                  onChange={(event) => {
-                    dispatchCardAction({
-                      type: CardActionType.SET_NAME,
-                      payload: event.target.value,
-                    })
-                  }}
-                />
+                <ComboBox label="Card Name" allowsCustomValue={true}>
+                  <Item key="cat">Cat</Item>
+                  <Item key="dog">Dog</Item>
+                  <Item key="bird">Bird</Item>
+                </ComboBox>
+                {/* <Input */}
+                {/*   label="Card Name" */}
+                {/*   placeholder="ex: Chase Sapphire Reserve" */}
+                {/*   value={card.name} */}
+                {/*   onChange={(event) => { */}
+                {/*     dispatchCardAction({ */}
+                {/*       type: CardActionType.SET_NAME, */}
+                {/*       payload: event.target.value, */}
+                {/*     }) */}
+                {/*   }} */}
+                {/* /> */}
                 <Input
                   label="Card Limit"
                   type={InputTypes.DOLLAR}
