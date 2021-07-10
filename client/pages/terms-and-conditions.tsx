@@ -56,7 +56,7 @@ const MainListItem = styled.li`
 export default function TermsAndConditions() {
   return (
     <Wrapper>
-      <Text size={7}>Terms of Service</Text>
+      <Text size={6}>Terms of Service</Text>
       <Text size={2}>Last Updated: June 23, 2021</Text>
       <General>
         <Text size={4}>I. GENERAL TERMS.</Text>
