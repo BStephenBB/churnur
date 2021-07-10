@@ -41,6 +41,16 @@ const GoogleButton = styled(Button).attrs(() => ({ variant: 'PRIMARY' }))`
   }
 `
 
+const NewPageLink = styled.a.attrs(() => ({ target: '_blank' }))`
+  color: ${({ theme }) => theme.color.blue5};
+  &:visited {
+    color: ${({ theme }) => theme.color.purple5};
+  }
+  &:active {
+    color: ${({ theme }) => theme.color.blue4};
+  }
+`
+
 const NEXT_PUBLIC_SERVER_DOMAIN = process.env.NEXT_PUBLIC_SERVER_DOMAIN
 
 export default function Dashboard() {
@@ -58,7 +68,11 @@ export default function Dashboard() {
           Login with Google
         </GoogleButton>
         <Text size={1} align="center" style={{ marginTop: 'auto' }}>
-          By logging in, you agree to our Terms of Services and Privacy Policy.
+          By logging in, you agree to our{' '}
+          <NewPageLink href="/terms-and-conditions">
+            Terms of Service
+          </NewPageLink>{' '}
+          and <NewPageLink href="/privacy-policy">Privacy Policy</NewPageLink>.
         </Text>
       </Card>
     </Wrapper>
