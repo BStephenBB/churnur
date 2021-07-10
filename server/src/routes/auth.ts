@@ -33,13 +33,19 @@ export default async function auth(
     request: FastifyRequest,
     reply: FastifyReply
   ) {
-    const { prisma, config } = app
+    const { prisma, config, httpErrors } = app
     // TODO error handling, or maybe just pass in a callback for that. Prob just use try/catch though
-    const token = await this.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(
-      request
-    )
+    const token =
+      await this.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request)
 
     const userInfo = await this.getGoogleProfileInfo(token.access_token) // TODO maybe check if `userInfo.email_verified` is true before making account
+
+    // temporary email blocking
+    const ALLOWED_EMAILS = ['sbrownbourne@gmail.com', 'bbchristo@gmail.com']
+    if (!ALLOWED_EMAILS.includes(userInfo.email)) {
+      throw httpErrors.unauthorized('Not an allowed account')
+    }
+
     const existingUser = await prisma.user.findUnique({
       where: {
         googleId: userInfo.sub,
