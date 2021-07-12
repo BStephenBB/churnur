@@ -11,7 +11,8 @@
     "studio": "prisma studio",
     "db": "prisma migrate deploy",
     "db-generate": "prisma generate",
-    "dev": "tsc --project tsconfig.json --watch"
+    "dev": "tsc --project tsconfig.json --watch",
+    "all": "concurrently \"npm run dev\" \"npm run start\""
   },
   "keywords": [
     "credit",
@@ -22,6 +23,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^2.24.1",
+    "@sendgrid/mail": "^7.4.5",
     "fastify": "^3.14.1",
     "fastify-autoload": "^3.7.0",
     "fastify-cli": "^2.9.1",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
+    "concurrently": "^6.2.0",
     "crypto-random-string": "^4.0.0",
     "prettier": "2.2.1",
     "prisma": "^2.24.1",
