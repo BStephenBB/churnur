@@ -24,6 +24,7 @@
   "dependencies": {
     "@prisma/client": "^2.24.1",
     "@sendgrid/mail": "^7.4.5",
+    "date-fns": "^2.21.1",
     "fastify": "^3.14.1",
     "fastify-autoload": "^3.7.0",
     "fastify-cli": "^2.9.1",
