@@ -12,7 +12,8 @@
     "db": "prisma migrate deploy",
     "db-generate": "prisma generate",
     "dev": "tsc --project tsconfig.json --watch",
-    "all": "concurrently \"npm run dev\" \"npm run start\""
+    "all": "concurrently \"npm run dev\" \"npm run start\"",
+    "remind": "node dist/tasks/spendDue.js"
   },
   "keywords": [
     "credit",

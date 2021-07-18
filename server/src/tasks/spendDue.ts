@@ -59,19 +59,23 @@ const sendReminders = async () => {
   const usersAndCards = await getUsersAndCardsToEmail()
   for (let i = 0; i < usersAndCards.length; i++) {
     const { name, email, cards } = usersAndCards[i]
-    const cardsText = cards.reduce(
-      (previous, current) =>
-        `${previous}${current.name}: $${
-          current.minimumSpendingRequirement && current.totalSpend
-            ? current.minimumSpendingRequirement
-                .minus(current.totalSpend)
+    const formatedCards = cards.map(
+      (card) =>
+        `${card.name}: $${
+          card.minimumSpendingRequirement && card.totalSpend
+            ? card.minimumSpendingRequirement
+                .minus(card.totalSpend)
                 .toDecimalPlaces(2)
                 .toFixed(2)
             : ''
-        }<br/>`,
-      ''
+        }`
     )
-    const html = `Hi ${name},<br/><br/>You have card(s) that have not had their minimum spending requirement(s) met yet, which is due in 2 weeks. Here are the card(s) and the outstanding amount(s):<br/><br/>${cardsText}`
+    const html = `Hi ${name},<br/><br/>You have card(s) that have not had their minimum spending requirement(s) met yet, which is due in 2 weeks. Here are the card(s) and the outstanding amount(s):<br/><br/>${formatedCards.join(
+      '<br/>'
+    )}`
+    const text = `Hi ${name},\n\nYou have card(s) that have not had their minimum spending requirement(s) met yet, which is due in 2 weeks. Here are the card(s) and the outstanding amount(s):\n\n${formatedCards.join(
+      '\n'
+    )}`
 
     const message: SendMail.MailDataRequired = {
       to:
@@ -82,8 +86,8 @@ const sendReminders = async () => {
         name: 'Churnur',
         email: 'reminders@churnur.com',
       },
-      subject: 'Send Reminder',
-      // text: 'hello from node js',
+      subject: 'Spend Reminder',
+      text: text,
       html: html,
       replyTo: 'sbrownbourne@gmail.com',
     }
