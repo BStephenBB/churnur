@@ -40,11 +40,13 @@ const getUsersAndCardsToEmail = async function () {
         }
       }
     }
-    usersAndCards.push({
-      name: users[i].firstName,
-      email: users[i].email,
-      cards: cardsToWarnAbout,
-    })
+    if (cardsToWarnAbout.length > 0) {
+      usersAndCards.push({
+        name: users[i].firstName,
+        email: users[i].email,
+        cards: cardsToWarnAbout,
+      })
+    }
   }
 
   return usersAndCards
@@ -59,17 +61,17 @@ const sendReminders = async () => {
     const { name, email, cards } = usersAndCards[i]
     const cardsText = cards.reduce(
       (previous, current) =>
-        `${previous}${current.name}: ${
+        `${previous}${current.name}: $${
           current.minimumSpendingRequirement && current.totalSpend
             ? current.minimumSpendingRequirement
                 .minus(current.totalSpend)
                 .toDecimalPlaces(2)
-                .toString()
+                .toFixed(2)
             : ''
         }<br/>`,
       ''
     )
-    const html = `Hi ${name},<br/><br/>You have card(s) that have not had their minimum spending requirement(s) met yet, which is due in 2 weeks. Here are the card(s) and the outstanding amount(s):<br/>${cardsText}`
+    const html = `Hi ${name},<br/><br/>You have card(s) that have not had their minimum spending requirement(s) met yet, which is due in 2 weeks. Here are the card(s) and the outstanding amount(s):<br/><br/>${cardsText}`
 
     const message: SendMail.MailDataRequired = {
       to:
@@ -94,23 +96,4 @@ const sendReminders = async () => {
       })
   }
 }
-
-// const message: SendMail.MailDataRequired = {
-//   to: 'sbrownbourne@gmail.com',
-//   from: {
-//     name: 'Churnur',
-//     email: 'reminders@churnur.com',
-//   },
-//   subject: 'Send Reminder',
-//   text: 'hello from node js',
-//   html: '<strong>sup</strong>',
-//   replyTo: 'sbrownbourne@gmail.com',
-// }
-
-// SendMail.send(message)
-//   .then(() => {
-//     console.log('sent mail')
-//   })
-//   .catch((error: unknown) => {
-//     console.error(error)
-//   })
+sendReminders()
