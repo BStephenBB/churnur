@@ -168,7 +168,8 @@ const makeCardTableColumns = ({
                   name: name,
                   limit: creditLimit.toString(),
                   totalSpend: totalSpend.toString(),
-                  minimumSpendingRequirement: minimumSpendingRequirement.toString(),
+                  minimumSpendingRequirement:
+                    minimumSpendingRequirement.toString(),
                   signupBonusDate: formatISOStringAsUTC(
                     signupBonusDueDate,
                     'MM/dd/yyyy'
@@ -212,19 +213,14 @@ const CardsTable = ({
   data: Cards
   columns: Column<Card>[]
 }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable<Card>(
-    {
-      columns: columns,
-      data: data,
-    },
-    useBlockLayout
-  )
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable<Card>(
+      {
+        columns: columns,
+        data: data,
+      },
+      useBlockLayout
+    )
 
   if (data.length === 0) {
     return null
@@ -280,13 +276,18 @@ export default function Dashboard() {
   const [editingCardId, setEditingCardId] = useState<null | number>(null)
   const newCardModalState = useOverlayTriggerState({})
   const editCardModalState = useOverlayTriggerState({})
-  const { data: cards, status, error } = useQuery<
-    Card[],
-    { statusCode: number; error: string; message: string }
-  >('cards', getUsersCards, {
-    refetchOnWindowFocus: false,
-    retry: false, // TODO probably want some amt of retry?
-  })
+  const {
+    data: cards,
+    status,
+    error,
+  } = useQuery<Card[], { statusCode: number; error: string; message: string }>(
+    'cards',
+    getUsersCards,
+    {
+      refetchOnWindowFocus: false,
+      retry: false, // TODO probably want some amt of retry?
+    }
+  )
 
   const router = useRouter()
 
@@ -341,7 +342,7 @@ export default function Dashboard() {
       >
         Churnur
       </Text>
-      <Text size={4} align="center">
+      <Text as={'h2'} size={4} align="center">
         Credit Card Management for Churning
       </Text>
       <CreateCardSection userHasNoCards={userHasNoCards}>

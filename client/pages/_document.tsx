@@ -44,6 +44,10 @@ export default class MyDocument extends Document {
             as="font"
             crossOrigin=""
           />
+          <meta
+            name="description"
+            content="Keep track of and manage your credit cards with Churnur. With automatic updates and reminders credit card management has never been easier."
+          />
         </Head>
         <body>
           <Main />

@@ -32,12 +32,17 @@ const WEIGHT_TO_SIZE: Record<keyof typeof WEIGHTS, string> = {
 
 // TODO weight and align; make good
 
-type TextProps = { size?: Sizes; weight?: keyof typeof WEIGHTS; align?: string }
+type TextProps = {
+  size?: Sizes
+  weight?: keyof typeof WEIGHTS
+  align?: string
+  as?: string
+}
 
 // maybe use 1.5 linexport height
-export const Text = styled.div.attrs<TextProps>(({ size }) => ({
+export const Text = styled.div.attrs<TextProps>(({ size, as }) => ({
   // TODO add more logic to still allow `as` to override?
-  as: size ? DEFAULT_ELEMENT_FOR_SIZE[size] : 'div',
+  as: as ? as : DEFAULT_ELEMENT_FOR_SIZE[size ?? 2],
 }))<TextProps>`
   font-size: ${({ size, theme }) => theme.text[size ?? 2]};
   line-height: 1.25;
