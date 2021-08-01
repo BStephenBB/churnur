@@ -1,8 +1,5 @@
-- figure out how to get oauth working
 - figure out how to get permissoins working
 - build endpoints to:
-	- create user (oauth)
-	- login as user (oauth)
 	- delete a card
 
 - coors?
@@ -12,7 +9,6 @@
 - cloudflare?
 - use `fluent-json-schema` package for all schema probably
 - figure out a way to generate schema from types
-- settup swagger or something similar so don't need to use postman
 - look into relative routes etc.
 - set up nice command to run everything, like nodemon, or that other tool
 

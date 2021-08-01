@@ -72,7 +72,7 @@ const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
   return function Cell(props: CardTableCellProps) {
     return (
       <DefaultCell {...props.calculatedProps}>
-        {CELL_FORMATERS[type](props.value)}
+        {props.value ? CELL_FORMATERS[type](props.value) : '--'}
       </DefaultCell>
     )
   }

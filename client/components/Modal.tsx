@@ -205,7 +205,7 @@ const emptyCard: CardRepresentation = {
 }
 
 const isValidCard = (card: CardRepresentation) => {
-  return Object.values(card).every((value) => value !== '')
+  return card.name !== ''
 }
 
 export enum CardActionType {
