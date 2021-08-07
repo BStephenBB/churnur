@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from 'react'
+import React, { useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 import type { OverlayTriggerState } from '@react-stately/overlays'
 import { Button, Text } from './index'
@@ -98,11 +98,14 @@ const ModalTitleWrapper = styled.div`
 
 const ModalBody = styled.div`
   padding: ${({ theme }) => theme.space4};
+  padding-bottom: ${({ theme }) => theme.space5};
   display: grid;
   width: ${({ theme }) => theme.space(150)};
   grid-template-columns: 1fr 1fr;
   grid-column-gap: ${({ theme }) => theme.space5};
   grid-row-gap: ${({ theme }) => theme.space4};
+  transition: max-height 0.2s ease;
+  overflow: hidden;
 
   > div:first-child {
     grid-column-start: span 2;
@@ -159,7 +162,7 @@ function ModalDialog(props: {
         right: 0,
         background: 'rgba(0, 0, 0, 0.6)',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
       }}
     >
@@ -173,6 +176,9 @@ function ModalDialog(props: {
             // TODO use css var when we can
             background: 'white',
             borderRadius: '6px',
+            marginTop: '10vh',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <ModalTitleWrapper>
@@ -267,8 +273,24 @@ function cardReducer(previousState: CardRepresentation, action: CardAction) {
   }
 }
 
+const MoreButton = styled.button`
+  border: 1px solid ${({ theme }) => theme.color.gray2};
+  background: ${({ theme }) => theme.color.white};
+  box-shadow: ${({ theme }) => theme.shadow.medium};
+  height: ${({ theme }) => theme.space5};
+  align-self: center;
+  position: absolute;
+  top: -${({ theme }) => theme.space3};
+  transform: translateX(-50%);
+  left: 50%;
+  z-index: 1;
+  border-radius: 100px;
+  padding: 0 ${({ theme }) => theme.space3};
+`
+
 export function Modal({ state }: { state: OverlayTriggerState }) {
   const [card, dispatchCardAction] = useReducer(cardReducer, emptyCard)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -339,7 +361,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             role="dialog"
           >
             <>
-              <ModalBody>
+              <ModalBody style={{ maxHeight: isExpanded ? '400px' : '300px' }}>
                 <ComboBox
                   // TODO figure out a way to make this select the input on click too
                   label="Card Name"
@@ -404,15 +426,44 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                       payload: date,
                     })
                   }}
-                  /* onChange={(event) => { */
-                  /*   dispatchCardAction({ */
-                  /*     type: CardActionType.SET_SIGNUP_BONUS_DATE, */
-                  /*     payload: event.target.value, */
-                  /*   }) */
-                  /* }} */
                 />
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Minimum Spending Requirement"
+                    type={InputTypes.DOLLAR}
+                    placeholder="ex: 8000.00"
+                    value={card.minimumSpendingRequirement}
+                    onChange={(event) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                        payload: event.target.value,
+                      })
+                    }}
+                  />
+                </div>
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Minimum Spending Requirement"
+                    type={InputTypes.DOLLAR}
+                    placeholder="ex: 8000.00"
+                    value={card.minimumSpendingRequirement}
+                    onChange={(event) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                        payload: event.target.value,
+                      })
+                    }}
+                  />
+                </div>
               </ModalBody>
               <ActionPanel>
+                <MoreButton
+                  onClick={() => {
+                    setIsExpanded((old) => !old)
+                  }}
+                >
+                  {isExpanded ? 'Less -' : 'More +'}
+                </MoreButton>
                 <Button onClick={closeAndClearModal}>CANCEL</Button>
                 <Button
                   {...closeButtonProps}
@@ -434,7 +485,8 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
 const ActionPanel = styled.div`
   display: flex;
   background: ${({ theme }) => theme.color.gray1};
-  padding: ${({ theme }) => theme.space3} ${({ theme }) => theme.space4};
+  padding: ${({ theme }) => theme.space5} ${({ theme }) => theme.space4}
+    ${({ theme }) => theme.space3};
   border-top: 1px solid ${({ theme }) => theme.color.gray2};
   border-radius: 0 0 6px 6px;
   justify-content: flex-end;
@@ -598,12 +650,6 @@ export function EditCardModal({
                       payload: date,
                     })
                   }}
-                  // onChange={(event) => {
-                  //   dispatchCardAction({
-                  //     type: CardActionType.SET_SIGNUP_BONUS_DATE,
-                  //     payload: event.target.value,
-                  //   })
-                  // }}
                 />
               </ModalBody>
               <ActionPanel>

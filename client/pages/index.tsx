@@ -166,14 +166,16 @@ const makeCardTableColumns = ({
                 } = props.row.original
                 setCardBeingEdited({
                   name: name,
-                  limit: creditLimit.toString(),
-                  totalSpend: totalSpend.toString(),
+                  limit: creditLimit !== null ? creditLimit.toString() : '',
+                  totalSpend: totalSpend !== null ? totalSpend.toString() : '',
                   minimumSpendingRequirement:
-                    minimumSpendingRequirement.toString(),
-                  signupBonusDate: formatISOStringAsUTC(
-                    signupBonusDueDate,
-                    'MM/dd/yyyy'
-                  ),
+                    minimumSpendingRequirement !== null
+                      ? minimumSpendingRequirement.toString()
+                      : '',
+                  signupBonusDate:
+                    signupBonusDueDate !== null
+                      ? formatISOStringAsUTC(signupBonusDueDate, 'MM/dd/yyyy')
+                      : '',
                 })
                 openCardModal()
                 setEditingCardId(id)
