@@ -12,6 +12,7 @@
 - look into relative routes etc.
 - set up nice command to run everything, like nodemon, or that other tool
 
+- reminder that I use the `rounded` version of material icons
 
 - make readme with steps to run
 # in server folder

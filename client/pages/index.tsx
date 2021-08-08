@@ -179,18 +179,6 @@ const makeCardTableColumns = ({
       width: DEFAULT_WIDTH,
     },
     {
-      Header: makeHeaderComponent('APP DATE'),
-      accessor: 'applicationDate',
-      Cell: makeCellComponent('DATE'),
-      width: 120,
-    },
-    {
-      Header: makeHeaderComponent('APPROVAL DATE'),
-      accessor: 'approvalDate',
-      Cell: makeCellComponent('DATE'),
-      width: DEFAULT_WIDTH,
-    },
-    {
       Header: makeHeaderComponent('LAST CHARGE DATE'),
       accessor: 'lastChargeDate',
       Cell: makeCellComponent('DATE'),
@@ -218,7 +206,6 @@ const makeCardTableColumns = ({
                   approvalDate,
                   lastChargeDate,
                 } = props.row.original
-                console.log(props.row.original)
                 setCardBeingEdited({
                   name: name,
                   limit: processNumber(creditLimit),
@@ -243,6 +230,7 @@ const makeCardTableColumns = ({
           </DefaultCell>
         )
       },
+      width: 60,
     },
   ]
   return columns
