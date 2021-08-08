@@ -163,13 +163,13 @@ const makeCardTableColumns = ({
     {
       Header: makeHeaderComponent('OUSTANDING BAL.'),
       accessor: 'outstandingBalance',
-      Cell: makeCellComponent(),
+      Cell: makeCellComponent('DOLLARS'),
       width: DEFAULT_WIDTH,
     },
     {
       Header: makeHeaderComponent('ANNUAL FEE'),
       accessor: 'annualFee',
-      Cell: makeCellComponent(),
+      Cell: makeCellComponent('DOLLARS'),
       width: 120,
     },
     {

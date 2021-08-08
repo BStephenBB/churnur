@@ -562,10 +562,11 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                     type={InputTypes.DATE}
                     placeholder="mm/dd/yyyy"
                     value={card.annualFeeDate}
-                    onChange={(event) => {
+                    onChange={() => {}}
+                    setDate={(date: string) => {
                       dispatchCardAction({
                         type: CardActionType.SET_ANNUAL_FEE_DATE,
-                        payload: event.target.value,
+                        payload: date,
                       })
                     }}
                   />
