@@ -35,6 +35,7 @@ const ALIGNMENT_OPTIONS = {
 export const DefaultCell = styled.div<{ align?: 'left' | 'right' | 'center' }>`
   flex-shrink: 0;
   flex-grow: 1;
+  padding: ${({ theme }) => theme.space1};
   text-align: ${(props) =>
     props.align ? ALIGNMENT_OPTIONS[props.align] : ALIGNMENT_OPTIONS['left']};
 `

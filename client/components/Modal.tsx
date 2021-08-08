@@ -25,6 +25,10 @@ const processMoney = (money: string) => {
   return trimmed ? Number(trimmed.replace(/\,/g, '')) : undefined
 }
 
+const processDate = (date: string) => {
+  return date.trim() ? formatISO(new Date(date)) : undefined
+}
+
 // TODO use react query w/ mutations for this...probably? And will need to invalidate RQ cards cache
 const updateCard = async (
   cardData: {
@@ -45,6 +49,12 @@ const updateCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
+    outstandingBalance,
+    annualFee,
+    annualFeeDate,
+    applicationDate,
+    approvalDate,
+    lastChargeDate,
   } = result
 
   updateCardData({
@@ -54,6 +64,12 @@ const updateCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
+    outstandingBalance,
+    annualFee,
+    annualFeeDate,
+    applicationDate,
+    approvalDate,
+    lastChargeDate,
   })
 }
 
@@ -66,6 +82,12 @@ const addCard = async (
     totalSpend?: number
     minimumSpendingRequirement?: number
     signupBonusDueDate?: string
+    outstandingBalance?: number
+    annualFee?: number
+    annualFeeDate?: string
+    applicationDate?: string
+    approvalDate?: string
+    lastChargeDate?: string
   },
   addNewCard: (card: Card) => void
 ) => {
@@ -77,7 +99,14 @@ const addCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
-  } = await result
+    outstandingBalance,
+    annualFee,
+    annualFeeDate,
+    applicationDate,
+    approvalDate,
+    lastChargeDate,
+  } = result
+  // } = await result
   addNewCard({
     id,
     name,
@@ -85,6 +114,12 @@ const addCard = async (
     minimumSpendingRequirement,
     totalSpend,
     signupBonusDueDate,
+    outstandingBalance,
+    annualFee,
+    annualFeeDate,
+    applicationDate,
+    approvalDate,
+    lastChargeDate,
   })
 }
 
@@ -105,7 +140,6 @@ const ModalBody = styled.div`
   grid-column-gap: ${({ theme }) => theme.space5};
   grid-row-gap: ${({ theme }) => theme.space4};
   transition: max-height 0.2s ease;
-  overflow: hidden;
 
   > div:first-child {
     grid-column-start: span 2;
@@ -194,12 +228,19 @@ function ModalDialog(props: {
   )
 }
 
+// TODO fix types (some are numbers)
 export type CardRepresentation = {
   name: string
   limit: string
   totalSpend: string
   minimumSpendingRequirement: string
   signupBonusDate: string
+  outstandingBalance: string
+  annualFee: string
+  annualFeeDate: string
+  applicationDate: string
+  approvalDate: string
+  lastChargeDate: string
 }
 
 const emptyCard: CardRepresentation = {
@@ -208,6 +249,12 @@ const emptyCard: CardRepresentation = {
   totalSpend: '',
   minimumSpendingRequirement: '',
   signupBonusDate: '',
+  outstandingBalance: '',
+  annualFee: '',
+  annualFeeDate: '',
+  applicationDate: '',
+  approvalDate: '',
+  lastChargeDate: '',
 }
 
 const isValidCard = (card: CardRepresentation) => {
@@ -220,6 +267,12 @@ export enum CardActionType {
   SET_TOTAL_SPEND = 'UPDATE_TOTAL_SPEND',
   SET_MINIMUM_SPENDING_REQUIREMENT = 'SET_MINIMUM_SPENDING_REQUIREMENT',
   SET_SIGNUP_BONUS_DATE = 'SET_SIGNUP_BONUS_DATE',
+  SET_OUTSTANDING_BALANCE = 'SET_OUTSTANDING_BALANCE',
+  SET_ANNUAL_FEE = 'SET_ANNUAL_FEE',
+  SET_ANNUAL_FEE_DATE = 'SET_ANNUAL_FEE_DATE',
+  SET_APPLICATION_DATE = 'SET_APPLICATION_DATE',
+  SET_APPROVAL_DATE = 'SET_APPROVAL_DATE',
+  SET_LAST_CHARGE_DATE = 'SET_LAST_CHARGE_DATE',
   CLEAR = 'CLEAR',
   SET_CARD = 'SET_CARD',
 }
@@ -249,6 +302,30 @@ type CardAction =
       type: CardActionType.SET_SIGNUP_BONUS_DATE
       payload: string
     }
+  | {
+      type: CardActionType.SET_OUTSTANDING_BALANCE
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_ANNUAL_FEE
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_ANNUAL_FEE_DATE
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_APPLICATION_DATE
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_APPROVAL_DATE
+      payload: string
+    }
+  | {
+      type: CardActionType.SET_LAST_CHARGE_DATE
+      payload: string
+    }
 
 function cardReducer(previousState: CardRepresentation, action: CardAction) {
   switch (action.type) {
@@ -262,6 +339,18 @@ function cardReducer(previousState: CardRepresentation, action: CardAction) {
       return { ...previousState, minimumSpendingRequirement: action.payload }
     case CardActionType.SET_SIGNUP_BONUS_DATE:
       return { ...previousState, signupBonusDate: action.payload }
+    case CardActionType.SET_OUTSTANDING_BALANCE:
+      return { ...previousState, outstandingBalance: action.payload }
+    case CardActionType.SET_ANNUAL_FEE:
+      return { ...previousState, annualFee: action.payload }
+    case CardActionType.SET_ANNUAL_FEE_DATE:
+      return { ...previousState, annualFeeDate: action.payload }
+    case CardActionType.SET_APPLICATION_DATE:
+      return { ...previousState, applicationDate: action.payload }
+    case CardActionType.SET_APPROVAL_DATE:
+      return { ...previousState, approvalDate: action.payload }
+    case CardActionType.SET_LAST_CHARGE_DATE:
+      return { ...previousState, lastChargeDate: action.payload }
     case CardActionType.CLEAR:
       return emptyCard
     case CardActionType.SET_CARD:
@@ -296,6 +385,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
 
   const closeAndClearModal = () => {
     state.close()
+    setIsExpanded(false)
     dispatchCardAction({ type: CardActionType.CLEAR })
   }
 
@@ -313,7 +403,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
     })
   }
 
-  const { buttonProps: closeButtonProps } = useButton(
+  const { buttonProps: createCardButtonProps } = useButton(
     {
       onPress: () => {
         if (isCompleteInformation) {
@@ -323,6 +413,12 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             totalSpend,
             minimumSpendingRequirement,
             signupBonusDate,
+            outstandingBalance,
+            annualFee,
+            annualFeeDate,
+            applicationDate,
+            approvalDate,
+            lastChargeDate,
           } = card
           addCard(
             {
@@ -332,9 +428,14 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               minimumSpendingRequirement: processMoney(
                 minimumSpendingRequirement
               ),
-              signupBonusDueDate: signupBonusDate.trim()
-                ? formatISO(new Date(signupBonusDate))
-                : undefined,
+              signupBonusDueDate: processDate(signupBonusDate),
+              outstandingBalance: processMoney(outstandingBalance),
+              annualFee: processMoney(annualFee),
+
+              annualFeeDate: processDate(annualFeeDate),
+              applicationDate: processDate(applicationDate),
+              approvalDate: processDate(approvalDate),
+              lastChargeDate: processDate(lastChargeDate),
             },
             addNewCard
           )
@@ -361,7 +462,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             role="dialog"
           >
             <>
-              <ModalBody style={{ maxHeight: isExpanded ? '400px' : '300px' }}>
+              <ModalBody style={{ maxHeight: isExpanded ? '800px' : '300px' }}>
                 <ComboBox
                   // TODO figure out a way to make this select the input on click too
                   label="Card Name"
@@ -429,13 +530,13 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 />
                 <div style={{ opacity: isExpanded ? '1' : '0' }}>
                   <Input
-                    label="Minimum Spending Requirement"
+                    label="Outstanding Balance"
                     type={InputTypes.DOLLAR}
-                    placeholder="ex: 8000.00"
-                    value={card.minimumSpendingRequirement}
+                    placeholder="ex: 445.00"
+                    value={card.outstandingBalance}
                     onChange={(event) => {
                       dispatchCardAction({
-                        type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                        type: CardActionType.SET_OUTSTANDING_BALANCE,
                         payload: event.target.value,
                       })
                     }}
@@ -443,14 +544,73 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
                 </div>
                 <div style={{ opacity: isExpanded ? '1' : '0' }}>
                   <Input
-                    label="Minimum Spending Requirement"
+                    label="Annual Fee"
                     type={InputTypes.DOLLAR}
-                    placeholder="ex: 8000.00"
-                    value={card.minimumSpendingRequirement}
+                    placeholder="ex: 200.00"
+                    value={card.annualFee}
                     onChange={(event) => {
                       dispatchCardAction({
-                        type: CardActionType.SET_MINIMUM_SPENDING_REQUIREMENT,
+                        type: CardActionType.SET_ANNUAL_FEE,
                         payload: event.target.value,
+                      })
+                    }}
+                  />
+                </div>
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Annual Fee Date"
+                    type={InputTypes.DATE}
+                    placeholder="mm/dd/yyyy"
+                    value={card.annualFeeDate}
+                    onChange={(event) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_ANNUAL_FEE_DATE,
+                        payload: event.target.value,
+                      })
+                    }}
+                  />
+                </div>
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Application Date"
+                    type={InputTypes.DATE}
+                    placeholder="mm/dd/yyyy"
+                    value={card.applicationDate}
+                    onChange={() => {}}
+                    setDate={(date: string) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_APPLICATION_DATE,
+                        payload: date,
+                      })
+                    }}
+                  />
+                </div>
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Approval Date"
+                    type={InputTypes.DATE}
+                    placeholder="mm/dd/yyyy"
+                    value={card.approvalDate}
+                    onChange={() => {}}
+                    setDate={(date: string) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_APPROVAL_DATE,
+                        payload: date,
+                      })
+                    }}
+                  />
+                </div>
+                <div style={{ opacity: isExpanded ? '1' : '0' }}>
+                  <Input
+                    label="Last Charge Date"
+                    type={InputTypes.DATE}
+                    placeholder="mm/dd/yyyy"
+                    value={card.lastChargeDate}
+                    onChange={() => {}}
+                    setDate={(date: string) => {
+                      dispatchCardAction({
+                        type: CardActionType.SET_LAST_CHARGE_DATE,
+                        payload: date,
                       })
                     }}
                   />
@@ -459,14 +619,15 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
               <ActionPanel>
                 <MoreButton
                   onClick={() => {
+                    // TODO probably clear all values here, and make it so inputs can't be tabbed to
                     setIsExpanded((old) => !old)
                   }}
                 >
-                  {isExpanded ? 'Less -' : 'More +'}
+                  {isExpanded ? 'less -' : 'more +'}
                 </MoreButton>
                 <Button onClick={closeAndClearModal}>CANCEL</Button>
                 <Button
-                  {...closeButtonProps}
+                  {...createCardButtonProps}
                   ref={closeButtonRef}
                   disabled={!isCompleteInformation}
                   variant="PRIMARY"
@@ -536,7 +697,7 @@ export function EditCardModal({
     })
   }
 
-  const { buttonProps: closeButtonProps } = useButton(
+  const { buttonProps: updateCardButtonProps } = useButton(
     {
       onPress: () => {
         if (isCompleteInformation && cardId !== null) {
@@ -655,7 +816,7 @@ export function EditCardModal({
               <ActionPanel>
                 <Button onClick={closeAndClearModal}>CANCEL</Button>
                 <Button
-                  {...closeButtonProps}
+                  {...updateCardButtonProps}
                   ref={saveButtonRef}
                   disabled={!isCompleteInformation}
                   variant="PRIMARY"

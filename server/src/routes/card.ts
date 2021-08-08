@@ -3,7 +3,7 @@ import type { FastifyInstance, FastifyServerOptions } from 'fastify'
 // all CRUD options for cards
 export default async function card(
   app: FastifyInstance,
-  options: FastifyServerOptions
+  _: FastifyServerOptions
 ) {
   app.addHook('onRequest', app.authorize)
   const { prisma } = app
@@ -14,6 +14,12 @@ export default async function card(
       totalSpend?: number
       minimumSpendingRequirement?: number
       signupBonusDueDate?: string
+      outstandingBalance?: number
+      annualFee?: number
+      annualFeeDate?: string
+      applicationDate?: string
+      approvalDate?: string
+      lastChargeDate?: string
     }
   }>(
     '/card',
@@ -28,6 +34,12 @@ export default async function card(
             totalSpend: { type: 'number' },
             minimumSpendingRequirement: { type: 'number' },
             signupBonusDueDate: { type: 'string' },
+            outstandingBalance: { type: 'number' },
+            annualFee: { type: 'number' },
+            annualFeeDate: { type: 'string' },
+            applicationDate: { type: 'string' },
+            approvalDate: { type: 'string' },
+            lastChargeDate: { type: 'string' },
           },
           required: ['cardName'],
           additionalProperties: false,
@@ -35,7 +47,6 @@ export default async function card(
       },
     },
     async (request, reply) => {
-      // TODO user id won't be needed once we attach the user to each request by default
       const userId = request.user.id
       const {
         cardName,
@@ -43,8 +54,13 @@ export default async function card(
         totalSpend,
         minimumSpendingRequirement,
         signupBonusDueDate,
+        outstandingBalance,
+        annualFee,
+        annualFeeDate,
+        applicationDate,
+        approvalDate,
+        lastChargeDate,
       } = request.body // add more options here as needed
-      // const { prisma } = app
 
       const newCard = await prisma.card.create({
         data: {
@@ -54,6 +70,12 @@ export default async function card(
           totalSpend: totalSpend,
           minimumSpendingRequirement: minimumSpendingRequirement,
           signupBonusDueDate: signupBonusDueDate,
+          outstandingBalance: outstandingBalance,
+          annualFee: annualFee,
+          annualFeeDate: annualFeeDate,
+          applicationDate: applicationDate,
+          approvalDate: approvalDate,
+          lastChargeDate: lastChargeDate,
         },
       })
 
@@ -69,6 +91,12 @@ export default async function card(
       totalSpend?: number
       minimumSpendingRequirement?: number
       signupBonusDueDate?: string
+      outstandingBalance?: number
+      annualFee?: number
+      annualFeeDate?: string
+      applicationDate?: string
+      approvalDate?: string
+      lastChargeDate?: string
     }
   }>(
     '/card',
@@ -83,6 +111,12 @@ export default async function card(
             totalSpend: { type: 'number' },
             minimumSpendingRequirement: { type: 'number' },
             signupBonusDueDate: { type: 'string' },
+            outstandingBalance: { type: 'number' },
+            annualFee: { type: 'number' },
+            annualFeeDate: { type: 'string' },
+            applicationDate: { type: 'string' },
+            approvalDate: { type: 'string' },
+            lastChargeDate: { type: 'string' },
           },
           required: ['id'],
           additionalProperties: false,
@@ -90,7 +124,6 @@ export default async function card(
       },
     },
     async (request, reply) => {
-      // TODO obviously clean this up once user is already there --> also remember to not pass it in from FE
       const { id, ...bodyWithoutId } = request.body
       // const card = await prisma.card.
       const card = await prisma.card.update({

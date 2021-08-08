@@ -113,6 +113,13 @@ const EditButton = styled.button`
   }
 `
 
+const DEFAULT_WIDTH = 140
+
+const processNumber = (number: number | null): string =>
+  number !== null ? number.toString() : ''
+const processDate = (dateString: string | null): string =>
+  dateString !== null ? formatISOStringAsUTC(dateString, 'MM/dd/yyyy') : ''
+
 const makeCardTableColumns = ({
   openCardModal,
   setEditingCardId,
@@ -127,26 +134,67 @@ const makeCardTableColumns = ({
       Header: makeHeaderComponent('NAME'),
       accessor: 'name',
       Cell: makeCellComponent(),
+      width: 150,
     },
     {
       Header: makeHeaderComponent('LIMIT'),
       accessor: 'creditLimit',
       Cell: makeCellComponent('DOLLARS'),
+      width: DEFAULT_WIDTH,
     },
     {
       Header: makeHeaderComponent('TOTAL SPEND'),
       accessor: 'totalSpend',
       Cell: makeCellComponent('DOLLARS'),
+      width: DEFAULT_WIDTH,
     },
     {
       Header: makeHeaderComponent('MSR'),
       accessor: 'minimumSpendingRequirement',
       Cell: makeCellComponent('DOLLARS'),
+      width: DEFAULT_WIDTH,
     },
     {
       Header: makeHeaderComponent('SUB. DUE DATE'),
       accessor: 'signupBonusDueDate',
       Cell: makeCellComponent('DATE'),
+      width: DEFAULT_WIDTH,
+    },
+    {
+      Header: makeHeaderComponent('OUSTANDING BAL.'),
+      accessor: 'outstandingBalance',
+      Cell: makeCellComponent(),
+      width: DEFAULT_WIDTH,
+    },
+    {
+      Header: makeHeaderComponent('ANNUAL FEE'),
+      accessor: 'annualFee',
+      Cell: makeCellComponent(),
+      width: 120,
+    },
+    {
+      Header: makeHeaderComponent('FEE DUE DATE'),
+      accessor: 'annualFeeDate',
+      Cell: makeCellComponent('DATE'),
+      width: DEFAULT_WIDTH,
+    },
+    {
+      Header: makeHeaderComponent('APP DATE'),
+      accessor: 'applicationDate',
+      Cell: makeCellComponent('DATE'),
+      width: 120,
+    },
+    {
+      Header: makeHeaderComponent('APPROVAL DATE'),
+      accessor: 'approvalDate',
+      Cell: makeCellComponent('DATE'),
+      width: DEFAULT_WIDTH,
+    },
+    {
+      Header: makeHeaderComponent('LAST CHARGE DATE'),
+      accessor: 'lastChargeDate',
+      Cell: makeCellComponent('DATE'),
+      width: DEFAULT_WIDTH,
     },
     {
       Header: makeHeaderComponent(''),
@@ -163,19 +211,28 @@ const makeCardTableColumns = ({
                   totalSpend,
                   minimumSpendingRequirement,
                   signupBonusDueDate,
+                  outstandingBalance,
+                  annualFee,
+                  annualFeeDate,
+                  applicationDate,
+                  approvalDate,
+                  lastChargeDate,
                 } = props.row.original
+                console.log(props.row.original)
                 setCardBeingEdited({
                   name: name,
-                  limit: creditLimit !== null ? creditLimit.toString() : '',
-                  totalSpend: totalSpend !== null ? totalSpend.toString() : '',
-                  minimumSpendingRequirement:
-                    minimumSpendingRequirement !== null
-                      ? minimumSpendingRequirement.toString()
-                      : '',
-                  signupBonusDate:
-                    signupBonusDueDate !== null
-                      ? formatISOStringAsUTC(signupBonusDueDate, 'MM/dd/yyyy')
-                      : '',
+                  limit: processNumber(creditLimit),
+                  totalSpend: processNumber(totalSpend),
+                  minimumSpendingRequirement: processNumber(
+                    minimumSpendingRequirement
+                  ),
+                  signupBonusDate: processDate(signupBonusDueDate),
+                  outstandingBalance: processNumber(outstandingBalance),
+                  annualFee: processNumber(annualFee),
+                  annualFeeDate: processDate(annualFeeDate),
+                  applicationDate: processDate(applicationDate),
+                  approvalDate: processDate(approvalDate),
+                  lastChargeDate: processDate(lastChargeDate),
                 })
                 openCardModal()
                 setEditingCardId(id)

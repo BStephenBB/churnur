@@ -77,6 +77,7 @@ const INPUT_TYPE_SYMBOL = {
   [InputTypes.DATE]: <CalendarIcon />,
 }
 
+// TODO make `setDate` only an argument for date type
 // TODO clean up all the meh logic in this component
 export const Input = (
   props: StyledComponentProps<

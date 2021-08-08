@@ -26,7 +26,7 @@ const ComboInputAndListWrapper = styled.div`
 const ListWrapper = styled.ul`
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   margin-top: ${({ theme }) => theme.space2};
   padding: 0;
   list-style: none;
@@ -112,13 +112,8 @@ export function ComboBox(props: ComboBoxStateProps<{}> & { label: string }) {
 }
 
 function ListBoxPopup(props: any) {
-  let {
-    popoverRef,
-    listBoxRef,
-    state,
-    shouldUseVirtualFocus,
-    ...otherProps
-  } = props
+  let { popoverRef, listBoxRef, state, shouldUseVirtualFocus, ...otherProps } =
+    props
 
   // Get props for the list box.
   // Prevent focus moving to list box via shouldUseVirtualFocus
