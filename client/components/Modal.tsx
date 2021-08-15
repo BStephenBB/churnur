@@ -160,9 +160,10 @@ const ModalBody = styled.div<{ isExpanded: boolean }>`
   @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
     padding: ${({ theme }) => theme.space3};
     padding-bottom: ${({ theme }) => theme.space5};
-    grid-column-gap: ${({ theme }) => theme.space4};
+    grid-column-gap: ${({ theme }) => theme.space3};
     grid-row-gap: ${({ theme }) => theme.space3};
     max-height: ${(props) => (props.isExpanded ? '500px' : '250px')};
+    width: ${({ theme }) => theme.space(140)};
   }
 `
 

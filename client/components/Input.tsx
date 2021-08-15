@@ -33,6 +33,10 @@ const Box = styled.div`
   border-radius: 4px 0 0 4px;
   font-variation-settings: 'wght' 550;
   font-size: ${({ theme }) => theme.text['1']};
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    flex-basis: ${({ theme }) => theme.space(8)};
+  }
 `
 
 export const Label = styled.label`

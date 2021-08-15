@@ -17,17 +17,22 @@ const CalendarWrapper = styled.div`
   background: ${({ theme }) => theme.color.white};
 `
 
-const Wrapper = styled.div<{ show: boolean }>`
+const Wrapper = styled.div<{ show: boolean; isOverflowing: boolean }>`
   box-shadow: ${({ theme }) => theme.shadow.medium};
   border-radius: 6px;
   overflow: hidden;
   position: absolute;
   z-index: 10;
-  top: calc(100% + ${({ theme }) => theme.space(2)});
+  top: ${({ isOverflowing, theme }) =>
+    isOverflowing ? theme.space(-6) : `calc(100% + ${theme.space(2)})`};
   left: 50%;
-  transition: all 0.15s ease;
+  transition: ${({ isOverflowing }) =>
+    isOverflowing ? undefined : 'transform 0.15s ease'};
   transform: translateX(-50%)
-    translateY(${({ show }) => (show ? '4px' : '0px')});
+    translateY(
+      ${({ show, isOverflowing }) =>
+        isOverflowing ? '-100%' : show ? '4px' : '0px'}
+    );
   opacity: ${(props) => (props.show ? '1' : '0')};
   pointer-events: ${(props) => (props.show ? 'auto' : 'none')};
 `
@@ -140,6 +145,16 @@ function CalendarUi({
     }
   }, [])
 
+  const isOverflowing = (() => {
+    if (calendarRef.current) {
+      const { top, height } = calendarRef.current.getBoundingClientRect()
+      const yPosition = top + height
+      return yPosition > window.innerHeight
+    } else {
+      return false
+    }
+  })()
+
   if (calendars.length) {
     return (
       <>
@@ -148,6 +163,7 @@ function CalendarUi({
             key={`${calendar.month}${calendar.year}`}
             show={show}
             ref={calendarRef}
+            isOverflowing={isOverflowing}
           >
             <TopWrapper>
               <ControlsWrapper>

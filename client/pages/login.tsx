@@ -24,7 +24,10 @@ const Card = styled.div`
   padding-bottom: ${({ theme }) => theme.space5};
 `
 
-const GoogleButton = styled(Button).attrs(() => ({ variant: 'PRIMARY' }))`
+const GoogleButton = styled(Button).attrs(() => ({
+  variant: 'PRIMARY',
+  noMedia: true,
+}))`
   color: ${({ theme }) => theme.color.white};
   font-size: ${({ theme }) => theme.text[2]};
   padding: ${({ theme }) => theme.space1};

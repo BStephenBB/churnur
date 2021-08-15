@@ -35,7 +35,10 @@ const BUTTON_TYPES = {
 } as const
 
 // TODO use react aria button
-export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
+export const Button = styled.button<{
+  variant?: keyof typeof BUTTON_TYPES
+  noMedia?: boolean
+}>`
   flex-grow: 0;
   height: ${({ theme }) => theme.space6};
   padding: ${({ theme }) => theme.space3};
@@ -77,8 +80,8 @@ export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
   }
 
   @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
-    height: ${({ theme }) => theme.space(9)};
-    padding: ${({ theme }) => theme.space(3)};
-    font-size: 14px;
+    height: ${({ theme, noMedia }) => (noMedia ? undefined : theme.space(9))};
+    padding: ${({ theme, noMedia }) => (noMedia ? undefined : theme.space(3))};
+    font-size: ${({ noMedia }) => (noMedia ? undefined : '14px')};
   }
 `
