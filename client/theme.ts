@@ -16,6 +16,14 @@ export const theme = {
     extraLarge: '0 12px 48px',
   },
 
+  breakpoints: {
+    // sm: '544px',
+    // md: '768px',
+    // lg: '1012px',
+    // xl: '1280px', // 13 in???
+    md: '1480px',
+  },
+
   text: {
     0: '12px',
     1: '14px',

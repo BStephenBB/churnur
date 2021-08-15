@@ -18,6 +18,6 @@
 # in server folder
 1. docker compose up # for db
 2. npm run dev # for typescript compilation TODO, maybe use nodejs or something
-3. npm run start # for running fastify server
+3. npm run start-dev # for running fastify server
 # in client folder
 1. npm run dev # to run nextjs server in dev mode

@@ -135,9 +135,14 @@ const ModalTitleWrapper = styled.div`
   background: ${({ theme }) => theme.color.gray1};
   border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
   border-radius: 6px 6px 0 0;
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    padding: ${({ theme }) => theme.space3};
+  }
 `
 
-const ModalBody = styled.div`
+// TODO setting the max height via style prop instead of styled component seems like it may be more performant; consider
+const ModalBody = styled.div<{ isExpanded: boolean }>`
   padding: ${({ theme }) => theme.space4};
   padding-bottom: ${({ theme }) => theme.space5};
   display: grid;
@@ -146,9 +151,18 @@ const ModalBody = styled.div`
   grid-column-gap: ${({ theme }) => theme.space5};
   grid-row-gap: ${({ theme }) => theme.space4};
   transition: max-height 0.2s ease;
+  max-height: ${(props) => (props.isExpanded ? '800px' : '300px')};
 
   > div:first-child {
     grid-column-start: span 2;
+  }
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    padding: ${({ theme }) => theme.space3};
+    padding-bottom: ${({ theme }) => theme.space5};
+    grid-column-gap: ${({ theme }) => theme.space4};
+    grid-row-gap: ${({ theme }) => theme.space3};
+    max-height: ${(props) => (props.isExpanded ? '500px' : '250px')};
   }
 `
 
@@ -222,7 +236,7 @@ function ModalDialog(props: {
           }}
         >
           <ModalTitleWrapper>
-            <Text {...titleProps} size={4}>
+            <Text {...titleProps} size={4} mdSize={3}>
               {title}
             </Text>
           </ModalTitleWrapper>
@@ -404,6 +418,12 @@ const MoreButton = styled.button`
 
   transition: background-color 0.15s ease, border-color 0.15s ease,
     transform 0.15s ease;
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    height: ${({ theme }) => theme.space(7)};
+    padding: 0 ${({ theme }) => theme.space(3)};
+    font-size: 15px;
+  }
 `
 
 export function Modal({ state }: { state: OverlayTriggerState }) {
@@ -491,7 +511,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
             role="dialog"
           >
             <>
-              <ModalBody style={{ maxHeight: isExpanded ? '800px' : '300px' }}>
+              <ModalBody isExpanded={isExpanded}>
                 <ComboBox
                   label="Card Name"
                   allowsCustomValue={true}
@@ -686,6 +706,10 @@ const ActionPanel = styled.div`
   border-radius: 0 0 6px 6px;
   justify-content: flex-end;
   gap: ${({ theme }) => theme.space2};
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    padding: ${({ theme }) => theme.space3};
+  }
 `
 
 export const useCardReducer = () => {
@@ -792,7 +816,7 @@ export function EditCardModal({
             role="dialog"
           >
             <>
-              <ModalBody style={{ maxHeight: isExpanded ? '800px' : '300px' }}>
+              <ModalBody isExpanded={isExpanded}>
                 <ComboBox
                   // TODO figure out a way to make this select the input on click too
                   label="Card Name"

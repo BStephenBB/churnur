@@ -34,12 +34,10 @@ const BUTTON_TYPES = {
   // DANGER: 'DANGER',
 } as const
 
-// height 36px is a good default size probably
-
 // TODO use react aria button
 export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
   flex-grow: 0;
-  height: ${({ theme }) => theme.space(10)};
+  height: ${({ theme }) => theme.space6};
   padding: ${({ theme }) => theme.space3};
   border-radius: 4px;
   display: flex;
@@ -55,7 +53,6 @@ export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
   &:focus {
     outline: none;
   }
-
   &:hover,
   &:focus {
     background: ${({ theme, variant }) =>
@@ -77,5 +74,11 @@ export const Button = styled.button<{ variant?: keyof typeof BUTTON_TYPES }>`
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+  }
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    height: ${({ theme }) => theme.space(9)};
+    padding: ${({ theme }) => theme.space(3)};
+    font-size: 14px;
   }
 `

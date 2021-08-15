@@ -21,6 +21,11 @@ const ComboboxWrapper = styled.div`
 const ComboInputAndListWrapper = styled.div`
   position: relative;
   display: inline-block;
+  height: ${({ theme }) => theme.space6};
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    height: ${({ theme }) => theme.space5};
+  }
 `
 
 const ListWrapper = styled.ul`

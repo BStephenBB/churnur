@@ -10,8 +10,12 @@ import { CalendarIcon } from '../icons'
 
 const Wrapper = styled.div`
   display: flex;
-  height: ${({ theme }) => theme.space(10)};
+  height: ${({ theme }) => theme.space6};
   border-radius: 4px;
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    height: ${({ theme }) => theme.space5};
+  }
 `
 
 const Box = styled.div`
@@ -48,7 +52,7 @@ export const InputElement = styled.input<{
   flex-grow: 1;
   min-width: 0;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : undefined)};
-  height: ${({ theme }) => theme.space(10)};
+  height: 100%;
   border-radius: ${({ hasBox }) => (hasBox ? '0 4px 4px 0' : '4px')};
   border: 1px solid ${({ theme }) => theme.color.gray3};
   outline: none !important;

@@ -34,6 +34,7 @@ const WEIGHT_TO_SIZE: Record<keyof typeof WEIGHTS, string> = {
 
 type TextProps = {
   size?: Sizes
+  mdSize?: Sizes
   weight?: keyof typeof WEIGHTS
   align?: string
   as?: string
@@ -50,4 +51,9 @@ export const Text = styled.div.attrs<TextProps>(({ size, as }) => ({
   font-variation-settings: 'wght'
     ${({ weight }) =>
       weight ? WEIGHT_TO_SIZE[weight] : WEIGHT_TO_SIZE.default};
+
+  @media (max-width: ${({ theme: { breakpoints } }) => breakpoints.md}) {
+    font-size: ${({ mdSize, theme }) =>
+      mdSize ? theme.text[mdSize] : undefined};
+  }
 `
