@@ -3,8 +3,5 @@ import { Modal, EditCardModal } from './Modal'
 import { Text } from './Text'
 import { Input } from './Input'
 import { ComboBox } from './Combobox'
-// import { SingleDate } from './DatePicker'
-
-// TODO date picker, tooltip, flesh out button
 
 export { Input, Button, Modal, EditCardModal, Text, ComboBox }

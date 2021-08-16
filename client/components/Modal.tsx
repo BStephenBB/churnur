@@ -504,10 +504,7 @@ export function Modal({ state }: { state: OverlayTriggerState }) {
           <ModalDialog
             title="Enter card information"
             isOpen={state.isOpen}
-            onClose={() => {
-              state.close()
-              dispatchCardAction({ type: CardActionType.CLEAR })
-            }}
+            onClose={closeAndClearModal}
             isDismissable={true}
             role="dialog"
           >
@@ -734,6 +731,7 @@ export function EditCardModal({
 
   const closeAndClearModal = () => {
     state.close()
+    setIsExpanded(false)
     dispatchCardAction({ type: CardActionType.CLEAR })
   }
 
@@ -809,10 +807,7 @@ export function EditCardModal({
           <ModalDialog
             title="Update card information"
             isOpen={state.isOpen}
-            onClose={() => {
-              state.close()
-              dispatchCardAction({ type: CardActionType.CLEAR })
-            }}
+            onClose={closeAndClearModal}
             isDismissable={true}
             role="dialog"
           >

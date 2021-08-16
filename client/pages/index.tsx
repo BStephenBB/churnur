@@ -71,17 +71,25 @@ const CELL_FORMATERS = {
 const makeCellComponent = (type: keyof typeof CELL_FORMATERS = 'DEFAULT') => {
   return function Cell(props: CardTableCellProps) {
     return (
-      <DefaultCell {...props.calculatedProps}>
+      <DefaultCell
+        {...props.calculatedProps}
+        align={type === 'DOLLARS' ? 'right' : 'left'}
+      >
         {props.value ? CELL_FORMATERS[type](props.value) : '--'}
       </DefaultCell>
     )
   }
 }
 
-const makeHeaderComponent = (text: string) => {
+const makeHeaderComponent = (text: string, rightAlign?: boolean) => {
   return function Header(props: CardHeaderCellProps) {
     return (
-      <DefaultHeaderCell {...props.calculatedProps}>{text}</DefaultHeaderCell>
+      <DefaultHeaderCell
+        {...props.calculatedProps}
+        align={rightAlign ? 'right' : 'left'}
+      >
+        {text}
+      </DefaultHeaderCell>
     )
   }
 }
@@ -137,19 +145,19 @@ const makeCardTableColumns = ({
       width: 150,
     },
     {
-      Header: makeHeaderComponent('LIMIT'),
+      Header: makeHeaderComponent('LIMIT', true),
       accessor: 'creditLimit',
       Cell: makeCellComponent('DOLLARS'),
       width: DEFAULT_WIDTH,
     },
     {
-      Header: makeHeaderComponent('TOTAL SPEND'),
+      Header: makeHeaderComponent('TOTAL SPEND', true),
       accessor: 'totalSpend',
       Cell: makeCellComponent('DOLLARS'),
       width: DEFAULT_WIDTH,
     },
     {
-      Header: makeHeaderComponent('MSR'),
+      Header: makeHeaderComponent('MSR', true),
       accessor: 'minimumSpendingRequirement',
       Cell: makeCellComponent('DOLLARS'),
       width: DEFAULT_WIDTH,
@@ -161,13 +169,13 @@ const makeCardTableColumns = ({
       width: DEFAULT_WIDTH,
     },
     {
-      Header: makeHeaderComponent('OUSTANDING BAL.'),
+      Header: makeHeaderComponent('OUSTANDING BAL.', true),
       accessor: 'outstandingBalance',
       Cell: makeCellComponent('DOLLARS'),
       width: DEFAULT_WIDTH,
     },
     {
-      Header: makeHeaderComponent('ANNUAL FEE'),
+      Header: makeHeaderComponent('ANNUAL FEE', true),
       accessor: 'annualFee',
       Cell: makeCellComponent('DOLLARS'),
       width: 120,

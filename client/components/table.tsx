@@ -35,15 +35,20 @@ const ALIGNMENT_OPTIONS = {
 export const DefaultCell = styled.div<{ align?: 'left' | 'right' | 'center' }>`
   flex-shrink: 0;
   flex-grow: 1;
-  padding: ${({ theme }) => theme.space1};
+  padding: ${({ theme }) => theme.space2};
   text-align: ${(props) =>
     props.align ? ALIGNMENT_OPTIONS[props.align] : ALIGNMENT_OPTIONS['left']};
 `
 
-export const DefaultHeaderCell = styled.div`
+export const DefaultHeaderCell = styled.div<{
+  align?: 'left' | 'right' | 'center'
+}>`
   flex-shrink: 0;
+  padding: ${({ theme }) => theme.space2};
   flex-grow: 1;
   font-variation-settings: 'wght' 600;
   font-size: ${({ theme }) => theme.text[1]};
   color: ${({ theme }) => theme.color.gray5};
+  text-align: ${(props) =>
+    props.align ? ALIGNMENT_OPTIONS[props.align] : ALIGNMENT_OPTIONS['left']};
 `
