@@ -21,7 +21,7 @@ export const theme = {
     // md: '768px',
     // lg: '1012px',
     // xl: '1280px', // 13 in???
-    md: '1480px',
+    md: '1300px', // 1280 is chris' screen width
   },
 
   text: {
